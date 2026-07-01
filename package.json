@@ -1,0 +1,13 @@
+{
+  "name": "ecf-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tailwindcss -i ./public/asset/css/input.css -o ./public/asset/css/style.css --watch",
+    "build": "tailwindcss -i ./public/asset/css/input.css -o ./public/asset/css/style.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.0",
+    "@tailwindcss/cli": "^4.1.0"
+  }
+}
