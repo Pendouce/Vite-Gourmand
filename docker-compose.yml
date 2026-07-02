@@ -78,9 +78,12 @@ services:
     image: node:24.18.0-alpine3.23
     container_name: node
     working_dir: /var/www/html
+    stdin_open: true
+    tty: true
+
     volumes:
       - .:/var/www/html
-    command: sh -c "npm install || true && npm run dev"
+    command: sh -c "npm install || true && npm approve-scripts @parcel/watcher || true && npm run dev"
     networks:
       - vgNetwork
 
