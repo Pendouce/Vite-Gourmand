@@ -16,7 +16,7 @@ CREATE TABLE user(
 
 CREATE TABLE role(
   role_id INT AUTO_INCREMENT PRIMARY KEY,
-  libelle VARCHAR(255)
+  libelle VARCHAR(255) NOT NULL
 );
 
 ALTER TABLE user 
@@ -25,20 +25,20 @@ ADD CONSTRAINT fk_rl FOREIGN KEY(role_id) REFERENCES role (role_id);
 CREATE TABLE commande(
   commande_id INT AUTO_INCREMENT PRIMARY KEY,
   nb_commande INT UNIQUE NOT NULL,
-  date_commande DATETIME,
-  date_prestation DATETIME,
-  nb_personne INT,
+  date_commande DATETIME NOT NULL,
+  date_prestation DATETIME NOT NULL,
+  nb_personne INT NOT NULL,
   heure_Livraison TIME,
   lieu_livraison VARCHAR(255),
-  prix_livraison DOUBLE,
-  prix_total DOUBLE,
-  user_id INT,
-  status_id INT
+  prix_livraison DOUBLE NOT NULL,
+  prix_total DOUBLE NOT NULL,
+  user_id INT NOT NULL,
+  status_id INT NOT NULL
 );
 
 CREATE TABLE status(
   status_id INT AUTO_INCREMENT PRIMARY KEY,
-  libelle VARCHAR(255)
+  libelle VARCHAR(255) NOT NULL
 );
 
 ALTER table commande
@@ -47,27 +47,27 @@ ADD CONSTRAINT fk_st FOREIGN KEY (status_id) REFERENCES status (status_id);
 
 CREATE table avis(
   avis_id INT AUTO_INCREMENT PRIMARY KEY,
-  note VARCHAR(20),
-  commentaire TEXT,
-  date_publication DATE,
+  note VARCHAR(20) NOT NULL,
+  commentaire TEXT NOT NULL,
+  date_publication DATE NOT NULL,
   publie BOOL,
-  commande_id INT
+  commande_id INT NOT NULL
 );
 
 CREATE TABLE prestation(
   prestation_id INT AUTO_INCREMENT PRIMARY KEY,
-  type_presta VARCHAR(255),
-  nom_presta VARCHAR(255),
-  prix_presta DOUBLE,
+  type_presta VARCHAR(255) NOT NULL,
+  nom_presta VARCHAR(255) NOT NULL,
+  prix_presta DOUBLE NOT NULL,
   description_presta TEXT,
   img_presta VARCHAR(255),
   necessite_retour BOOL,
   prestation_actif BOOL
 );
 CREATE TABLE commande_prestation(
-  prix_total_presta DOUBLE,
-  date_presta DATETIME,
-  date_retour_prevu DATETIME,
+  prix_total_presta DOUBLE NOT NULL,
+  date_presta DATETIME NOT NULL,
+  date_retour_prevu DATETIME NOT NULL,
   date_retour DATETIME,
   taux_retard DOUBLE,
   montant_penalité DOUBLE,
@@ -84,9 +84,9 @@ ADD CONSTRAINT fk_avs Foreign Key (commande_id) REFERENCES commande (commande_id
 
 CREATE TABLE boisson(
   boisson_id INT AUTO_INCREMENT PRIMARY KEY,
-  nom_boisson VARCHAR(255),
-  photo_boisson VARCHAR(255),
-  prix_boisson DOUBLE,
+  nom_boisson VARCHAR(255) NOT NULL,
+  photo_boisson VARCHAR(255) NOT NULL,
+  prix_boisson DOUBLE NOT NULL,
   alcool BOOL,
   stock_boisson INT
 );
@@ -94,7 +94,7 @@ CREATE TABLE boisson(
 CREATE TABLE commande_boisson(
   commande_id INT,
   boisson_id INT,
-  quantite INT,
+  quantite INT NOT NULL,
   PRIMARY KEY(commande_id, boisson_id)
 ); 
 
@@ -104,16 +104,16 @@ ADD CONSTRAINT fk_bss Foreign Key (boisson_id) REFERENCES boisson (boisson_id);
 
 CREATE TABLE menu(
   menu_id INT AUTO_INCREMENT PRIMARY KEY,
-  titre VARCHAR(255),
-  prix_personne DOUBLE,
-  nombre_personne_min INT,
+  titre VARCHAR(255) NOT NULL,
+  prix_personne DOUBLE NOT NULL,
+  nombre_personne_min INT NOT NULL,
   conditions TEXT,
-  stockt_dispo INT,
+  stockt_dispo INT NOT NULL,
   menu_actif BOOL
 );
 
 CREATE TABLE commande_menu(
-  nb_personne_menu INT,
+  nb_personne_menu INT NOT NULL,
   commande_id INT,
   menu_id INT,
   PRIMARY KEY(commande_id, menu_id)
@@ -125,9 +125,9 @@ ADD CONSTRAINT fk_mn Foreign Key (menu_id) REFERENCES menu (menu_id);
 
 CREATE TABLE plat(
   plat_id INT AUTO_INCREMENT PRIMARY KEY,
-  titre VARCHAR(255),
-  prix_personne DOUBLE,
-  stockt_plat INT,
+  titre VARCHAR(255) NOT NULL,
+  prix_personne DOUBLE NOT NULL,
+  stock_plat INT NOT NULL,
   plat_actif BOOL
 );
 
@@ -143,7 +143,7 @@ ADD CONSTRAINT fk_plt Foreign Key (plat_id) REFERENCES plat (plat_id);
 
 CREATE TABLE regime(
   regime_id INT AUTO_INCREMENT PRIMARY KEY,
-  libelle VARCHAR(255)
+  libelle VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE menu_regime(
@@ -158,7 +158,7 @@ ADD CONSTRAINT fk_rgm Foreign Key (regime_id) REFERENCES regime (regime_id);
 
 CREATE TABLE theme(
   theme_id INT AUTO_INCREMENT PRIMARY KEY,
-  libelle VARCHAR(255)
+  libelle VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE menu_theme(
@@ -173,7 +173,7 @@ ADD CONSTRAINT fk_th Foreign Key (theme_id) REFERENCES theme (theme_id);
 
 CREATE TABLE evenement(
   evenement_id INT AUTO_INCREMENT PRIMARY KEY,
-  libelle VARCHAR(255)
+  libelle VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE menu_evenement(
@@ -188,7 +188,7 @@ ADD CONSTRAINT fk_evn Foreign Key (evenement_id) REFERENCES evenement (evenement
 
 CREATE TABLE allergene(
   allergene_id INT AUTO_INCREMENT PRIMARY KEY,
-  libelle VARCHAR(255)
+  libelle VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE plat_allergene(
@@ -203,26 +203,33 @@ ADD CONSTRAINT fk_al Foreign Key (allergene_id) REFERENCES allergene (allergene_
 
 CREATE Table equipe(
   membre_id INT AUTO_INCREMENT PRIMARY KEY,
-  nom VARCHAR(50),
-  prenom VARCHAR(50),
-  photo VARCHAR(255),
-  poste VARCHAR(255),
+  nom VARCHAR(50) NOT NULL,
+  prenom VARCHAR(50) NOT NULL,
+  photo VARCHAR(255) NOT NULL,
+  poste VARCHAR(255) NOT NULL,
   description TEXT,
   actif BOOLEAN
 );
 
 CREATE TABLE information_vg(
   info_id INT AUTO_INCREMENT PRIMARY KEY,
-  jour_ouverture VARCHAR(255),
-  heure_ouverture VARCHAR(255),
-  heure_fermeture VARCHAR(255),
-  adresse VARCHAR(255),
-  telephone VARCHAR(20),
-  email VARCHAR(255)
+  jour_ouverture VARCHAR(255) NOT NULL,
+  heure_ouverture VARCHAR(255) NOT NULL,
+  heure_fermeture VARCHAR(255) NOT NULL,
+  adresse VARCHAR(255) NOT NULL,
+  telephone VARCHAR(20) NOT NULL,
+  email VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE image_site(
   id INT AUTO_INCREMENT PRIMARY KEY,
-  nom_img VARCHAR(100),
-  chemin VARCHAR(255)
+  nom_img VARCHAR(100) NOT NULL,
+  chemin VARCHAR(255) NOT NULL
 );
+
+INSERT INTO role(libelle) VALUES('Utilisateur'), ('Employé'), ('Admin');
+INSERT INTO regime(libelle) VALUES('Végétarien'), ('Vegan'), ('Sans gluten'), ('Halal'), ('Casher');
+INSERT INTO evenement(libelle) VALUES('Mariage'), ('Anniversaire'), ('Baptême'), ('Cocktail'), ('Brunch'), ('Séminaire d\'entreprise'), 
+  ('Noel'), ('Paques'), ('Aid'),
+  ('Nouvel an chinois'), ('Pessah'), ('Roch Hachana'), ('Hanoucca') ;
+INSERT INTO theme(libelle) VALUES('Terroir'), ('Europe'), ('Afrique'), ('Asie'), ('Amerique');
