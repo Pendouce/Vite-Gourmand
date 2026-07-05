@@ -233,3 +233,8 @@ INSERT INTO evenement(libelle) VALUES('Mariage'), ('Anniversaire'), ('Baptême')
   ('Noel'), ('Paques'), ('Aid'),
   ('Nouvel an chinois'), ('Pessah'), ('Roch Hachana'), ('Hanoucca') ;
 INSERT INTO theme(libelle) VALUES('Terroir'), ('Europe'), ('Afrique'), ('Asie'), ('Amerique');
+INSERT INTO allergene (libelle) VALUES 
+('Gluten'), ('Crustacés'), ('Œufs'), ('Poisson'),
+('Arachides'), ('Soja'), ('Lait'), ('Fruits à coque'),
+('Céleri'), ('Moutarde'), ('Graines de sésame'), ('Sulfites'),
+('Lupin'), ('Mollusques');
