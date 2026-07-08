@@ -3,7 +3,10 @@
 
 namespace App\Routing;
 
-use Exception;
+use App\Controller\ErreurController;
+use App\Exceptions\RouteIntrouvableException;
+use App\Exceptions\ControllerIntrouvableException;
+use App\Exceptions\MethodeIntrouvableException;
 use Throwable;
 
 class Router
@@ -12,7 +15,7 @@ class Router
 
   public function __construct()
   {
-    $this->route = require_once APP_ROOT."/config/route.php";
+    $this->route = require_once APP_ROOT."/config/routes.php";
   }
 
   public function GererRequette(string $uri):void
@@ -21,8 +24,7 @@ class Router
       $path = $this->nettoyageUri($uri);
 
       if(!isset($this->route[$path])){
-        // fetaure/gestion d'erreur
-        throw new Exception("La route n'existe pas");
+        throw new RouteIntrouvableException();
       }
 
       $route = $this->route[$path];
@@ -30,20 +32,19 @@ class Router
       $action = $route["action"];
 
       if(!class_exists($controllerPath)){
-      //Remplacer par une exeption fetaure/gestion d'erreur
-        throw new Exception("La classe n'existe pas");
+        throw new ControllerIntrouvableException();
+
       }
       $controller= new $controllerPath();
 
-      if(!method_exists($controllerPath, $action)){
-        //Remplacer par une exeption fetaure/gestion d'erreur
-        throw new Exception("La methode n'existe pas");
+      if(!method_exists($controller, $action)){
+        throw new MethodeIntrouvableException();
+
       }
       $controller->$action();
     } catch(Throwable $e){
-      // fetaure/gestion d'erreur
-        //$errorController = new ErreurController();
-        //$errorController->show($e->getMessage());
+        $errorController = new ErreurController();
+        $errorController->afficheErreur($e);
     }
   }
 

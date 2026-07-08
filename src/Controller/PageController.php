@@ -8,5 +8,9 @@ namespace App\Controller;
 
 class PageController extends Controller{
 
+  public function acceuil(): void
+  {
+    $this->render("page/acceuil");
+  }
 
 }
