@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 use PDO;
-//use App\Entity\User;
+use App\Entity\User;
 
 
 class UserRepository extends Repository
@@ -31,4 +31,33 @@ class UserRepository extends Repository
     //return $statment->execute($data);
     return $statment->execute();
   }
+
+  // Read
+
+  public function afficheUtilisateur(){
+    $sql = 'SELECT * FROM user';
+    $statement = $this->pdo->prepare($sql);
+
+    $statement->execute();
+    $tabUtilisateur = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $utilisateur = [];
+
+    // Boucle pour recuperer les données de tous mes utilisateurs
+    // $utilisateur[] = array_push($utilisateur)
+    foreach($tabUtilisateur as $data){
+      $utilisateur[] = User::creerEtHydrate($data);
+    }
+
+    return $utilisateur;
+  }
+
+  // Update
+
+
 }
+
+/*   $categoryArray = $sql->fetch($this->pdo::FETCH_ASSOC);
+
+    $categoryArray["first_name"] = "John";
+
+    $category = Category::createAndHydrate($categoryArray); */
