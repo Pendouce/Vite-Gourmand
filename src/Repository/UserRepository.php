@@ -51,6 +51,30 @@ class UserRepository extends Repository
     return $utilisateur;
   }
 
+  // By id
+    public function afficheUtilisateurById(int $id)
+    {
+      $sql = ('SELECT * FROM user WHERE user_id = :id');
+
+      $statement = $this->pdo->prepare($sql);
+      $statement->bindValue(':id', $id, PDO::PARAM_INT);
+      $statement ->execute();
+
+      return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+  // By email
+    public function afficheUtilisateurByEmail(string $email)
+    {
+      $sql = ('SELECT * FROM user WHERE email = :email');
+
+      $statement = $this->pdo->prepare($sql);
+      $statement->bindValue(':email', $email, PDO::PARAM_STR);
+      $statement ->execute();
+
+      return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
   // Update
 
   public function modifieUtilisateur(array $data)
