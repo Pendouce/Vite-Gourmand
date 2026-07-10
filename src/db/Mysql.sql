@@ -238,3 +238,6 @@ INSERT INTO allergene (libelle) VALUES
 ('Arachides'), ('Soja'), ('Lait'), ('Fruits à coque'),
 ('Céleri'), ('Moutarde'), ('Graines de sésame'), ('Sulfites'),
 ('Lupin'), ('Mollusques');
+
+--INSERT INTO user(nom, prenom, email, mot_de_passe, role_id) VALUES 
+--('Garcia', 'José', 'jose@vg.fr', '$2y$12$hQxzhce4Qe7DelRyrhyOtO40hVA35QMA5VuqWbtvzM4L4DpsVSLdy', 3);
