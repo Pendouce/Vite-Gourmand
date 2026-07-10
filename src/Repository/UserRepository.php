@@ -9,7 +9,7 @@ class UserRepository extends Repository
 {
   // Create
 
-  public function creationUtilisateur(string $nom, string $prenom, string $email, string $mdp, string $telephone, string $ville, string $codePostal, string $adresse, int $role)
+  public function creeUtilisateur(string $nom, string $prenom, string $email, string $mdp, string $telephone, string $ville, string $codePostal, string $adresse, int $role)
   //public function creationUtilisateur(array $data)
   {
     $sql = 'INSERT INTO user(nom, prenom, email, mot_de_passe, telephone, ville, code_postal, adresse, role_id)
@@ -53,6 +53,23 @@ class UserRepository extends Repository
 
   // Update
 
+  public function modifieUtilisateur(array $data)
+  {
+    $sql = ('UPDATE user SET
+       nom = :nom, 
+       prenom = :prenom, 
+       email = :email, 
+       mot_de_passe = :mot_de_passe, 
+       telephone = :telephone, 
+       ville = :ville,
+        code_postal = :code_postal,
+        adresse = :adresse
+      WHERE user_id = :id');
+
+    $statement = $this->pdo->prepare($sql);
+
+    return $statement->execute($data);
+  }
 
 }
 
