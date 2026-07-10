@@ -71,10 +71,12 @@ class UserRepository extends Repository
     return $statement->execute($data);
   }
 
+  public function supprimeUtilisateur(int $id){
+    $sql = ('DELETE FROM user WHERE user_id = :id');
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':id', $id, PDO::PARAM_INT);
+
+    return $statement->execute();
+  }
 }
-
-/*   $categoryArray = $sql->fetch($this->pdo::FETCH_ASSOC);
-
-    $categoryArray["first_name"] = "John";
-
-    $category = Category::createAndHydrate($categoryArray); */
