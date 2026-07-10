@@ -2,6 +2,7 @@
   "name": "ecf/vite-et-gourmand",
   "description": "Projet Vite et Gourmand",
   "type": "project",
+  "license": "proprietary",
   "require": {
     "php": ">=8.5",
     "vlucas/phpdotenv": "^5.6",
