@@ -9,12 +9,12 @@ class User extends Entity
   private ?string $nom = null;
   private ?string $prenom = null;
   private ?string $email = null;
-  private ?string $mot_de_passe = null;
+  private ?string $motDePasse = null;
   private ?string $telephone = null;
   private ?string $ville = null;
-  private ?string $code_postal = null;
+  private ?string $codePostal = null;
   private ?string $adresse = null;
-  private ?int $role_id = null;
+  private ?int $roleId = null;
 
   /**
    * Get the value of user_id
@@ -89,19 +89,19 @@ class User extends Entity
   }
 
   /**
-   * Get the value of mot_de_passe
+   * Get the value of motDePasse
    */
   public function getMotDePasse(): ?string
   {
-    return $this->mot_de_passe;
+    return $this->motDePasse;
   }
 
   /**
-   * Set the value of mot_de_passe
+   * Set the value of motDePasse
    */
-  public function setMotDePasse(?string $mot_de_passe): self
+  public function setMotDePasse(?string $motDePasse): self
   {
-    $this->mot_de_passe = $mot_de_passe;
+    $this->motDePasse = $motDePasse;
 
     return $this;
   }
@@ -143,19 +143,19 @@ class User extends Entity
   }
 
   /**
-   * Get the value of code_postal
+   * Get the value of codePostal
    */
   public function getCodePostal(): ?string
   {
-    return $this->code_postal;
+    return $this->codePostal;
   }
 
   /**
-   * Set the value of code_postal
+   * Set the value of codePostal
    */
-  public function setCodePostal(?string $code_postal): self
+  public function setCodePostal(?string $codePostal): self
   {
-    $this->code_postal = $code_postal;
+    $this->codePostal = $codePostal;
 
     return $this;
   }
@@ -179,19 +179,19 @@ class User extends Entity
   }
 
   /**
-   * Get the value of role_id
+   * Get the value of roleId
    */
   public function getRoleId(): ?int
   {
-    return $this->role_id;
+    return $this->roleId;
   }
 
   /**
-   * Set the value of role_id
+   * Set the value of roleId
    */
-  public function setRoleId(?int $role_id): self
+  public function setRoleId(?int $roleId): self
   {
-    $this->role_id = $role_id;
+    $this->roleId = $roleId;
 
     return $this;
   }
