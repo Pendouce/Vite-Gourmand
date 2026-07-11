@@ -10,7 +10,7 @@ class UserRepository extends Repository
   // Create
 
   //public function creeUtilisateur(string $nom, string $prenom, string $email, string $mdp, string $telephone, string $ville, string $codePostal, string $adresse, int $role)
-  public function creeUtilisateur(array $data)
+  public function creeUtilisateur(array $data): array
   {
     $sql = 'INSERT INTO user(nom, prenom, email, mot_de_passe, telephone, ville, code_postal, adresse, role_id)
       VALUES(
@@ -28,13 +28,16 @@ class UserRepository extends Repository
     $statment->bindValue(':adresse', $adresse, PDO::PARAM_STR);
     $statment->bindValue(':role_id', $role, PDO::PARAM_INT); */
 
-    return $statment->execute($data);
+    $statment->execute($data);
+
+    return $data;
     //return $statment->execute();
   }
 
   // Read
 
-  public function afficheUtilisateur(){
+  public function afficheUtilisateur() :array
+  {
     $sql = 'SELECT * FROM user';
     $statement = $this->pdo->prepare($sql);
 
@@ -52,7 +55,7 @@ class UserRepository extends Repository
   }
 
   // By id
-    public function afficheUtilisateurById(int $id)
+    public function afficheUtilisateurById(int $id) :array
     {
       $sql = ('SELECT * FROM user WHERE user_id = :id');
 
@@ -64,7 +67,7 @@ class UserRepository extends Repository
     }
 
   // By email
-    public function afficheUtilisateurByEmail(string $email)
+    public function afficheUtilisateurByEmail(string $email): array
     {
       $sql = ('SELECT * FROM user WHERE email = :email');
 
@@ -77,7 +80,7 @@ class UserRepository extends Repository
 
   // Update
 
-  public function modifieUtilisateur(array $data)
+  public function modifieUtilisateur(array $data):array
   {
     $sql = ('UPDATE user SET
        nom = :nom, 
@@ -91,11 +94,12 @@ class UserRepository extends Repository
       WHERE user_id = :id');
 
     $statement = $this->pdo->prepare($sql);
-
-    return $statement->execute($data);
+    $statement->execute($data);
+    return $data;
   }
 
-  public function supprimeUtilisateur(int $id){
+  public function supprimeUtilisateur(int $id):bool
+  {
     $sql = ('DELETE FROM user WHERE user_id = :id');
 
     $statement = $this->pdo->prepare($sql);
