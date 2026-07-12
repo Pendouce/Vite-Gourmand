@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Exceptions\EmailExistantException;
+use App\Exceptions\EmailMdpException;
 use App\Repository\UserRepository;
 
 /* 
@@ -17,7 +18,7 @@ use App\Repository\UserRepository;
   Creation d'un compte employé ✅
   Envoyer un mail avec acces
   _______________________________
-  Connexion
+  Connexion ✅
   _______________________________
   Afficher les infos utilisateur
   _______________________________
@@ -40,14 +41,15 @@ class UserService
 
   private UserRepository $userRepository;
 
-  /* public function __construct(UserRepository $userRepository)
+  public function __construct(UserRepository $userRepository)
   {
     $this->userRepository = $userRepository;
-  } */
+  } 
+
   // Methode globale creation de compte
   private function creationCompte(string $email, string $mdp, array $data, int $role)
   {
-    $verifEmail = $this->userRepository->afficheUtilisateurByEmail($email);
+    $verifEmail = $this->userRepository->trouveUtilisateurByEmail($email);
     if($verifEmail !== false){
       throw new EmailExistantException();
     }
@@ -84,6 +86,27 @@ class UserService
 
       return $compteUtilisateur;
   }
+
+  // Connexion
+  public function connexion(string $email, string $mdp)
+  {
+    $verifEmail = $this->userRepository->trouveUtilisateurByEmail($email);
+    if($verifEmail === false){
+      throw new EmailMdpException();
+    }
+    $verifMdp = password_verify($mdp, $verifEmail->getMotDePasse());
+    if(!$verifMdp){
+      throw new EmailMdpException();
+    }
+    return $verifEmail;
+  }
+
+/*   private function verifEmailExist(string $email){
+    $verifEmail = $this->userRepository->trouveUtilisateurByEmail($email);
+    if($verifEmail === false){
+      throw new EmailExistantException();
+    }
+  } */
 
   // Generer un mdp aleatoir initialemment pour la creation de compte employe
   // Voir si je propose un mdp a l'inscription est la modification de mdp 
