@@ -20,3 +20,8 @@ $affiche = new UserRepository();
 
 //var_dump($affiche->afficheUtilisateur());
 //var_dump($affiche->afficheUtilisateurById(2));
+
+use App\Controller\UserController;
+
+$us = new UserController;
+$us->inscription();

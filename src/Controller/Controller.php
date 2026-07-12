@@ -17,4 +17,10 @@ class Controller
     }
   }
 
+  public function nettoyerDonnees(array $data): array
+  {
+    $dataNettoye = array_map('htmlspecialchars', $data);
+    return $dataNettoye;
+  }
+
 }
