@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Exceptions\EmailExistantException;
 use App\Exceptions\EmailMdpException;
+use App\Exceptions\MotDepasseException;
+use App\Exceptions\UtilisateurIntrouvableException;
 use App\Repository\UserRepository;
 
 /* 
@@ -20,15 +22,15 @@ use App\Repository\UserRepository;
   _______________________________
   Connexion ✅
   _______________________________
-  Afficher les infos utilisateur
+  Afficher les infos utilisateur ✅
   _______________________________
-  Modifier les infos perso
+  Modifier les infos perso ✅
   _______________________________
   Modifier le mdp
   _______________________________
   Supression compte
   _______________________________
-  Supression compte employé
+  Supression compte employé ✅
   _______________________________
   Methode hash mdp ✅
 */
@@ -101,12 +103,68 @@ class UserService
     return $verifEmail;
   }
 
-/*   private function verifEmailExist(string $email){
+  // Afficher les infos utilisateur
+  public function afficheInfo(int $id)
+  {
+    $utilisateur = $this->userRepository->trouveUtilisateurById($id);
+    if($utilisateur === false){
+      throw new UtilisateurIntrouvableException();
+    }
+
+    return $utilisateur;
+  }
+
+  // Modifier les infos perso
+  public function modifieInfo( array $data)
+  {
+    $this->afficheInfo($data['id']);
+    $modification = $this->userRepository->modifieUtilisateur($data);
+
+    return $modification;
+  }
+
+  // Reinitialiser le mdp
+  public function reinitialiseMdp(string $email, array $data)
+  {
     $verifEmail = $this->userRepository->trouveUtilisateurByEmail($email);
     if($verifEmail === false){
-      throw new EmailExistantException();
+      throw new UtilisateurIntrouvableException();
     }
-  } */
+
+    $genereMdp = $this->genererMdpAleatoire();
+    $nouveauMdp = $this->hashMotDePasse($genereMdp);
+    $data = $verifEmail->deshydrate();
+    $data['mot_de_passe'] = $nouveauMdp;
+    $data = $this->modifieInfo($data);
+
+    /* 
+      Envoie mail avec nouveau mdp
+    */
+    return $data;
+  }
+
+  // Modifier le mdp
+  public function modifieMdp(string $ancienMdp, string $nouveauMdp,int $id, array $data)
+  {
+    $utilisateur = $this->userRepository->trouveUtilisateurById($id);
+    $verifMdp = password_verify($ancienMdp, $utilisateur->getMotDePasse());
+    if(!$verifMdp){
+      throw new MotDepasseException();
+    }
+    $nouveauMdp = $this->hashMotDePasse($nouveauMdp);
+    $data['mot_de_passe'] = $nouveauMdp;
+    $data = $this->modifieInfo($data);
+    return $data;
+  }
+
+  // Supression compte
+  public function supprimeCompte(int $id)
+  {
+    $this->afficheInfo($id);
+    $compte = $this->userRepository->supprimeUtilisateur($id);
+
+    return $compte;
+  }
 
   // Generer un mdp aleatoir initialemment pour la creation de compte employe
   // Voir si je propose un mdp a l'inscription est la modification de mdp 

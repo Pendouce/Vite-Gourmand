@@ -34,4 +34,10 @@ class Entity{
       }
     }
   }
+
+  // Transforme un objet en tableau associatif cle => valeur
+  public function deshydrate(): array
+  {
+    return get_object_vars($this);
+  }
 }
