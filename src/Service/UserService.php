@@ -14,7 +14,8 @@ use App\Repository\UserRepository;
 
   Envoyé un mail de confirmation
   _______________________________
-  Creation d'un compte employé
+  Creation d'un compte employé ✅
+  Envoyer un mail avec acces
   _______________________________
   Connexion
   _______________________________
@@ -39,10 +40,10 @@ class UserService
 
   private UserRepository $userRepository;
 
-  public function __construct(UserRepository $userRepository)
+  /* public function __construct(UserRepository $userRepository)
   {
     $this->userRepository = $userRepository;
-  }
+  } */
   // Methode globale creation de compte
   private function creationCompte(string $email, string $mdp, array $data, int $role)
   {
@@ -70,6 +71,32 @@ class UserService
     */
 
       return $compteUtilisateur;
+  }
+
+  // Methode creation d'un compte employe
+  public function creationCompteEmploye(string $email, array $data)
+  {
+    $mdp = $this->genererMdpAleatoire();
+    $compteUtilisateur = $this->creationCompte($email, $mdp, $data, self::ROLE_EMPLOYE);
+    /* 
+      Envoyer le mail de avec acces
+    */
+
+      return $compteUtilisateur;
+  }
+
+  // Generer un mdp aleatoir initialemment pour la creation de compte employe
+  // Voir si je propose un mdp a l'inscription est la modification de mdp 
+  private function genererMdpAleatoire()
+  {
+    $char = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@&(){}-_+%*';
+    $mdpGenere = '';
+    $max = strlen($char) - 1;
+
+    for($i = 0; $i < 16; $i++){
+      $mdpGenere .= $char[random_int(0, $max)];
+    }
+    return $mdpGenere;
   }
 
   // Methode hash mdp reutiliser dans plusieurs methode

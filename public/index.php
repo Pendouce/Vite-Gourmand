@@ -19,6 +19,4 @@ $router->GererRequette($_SERVER['REQUEST_URI']);
 $affiche = new UserRepository();
 
 //var_dump($affiche->afficheUtilisateur());
-var_dump($affiche->afficheUtilisateurById(2));
-
-
+//var_dump($affiche->afficheUtilisateurById(2));
