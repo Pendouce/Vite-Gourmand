@@ -81,6 +81,7 @@ class UserService
   public function creationCompteEmploye(string $email, array $data)
   {
     $mdp = $this->genererMdpAleatoire();
+    $mdpGenere = $mdp;
     $compteUtilisateur = $this->creationCompte($email, $mdp, $data, self::ROLE_EMPLOYE);
     /* 
       Envoyer le mail de avec acces

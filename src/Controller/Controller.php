@@ -18,9 +18,13 @@ class Controller
   }
 
   public function nettoyerDonnees(array $data): array
-  {
-    $dataNettoye = array_map('htmlspecialchars', $data);
+{
+    $dataNettoye = array_map(function($value) 
+    {
+      return $value === null ? null : htmlspecialchars($value);
+    }, $data);
     return $dataNettoye;
-  }
+}
+
 
 }

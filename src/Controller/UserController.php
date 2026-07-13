@@ -13,6 +13,7 @@ class UserController extends Controller
   private UserService $userService;
 
   public function __construct() {
+    // ici ou index.html ?
     session_start();
     $userRepository = new UserRepository();
     $this->userService = new UserService($userRepository);
@@ -29,22 +30,54 @@ class UserController extends Controller
   envoyer a la vue✅
   _______________________________
   Creation d'un compte employé 
-  Envoyer un mail avec acces
+  recuperer les donnees du formulaire 
+  nettoyer les donnees 
+  verifier les champs du formulaire 
+  appeller le service
+  rediriger sur inscription avec message succes
+  si exception on reste sur le formulaire catch render->inscriptionEmploye + message
+
   _______________________________
   Connexion 
+  recuperer les donnees du formulaire 
+  nettoyer les donnees 
+  verifier les champs du formulaire 
+  appeller le service
+  lancer la session
+  redirider vers acceuil
   limiter le nombre de tentatives 
    Implémentez un système de verrouillage temporaire après plusieurs tentatives échouées, 
    par exemple, après 5 tentatives, bloquez l'accès pendant 15 minutes. Cela réduit le risque d'attaques par force brute.
+  si exception on reste sur le formulaire catch render->connexion + message
+
   _______________________________
   Afficher les infos utilisateur 
+  appeller le service
+  envoyer a la vue
+
   _______________________________
   Modifier les infos perso 
+  recuperer les donnees du formulaire 
+  nettoyer les donnees 
+  verifier les champs du formulaire 
+  appeller le service
+  rediriger sur infos perso avec message succes
+
   _______________________________
   Modifier le mdp
+  recuperer les donnees du formulaire 
+  nettoyer les donnees 
+  verfie mdp 8 char min avec maj, chiffre et char spec === mdp confirm 
+  appeller le service
+  rediriger sur infos perso avec message succes
+
   _______________________________
   Supression compte
+  appeller le service
+  detruire la session
   _______________________________
   Supression compte employé 
+  appeller le service
   ———————————————————————————————
   Deconnexion
   session destroy
@@ -84,7 +117,7 @@ class UserController extends Controller
         if($_POST['mot_de_passe'] !== $_POST['mdpConfirm']){
           throw new MotDepasseException();
         }
-        
+
         //Appel du service
         $nouvelUtilisateur = $this->userService->inscrirUtilisateur($data['email'], $data['mot_de_passe'], $data);
         $nouvelUtilisateurId = $nouvelUtilisateur->getUserId();
@@ -116,6 +149,49 @@ class UserController extends Controller
       ];
       $dataNettoye = $this->nettoyerDonnees($data);
        var_dump($dataNettoye); */
+  }
+
+  public function inscriptionEmploye()
+  {
+     /*  Creation d'un compte employé 
+      recuperer les donnees du formulaire ✅
+      nettoyer les donnees ✅
+      verifier les champs du formulaire ✅
+      appeller le service✅
+      rediriger sur inscription avec message succes
+      si exception on reste sur le formulaire catch render->inscriptionEmploye + message ✅*/
+
+      if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        $data = [
+        'nom' => $_POST['nom'],
+        'prenom' => $_POST['prenom'],
+        'email' => $_POST['email'],
+        'telephone' => $_POST['telephone'],
+        'ville' => $_POST['ville'] ?? null,
+        'code_postal' => $_POST['code_postal'] ?? null,
+        'adresse' => $_POST['adresse'] ?? null,
+      ];
+        $data = $this->nettoyerDonnees($data);
+
+        try {
+         // Verification email
+          if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+            throw new EmailException();
+          }
+          $this->userService->creationCompteEmploye($data['email'], $data);
+
+          $_SESSION['succes'] = 'Inscription reussi !';
+
+          header('location: /inscriptionEmploye');
+          exit;
+        } catch (Exception $e) {
+          $message = $e->getMessage();
+          $this->render('page/inscriptionEmploye', ['erreur' => $message]);
+        }
+      }else{
+        $this->render('page/inscriptionEmploye');
+      }
+
   }
 
 }
