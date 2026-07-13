@@ -13,7 +13,7 @@ class UserController extends Controller
   private UserService $userService;
 
   public function __construct() {
-   // session_start();
+    session_start();
     $userRepository = new UserRepository();
     $this->userService = new UserService($userRepository);
   }
@@ -24,9 +24,9 @@ class UserController extends Controller
   verfie mdp 8 char min avec maj, chiffre et char spec === mdp confirm ✅
   verifier les champs du formulaire filter_var() avec le filtre FILTER_VALIDATE_EMAIL.✅
   appeller le service✅
-  si exception on reste sur le formulaire catch render->inscription
-  cree la session
-  envoyer a la vue
+  si exception on reste sur le formulaire catch render->inscription✅
+  cree la session✅
+  envoyer a la vue✅
   _______________________________
   Creation d'un compte employé 
   Envoyer un mail avec acces
@@ -67,7 +67,7 @@ class UserController extends Controller
       ];
       try{
         $data = $this->nettoyerDonnees($data);
-        $regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$";
+        $regex = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
 
         // Verification email
         if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
@@ -84,10 +84,18 @@ class UserController extends Controller
         if($_POST['mot_de_passe'] !== $_POST['mdpConfirm']){
           throw new MotDepasseException();
         }
-
-
+        
         //Appel du service
-        $this->userService->inscrirUtilisateur($data['email'], $data['mot_de_passe'], $data);
+        $nouvelUtilisateur = $this->userService->inscrirUtilisateur($data['email'], $data['mot_de_passe'], $data);
+        $nouvelUtilisateurId = $nouvelUtilisateur->getUserId();
+        $nouvelUtilisateurRole = $nouvelUtilisateur->getRoleId();
+
+        $_SESSION['user_id'] = $nouvelUtilisateurId;
+        $_SESSION['role_id'] = $nouvelUtilisateurRole;
+
+        //$this->render('page/acceuil');
+        header('location: /');
+        exit;
       }catch(Exception $e){
       $message = $e->getMessage();
       $this->render('page/inscription', ['erreur' => $message]);

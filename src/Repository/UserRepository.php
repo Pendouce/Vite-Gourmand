@@ -18,6 +18,8 @@ class UserRepository extends Repository
     $statment = $this->pdo->prepare($sql);
     $statment->execute($data);
 
+    $data['user_id'] = $this->pdo->lastInsertId();
+
     return User::creerEtHydrate($data);
   }
 
