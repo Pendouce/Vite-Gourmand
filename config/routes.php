@@ -6,4 +6,5 @@ return[
     "/inscriptionEmploye/" => ["controller" => "App\Controller\UserController", "action" => "inscriptionEmploye"],
     "/connexion/" => ["controller" => "App\Controller\UserController", "action" => "connexion"],
     "/mesInfos/" => ["controller" => "App\Controller\UserController", "action" => "afficheInfos"],
+    "/modifierInfos/" => ["controller" => "App\Controller\UserController", "action" => "modifierInfos"],
 ];

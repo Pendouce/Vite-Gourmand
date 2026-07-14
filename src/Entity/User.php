@@ -5,16 +5,16 @@ namespace App\Entity;
 class User extends Entity
 {
 
-  private ?int $user_id = null;
-  private ?string $nom = null;
-  private ?string $prenom = null;
-  private ?string $email = null;
-  private ?string $motDePasse = null;
-  private ?string $telephone = null;
-  private ?string $ville = null;
-  private ?string $codePostal = null;
-  private ?string $adresse = null;
-  private ?int $roleId = null;
+  protected ?int $user_id = null;
+  protected ?string $nom = null;
+  protected ?string $prenom = null;
+  protected ?string $email = null;
+  protected ?string $motDePasse = null;
+  protected ?string $telephone = null;
+  protected ?string $ville = null;
+  protected ?string $codePostal = null;
+  protected ?string $adresse = null;
+  protected ?int $roleId = null;
 
   /**
    * Get the value of user_id

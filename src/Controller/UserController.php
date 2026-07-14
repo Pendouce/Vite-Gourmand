@@ -53,12 +53,12 @@ class UserController extends Controller
   si exception on reste sur le formulaire catch render->connexion + message
 
   _______________________________
-  Afficher les infos utilisateur 
+  Afficher les infos utilisateur ✅
   appeller le service
   envoyer a la vue
 
   _______________________________
-  Modifier les infos perso 
+  Modifier les infos perso ✅
   recuperer les donnees du formulaire 
   nettoyer les donnees 
   verifier les champs du formulaire 
@@ -96,18 +96,16 @@ class UserController extends Controller
         'email' => $_POST['email'],
         'mot_de_passe' => $_POST['mot_de_passe'],
         'telephone' => $_POST['telephone'],
-        'ville' => $_POST['ville'],
-        'code_postal' => $_POST['code_postal'],
-        'adresse' => $_POST['adresse'],
+        'ville' => $_POST['ville'] ?? null,
+        'code_postal' => $_POST['code_postal'] ?? null,
+        'adresse' => $_POST['adresse'] ?? null,
       ];
       try{
         $data = $this->nettoyerDonnees($data);
         $regex = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
 
         // Verification email
-        if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
-          throw new EmailException();
-        }
+        if($data['email'])$this->verifEmail($data['email']);
       
         // Verification mdp
         // preg_match effectue une recherche de correspondance avec une expression rationnelle standard
@@ -197,9 +195,7 @@ class UserController extends Controller
       $data = $this->nettoyerDonnees($data);
       try {
         // Verification email
-        if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
-          throw new EmailException();
-        }
+        if($data['email'])$this->verifEmail($data['email']);
 
         // appel du service
         $connecte = $this->userService->connexion($data['email'], $data['mot_de_passe']);
@@ -233,6 +229,33 @@ class UserController extends Controller
   appeller le service
   rediriger sur infos perso avec message succes */
 
+  public function modifierInfos()
+  {
+      $data = [
+          'nom' => $_POST['nom'] ?? null,
+          'prenom' => $_POST['prenom'] ?? null,
+          'email' => $_POST['email'] ?? null,
+          'telephone' => $_POST['telephone'] ?? null,
+          'ville' => $_POST['ville'] ?? null,
+          'code_postal' => $_POST['code_postal'] ?? null,
+          'adresse' => $_POST['adresse'] ?? null,
+        ];
+        try{
+        $data = $this->nettoyerDonnees($data);
+        if($data['email'])$this->verifEmail($data['email']);
+        $data['id'] = $_SESSION['user_id'];
+        $this->userService->modifieInfo($data);
+        $_SESSION['succes'] = 'Information personnel modifier !';
+        header('location: /mesInfos');
+        exit;
+
+       }catch(Exception $e){
+        $message = $e->getMessage();
+        $_SESSION['erreur'] = $message;
+        header('location: /mesInfos');
+        exit;
+      }
+  }
         /*   Modifier le mdp
           recuperer les donnees du formulaire 
           nettoyer les donnees 
@@ -240,4 +263,10 @@ class UserController extends Controller
           appeller le service
           rediriger sur infos perso avec message succes */
 
+  public function verifEmail(string $email)
+  {
+    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+      throw new EmailException();
+    }
+  }
 }

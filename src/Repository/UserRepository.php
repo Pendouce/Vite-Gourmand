@@ -81,7 +81,7 @@ class UserRepository extends Repository
 
   // Update
 
-  public function modifieUtilisateur(array $data)
+  public function modifieUtilisateur(array $data): void
   {
     $sql = ('UPDATE user SET
        nom = :nom, 
@@ -96,7 +96,7 @@ class UserRepository extends Repository
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
-    return User::creerEtHydrate($data);
+    //return User::creerEtHydrate($data);
   }
 
   public function supprimeUtilisateur(int $id):bool
