@@ -136,10 +136,28 @@ class UserService
   }
 
   // Reinitialiser le mdp
+  public function reinitialiseMdp( array $data)
+  {
+    $verifEmail = $this->userRepository->trouveUtilisateurByEmail($data['email']);
+    if(!$verifEmail){
+      throw new UtilisateurIntrouvableException();
+    }
+
+    $genereMdp = $this->genererMdpAleatoire();
+    $nouveauMdp = $this->hashMotDePasse($genereMdp);
+    $data = $verifEmail->deshydrate();
+    $data['mot_de_passe'] = $nouveauMdp;
+    $this->modifieInfo($data);
+
+    /* 
+      Envoie mail avec nouveau mdp
+    */
+  }
+/*   // Reinitialiser le mdp
   public function reinitialiseMdp(string $email, array $data)
   {
     $verifEmail = $this->userRepository->trouveUtilisateurByEmail($email);
-    if($verifEmail === false){
+    if(!$verifEmail){
       throw new UtilisateurIntrouvableException();
     }
 
@@ -152,8 +170,8 @@ class UserService
     /* 
       Envoie mail avec nouveau mdp
     */
-    return $data;
-  }
+    //return $data;
+  //} 
 
   // Modifier le mdp
   public function modifieMdp(string $ancienMdp, string $nouveauMdp,int $id, array $data)

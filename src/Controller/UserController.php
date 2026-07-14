@@ -287,6 +287,31 @@ class UserController extends Controller
     }
   }
 
+  public function reinitialiserMdp()
+  {
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $data = [
+        'email' => $_POST['email'],
+      ];
+      try{
+        $data = $this->nettoyerDonnees($data);
+        $this->verifEmail($data['email']);
+        $this->userService->reinitialiseMdp($data);
+        $_SESSION['succes'] = 'Votre mot de passe été reinitialiser votre nouveaux mot de passe vous a ete envoyé par mail';
+        header('location: /connexion');
+        exit;
+      }catch(Exception $e){
+        $message = $e->getMessage();
+        $_SESSION['erreur'] = $message;
+        header('location: /reinitilisationMdp');
+        exit;
+      }
+
+    }else{
+      $this->render('page/reinitilisationMdp');
+    }
+  }
+
   private function verifEmail(string $email)
   {
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)){

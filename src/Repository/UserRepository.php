@@ -109,6 +109,16 @@ class UserRepository extends Repository
     $statement->execute($data);
   }
 
+  public function reinitialiseMdp(array $data): void
+  {
+    $sql = ('UPDATE user SET
+       mot_de_passe = :mot_de_passe
+      WHERE email = :email');
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
+
   public function supprimeUtilisateur(int $id):bool
   {
     $sql = ('DELETE FROM user WHERE user_id = :id');
