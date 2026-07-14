@@ -38,16 +38,18 @@ class UserController extends Controller
   si exception on reste sur le formulaire catch render->inscriptionEmploye + message✅
 
   _______________________________
-  Connexion 
+  Connexion ✅
   recuperer les donnees du formulaire 
   nettoyer les donnees 
   verifier les champs du formulaire 
   appeller le service
   lancer la session
-  redirider vers acceuil
+  redirider vers acceuil✅
+    ____________________
   limiter le nombre de tentatives 
    Implémentez un système de verrouillage temporaire après plusieurs tentatives échouées, 
    par exemple, après 5 tentatives, bloquez l'accès pendant 15 minutes. Cela réduit le risque d'attaques par force brute.
+    ____________________
   si exception on reste sur le formulaire catch render->connexion + message
 
   _______________________________
@@ -185,48 +187,57 @@ class UserController extends Controller
       }
   }
 
-      /* 
-        Connexion 
-        recuperer les donnees du formulaire ✅
-        nettoyer les donnees ✅
-        verifier les champs du formulaire ✅
-        appeller le service
-        lancer la session
-        redirider vers acceuil
-      */
-
-        public function connexion()
-        {
-          if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $data = [
-              'email' => $_POST['email'],
-              'mot_de_passe' => $_POST['mot_de_passe'],
-            ];
-            $data = $this->nettoyerDonnees($data);
-            try {
-              // Verification email
-              if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
-                throw new EmailException();
-              }
-
-              // appel du service
-              $connecte = $this->userService->connexion($data['email'], $data['mot_de_passe']);
-              $nouvelUtilisateurId = $connecte->getUserId();
-              $nouvelUtilisateurRole = $connecte->getRoleId();
-
-              $_SESSION['user_id'] = $nouvelUtilisateurId;
-              $_SESSION['role_id'] = $nouvelUtilisateurRole;
-              header('location: /');
-              exit;
-
-            }catch(Exception $e){
-              $message = $e->getMessage();
-              $this->render('page/connexion', ['erreur' => $message]);
-            }
-          } else{
-            $this->render('page/connexion');
-          }
+  public function connexion()
+  {
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $data = [
+        'email' => $_POST['email'],
+        'mot_de_passe' => $_POST['mot_de_passe'],
+      ];
+      $data = $this->nettoyerDonnees($data);
+      try {
+        // Verification email
+        if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+          throw new EmailException();
         }
 
+        // appel du service
+        $connecte = $this->userService->connexion($data['email'], $data['mot_de_passe']);
+        $nouvelUtilisateurId = $connecte->getUserId();
+        $nouvelUtilisateurRole = $connecte->getRoleId();
+        $_SESSION['user_id'] = $nouvelUtilisateurId;
+        $_SESSION['role_id'] = $nouvelUtilisateurRole;
+        header('location: /');
+        exit;
+
+      }catch(Exception $e){
+        $message = $e->getMessage();
+        $this->render('page/connexion', ['erreur' => $message]);
+      }
+    } else{
+      $this->render('page/connexion');
+    }
+  }
+
+  public function afficheInfos()
+  {
+    $id = $_SESSION['user_id'];
+    $infoUtilisateur = $this->userService->afficheInfo($id);
+    $this->render('page/mesInfos', ['infoUtilisateur' => $infoUtilisateur]);
+  }
+
+/*           Modifier les infos perso 
+  recuperer les donnees du formulaire 
+  nettoyer les donnees 
+  verifier les champs du formulaire 
+  appeller le service
+  rediriger sur infos perso avec message succes */
+
+        /*   Modifier le mdp
+          recuperer les donnees du formulaire 
+          nettoyer les donnees 
+          verfie mdp 8 char min avec maj, chiffre et char spec === mdp confirm 
+          appeller le service
+          rediriger sur infos perso avec message succes */
 
 }
