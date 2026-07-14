@@ -29,13 +29,13 @@ class UserController extends Controller
   cree la session✅
   envoyer a la vue✅
   _______________________________
-  Creation d'un compte employé 
-  recuperer les donnees du formulaire 
-  nettoyer les donnees 
-  verifier les champs du formulaire 
-  appeller le service
-  rediriger sur inscription avec message succes
-  si exception on reste sur le formulaire catch render->inscriptionEmploye + message
+  Creation d'un compte employé ✅
+  recuperer les donnees du formulaire ✅
+  nettoyer les donnees ✅
+  verifier les champs du formulaire ✅
+  appeller le service✅
+  rediriger sur inscription avec message succes✅
+  si exception on reste sur le formulaire catch render->inscriptionEmploye + message✅
 
   _______________________________
   Connexion 
@@ -153,14 +153,6 @@ class UserController extends Controller
 
   public function inscriptionEmploye()
   {
-     /*  Creation d'un compte employé 
-      recuperer les donnees du formulaire ✅
-      nettoyer les donnees ✅
-      verifier les champs du formulaire ✅
-      appeller le service✅
-      rediriger sur inscription avec message succes
-      si exception on reste sur le formulaire catch render->inscriptionEmploye + message ✅*/
-
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $data = [
         'nom' => $_POST['nom'],
@@ -191,7 +183,50 @@ class UserController extends Controller
       }else{
         $this->render('page/inscriptionEmploye');
       }
-
   }
+
+      /* 
+        Connexion 
+        recuperer les donnees du formulaire ✅
+        nettoyer les donnees ✅
+        verifier les champs du formulaire ✅
+        appeller le service
+        lancer la session
+        redirider vers acceuil
+      */
+
+        public function connexion()
+        {
+          if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $data = [
+              'email' => $_POST['email'],
+              'mot_de_passe' => $_POST['mot_de_passe'],
+            ];
+            $data = $this->nettoyerDonnees($data);
+            try {
+              // Verification email
+              if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+                throw new EmailException();
+              }
+
+              // appel du service
+              $connecte = $this->userService->connexion($data['email'], $data['mot_de_passe']);
+              $nouvelUtilisateurId = $connecte->getUserId();
+              $nouvelUtilisateurRole = $connecte->getRoleId();
+
+              $_SESSION['user_id'] = $nouvelUtilisateurId;
+              $_SESSION['role_id'] = $nouvelUtilisateurRole;
+              header('location: /');
+              exit;
+
+            }catch(Exception $e){
+              $message = $e->getMessage();
+              $this->render('page/connexion', ['erreur' => $message]);
+            }
+          } else{
+            $this->render('page/connexion');
+          }
+        }
+
 
 }

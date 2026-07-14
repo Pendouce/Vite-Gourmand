@@ -24,7 +24,7 @@ class Router
       $path = $this->nettoyageUri($uri);
 
       if(!isset($this->route[$path])){
-        throw new RouteIntrouvableException();
+        throw new RouteIntrouvableException($path);
       }
 
       $route = $this->route[$path];
@@ -32,13 +32,13 @@ class Router
       $action = $route["action"];
 
       if(!class_exists($controllerPath)){
-        throw new ControllerIntrouvableException();
+        throw new ControllerIntrouvableException($controllerPath);
 
       }
       $controller= new $controllerPath();
 
       if(!method_exists($controller, $action)){
-        throw new MethodeIntrouvableException();
+        throw new MethodeIntrouvableException($controllerPath, $action);
 
       }
       $controller->$action();

@@ -3,8 +3,10 @@
 namespace App\Exceptions;
 
 use Exception;
-
-class ControllerIntrouvableException extends Exception
+    class ControllerIntrouvableException extends Exception
 {
-  protected $message = "La classe n'existe pas";
+    public function __construct(string $controller = "")
+    {
+        parent::__construct("Le controller " . $controller . " n'existe pas");
+    }
 }
