@@ -99,6 +99,16 @@ class UserRepository extends Repository
     //return User::creerEtHydrate($data);
   }
 
+  public function modifieMdp(array $data): void
+  {
+    $sql = ('UPDATE user SET
+       mot_de_passe = :mot_de_passe
+      WHERE user_id = :id');
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
+
   public function supprimeUtilisateur(int $id):bool
   {
     $sql = ('DELETE FROM user WHERE user_id = :id');

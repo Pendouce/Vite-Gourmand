@@ -7,4 +7,5 @@ return[
     "/connexion/" => ["controller" => "App\Controller\UserController", "action" => "connexion"],
     "/mesInfos/" => ["controller" => "App\Controller\UserController", "action" => "afficheInfos"],
     "/modifierInfos/" => ["controller" => "App\Controller\UserController", "action" => "modifierInfos"],
+    "/modificationMotDePasse/" => ["controller" => "App\Controller\UserController", "action" => "modifierMdp"],
 ];

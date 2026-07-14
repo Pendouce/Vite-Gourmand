@@ -262,11 +262,49 @@ class UserController extends Controller
           verfie mdp 8 char min avec maj, chiffre et char spec === mdp confirm 
           appeller le service
           rediriger sur infos perso avec message succes */
+  public function modifierMdp(){
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $data = [
+        'ancienMdp' => $_POST['ancienMdp'],
+        'mot_de_passe' => $_POST['mot_de_passe'],
+      ];
+      $data = $this->nettoyerDonnees($data);
+      try{
+          $this->verifMdp($data['mot_de_passe'], $_POST['mdpConfirm']);
+          $data['id'] = $_SESSION['user_id'];
+          $this->userService->modifieMdp($data['ancienMdp'], $data['mot_de_passe'], $data['id'], $data);
+          $_SESSION['succes'] = 'Mot de passe modifié';
+          header('location: /mesInfos');
+          exit;
+      }catch(Exception $e){
+        $message = $e->getMessage();
+        $_SESSION['erreur'] = $message;
+        header('location: /modificationMotDePasse');
+        exit;
+      }
+    }else{
+      $this->render('page/modificationMdp');
+    }
+  }
 
-  public function verifEmail(string $email)
+  private function verifEmail(string $email)
   {
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
       throw new EmailException();
     }
+  }
+
+  private function verifMdp(string $mdp, string $mdpConfirm){
+    $regex = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
+
+    // preg_match effectue une recherche de correspondance avec une expression rationnelle standard
+    if(!preg_match($regex, $mdp)){
+      throw new MotDepasseException('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&)');
+    }
+
+      // Verification mdp === mdpConfirm
+      if($mdp !== $mdpConfirm){
+        throw new MotDepasseException();
+      }
   }
 }

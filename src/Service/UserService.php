@@ -123,9 +123,10 @@ class UserService
     // Parcourt chaques valeur du tableau et ne garde que celles qui ne sont pas null
     $data = array_filter($data, fn($value) => $value !== null);
     $nouvellesDonnees = array_merge($donneesActuel, $data);
-    // Je renommepar le nom attendu 
+    // Je renomme par le nom attendu 
     $nouvellesDonnees['mot_de_passe'] = $nouvellesDonnees['motDePasse'];
     $nouvellesDonnees['code_postal'] = $nouvellesDonnees['codePostal'];
+    // Supression des anciennes cles nonutilisées par la requette
     unset($nouvellesDonnees['motDePasse']);
     unset($nouvellesDonnees['codePostal']);
     unset($nouvellesDonnees['user_id']);
@@ -158,13 +159,16 @@ class UserService
   public function modifieMdp(string $ancienMdp, string $nouveauMdp,int $id, array $data)
   {
     $utilisateur = $this->userRepository->trouveUtilisateurById($id);
+    if(!$utilisateur){
+      throw new UtilisateurIntrouvableException();
+    }
     $verifMdp = password_verify($ancienMdp, $utilisateur->getMotDePasse());
     if(!$verifMdp){
       throw new MotDepasseException();
     }
     $nouveauMdp = $this->hashMotDePasse($nouveauMdp);
     $data['mot_de_passe'] = $nouveauMdp;
-    $data = $this->modifieInfo($data);
+    unset($data['ancienMdp']);
     return $data;
   }
 
