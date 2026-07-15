@@ -42,6 +42,27 @@ class UserRepository extends Repository
 
     return $utilisateur;
   }
+ 
+  // By role
+  public function trouveEmployeByRole(int $role)
+  {
+    $sql = 'SELECT * FROM user WHERE role_id = :role_id';
+    $statement = $this->pdo->prepare($sql);
+
+    $statement->bindValue(':role_id', $role, PDO::PARAM_INT);
+
+    $statement->execute();
+    $tabEmploye = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $employe = [];
+
+    foreach($tabEmploye as $data){
+      $employe[] = User::creerEtHydrate($data);
+    }
+
+    return $employe;
+  }
+
+
 
   // By id
     public function trouveUtilisateurById(int $id) 
@@ -78,7 +99,7 @@ class UserRepository extends Repository
 
       return User::creerEtHydrate($data);
     }
-
+    
   // Update
 
   public function modifieUtilisateur(array $data): void

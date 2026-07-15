@@ -66,7 +66,7 @@ class UserController extends Controller
   rediriger sur infos perso avec message succes
 
   _______________________________
-  Modifier le mdp
+  Modifier le mdp✅
   recuperer les donnees du formulaire 
   nettoyer les donnees 
   verfie mdp 8 char min avec maj, chiffre et char spec === mdp confirm 
@@ -74,14 +74,14 @@ class UserController extends Controller
   rediriger sur infos perso avec message succes
 
   _______________________________
-  Supression compte
+  Supression compte✅
   appeller le service
   detruire la session
   _______________________________
-  Supression compte employé 
+  Supression compte employé ✅
   appeller le service
   ———————————————————————————————
-  Deconnexion
+  Deconnexion✅
   session destroy
 
   */
@@ -114,9 +114,11 @@ class UserController extends Controller
         }
 
         // Verification mdp === mdpConfirm
-        if($_POST['mot_de_passe'] !== $_POST['mdpConfirm']){
+       /*  if($_POST['mot_de_passe'] !== $_POST['mdpConfirm']){
           throw new MotDepasseException();
-        }
+        } */
+          $this->verifMdp($data['mot_de_passe'], $_POST['mdpConfirm']);
+
 
         //Appel du service
         $nouvelUtilisateur = $this->userService->inscrirUtilisateur($data['email'], $data['mot_de_passe'], $data);
@@ -175,6 +177,7 @@ class UserController extends Controller
           $_SESSION['succes'] = 'Inscription reussi !';
 
           header('location: /inscriptionEmploye');
+          //header('location: /gestionEmploye');
           exit;
         } catch (Exception $e) {
           $message = $e->getMessage();
@@ -221,6 +224,20 @@ class UserController extends Controller
     $infoUtilisateur = $this->userService->afficheInfo($id);
     $this->render('page/mesInfos', ['infoUtilisateur' => $infoUtilisateur]);
   }
+  
+  public function afficheInfosEmploye()
+  {
+    $id = $_GET['id'];
+    $infoEmploye = $this->userService->afficheInfo($id);
+    var_dump($infoEmploye);
+    $this->render('page/detailEmploye', ['infoEmploye' => $infoEmploye]);
+  }
+
+  public function afficheEmploye()
+  {
+    $listeEmploye = $this->userService->afficheEmploye();
+    $this->render('page/gestionEmploye', ['listeEmploye' => $listeEmploye]);
+  }
 
 /*           Modifier les infos perso 
   recuperer les donnees du formulaire 
@@ -256,12 +273,7 @@ class UserController extends Controller
         exit;
       }
   }
-        /*   Modifier le mdp
-          recuperer les donnees du formulaire 
-          nettoyer les donnees 
-          verfie mdp 8 char min avec maj, chiffre et char spec === mdp confirm 
-          appeller le service
-          rediriger sur infos perso avec message succes */
+
   public function modifierMdp(){
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
       $data = [
@@ -277,8 +289,7 @@ class UserController extends Controller
           header('location: /mesInfos');
           exit;
       }catch(Exception $e){
-        $message = $e->getMessage();
-        $_SESSION['erreur'] = $message;
+        $_SESSION['erreur'] = $e->getMessage();
         header('location: /modificationMotDePasse');
         exit;
       }
@@ -301,14 +312,70 @@ class UserController extends Controller
         header('location: /connexion');
         exit;
       }catch(Exception $e){
-        $message = $e->getMessage();
-        $_SESSION['erreur'] = $message;
+        $_SESSION['erreur'] = $e->getMessage();
         header('location: /reinitilisationMdp');
         exit;
       }
 
     }else{
       $this->render('page/reinitilisationMdp');
+    }
+  }
+    // Si role = utilisateur supprime , deconnecte, redirige acceuil
+    // Si role = utilisateur supprime , redirige acceuil
+
+    public function deconnexion()
+    {
+      $_SESSION = [];
+
+      if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]);
+      }
+      session_destroy();
+      header('location: /');
+      exit;
+    }
+
+  public function supprimerCompteUtilisateur()
+  {
+    try{
+      $role = $_SESSION['role_id'];
+      $id = $_SESSION['user_id'];
+
+      if($role === 1){
+        $this->userService->supprimeCompte($id);
+        $this->deconnexion();
+        $_SESSION['succes'] = "Compte supprimé avec succes";
+        header('location: /');
+        exit;
+      }
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /mesInfos');
+      exit;
+    }
+  }
+
+  public function supprimerCompteEmploye()
+  {
+    try{
+      $role = $_SESSION['role_id'];
+      $id = $_GET['id'];
+      if($role === 3){
+          $this->userService->supprimeCompte($id);
+          $_SESSION['succes'] = "Compte supprimé avec succes";
+          header('location: /gestionEmployes');
+          exit;
+        }else{
+          $this->render('page/gestionEmploye');
+        }
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /gestionEmployes');
+      exit;
     }
   }
 

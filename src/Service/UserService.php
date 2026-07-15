@@ -115,6 +115,11 @@ class UserService
     return $utilisateur;
   }
 
+  public function afficheEmploye()
+  {
+    return $this->userRepository->trouveEmployeByRole(self::ROLE_EMPLOYE);
+  }
+
   // Modifier les infos perso
   public function modifieInfo( array $data)
   {
