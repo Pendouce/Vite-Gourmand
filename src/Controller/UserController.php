@@ -133,10 +133,10 @@ class UserController extends Controller
         exit;
       }catch(Exception $e){
       $message = $e->getMessage();
-      $this->render('page/inscription', ['erreur' => $message]);
+      $this->render('pages/client/inscription', ['erreur' => $message]);
       }
     }else {
-      $this->render('page/inscription');
+      $this->render('pages/client/inscription');
     }
 
  /*      $data = [
@@ -181,10 +181,10 @@ class UserController extends Controller
           exit;
         } catch (Exception $e) {
           $message = $e->getMessage();
-          $this->render('page/inscriptionEmploye', ['erreur' => $message]);
+          $this->render('pages/admin/inscriptionEmploye', ['erreur' => $message]);
         }
       }else{
-        $this->render('page/inscriptionEmploye');
+        $this->render('pages/admin/inscriptionEmploye');
       }
   }
 
@@ -211,10 +211,10 @@ class UserController extends Controller
 
       }catch(Exception $e){
         $message = $e->getMessage();
-        $this->render('page/connexion', ['erreur' => $message]);
+        $this->render('pages/auth/connexion', ['erreur' => $message]);
       }
     } else{
-      $this->render('page/connexion');
+      $this->render('pages/auth/connexion');
     }
   }
 
@@ -222,56 +222,48 @@ class UserController extends Controller
   {
     $id = $_SESSION['user_id'];
     $infoUtilisateur = $this->userService->afficheInfo($id);
-    $this->render('page/mesInfos', ['infoUtilisateur' => $infoUtilisateur]);
+    $this->render('pages/client/mesInfos', ['infoUtilisateur' => $infoUtilisateur]);
   }
   
   public function afficheInfosEmploye()
   {
     $id = $_GET['id'];
     $infoEmploye = $this->userService->afficheInfo($id);
-    var_dump($infoEmploye);
-    $this->render('page/detailEmploye', ['infoEmploye' => $infoEmploye]);
+    $this->render('pages/admin/detailEmploye', ['infoEmploye' => $infoEmploye]);
   }
 
   public function afficheEmploye()
   {
     $listeEmploye = $this->userService->afficheEmploye();
-    $this->render('page/gestionEmploye', ['listeEmploye' => $listeEmploye]);
+    $this->render('pages/admin/gestionEmploye', ['listeEmploye' => $listeEmploye]);
   }
-
-/*           Modifier les infos perso 
-  recuperer les donnees du formulaire 
-  nettoyer les donnees 
-  verifier les champs du formulaire 
-  appeller le service
-  rediriger sur infos perso avec message succes */
 
   public function modifierInfos()
   {
-      $data = [
-          'nom' => $_POST['nom'] ?? null,
-          'prenom' => $_POST['prenom'] ?? null,
-          'email' => $_POST['email'] ?? null,
-          'telephone' => $_POST['telephone'] ?? null,
-          'ville' => $_POST['ville'] ?? null,
-          'code_postal' => $_POST['code_postal'] ?? null,
-          'adresse' => $_POST['adresse'] ?? null,
-        ];
-        try{
-        $data = $this->nettoyerDonnees($data);
-        if($data['email'])$this->verifEmail($data['email']);
-        $data['id'] = $_SESSION['user_id'];
-        $this->userService->modifieInfo($data);
-        $_SESSION['succes'] = 'Information personnel modifier !';
-        header('location: /mesInfos');
-        exit;
+    $data = [
+      'nom' => $_POST['nom'] ?? null,
+      'prenom' => $_POST['prenom'] ?? null,
+      'email' => $_POST['email'] ?? null,
+      'telephone' => $_POST['telephone'] ?? null,
+      'ville' => $_POST['ville'] ?? null,
+      'code_postal' => $_POST['code_postal'] ?? null,
+      'adresse' => $_POST['adresse'] ?? null,
+    ];
+    try{
+      $data = $this->nettoyerDonnees($data);
+      if($data['email'])$this->verifEmail($data['email']);
+      $data['id'] = $_SESSION['user_id'];
+      $this->userService->modifieInfo($data);
+      $_SESSION['succes'] = 'Information personnel modifier !';
+      header('location: /mesInfos');
+      exit;
 
-       }catch(Exception $e){
-        $message = $e->getMessage();
-        $_SESSION['erreur'] = $message;
-        header('location: /mesInfos');
-        exit;
-      }
+    }catch(Exception $e){
+      $message = $e->getMessage();
+      $_SESSION['erreur'] = $message;
+      header('location: /mesInfos');
+      exit;
+    }
   }
 
   public function modifierMdp(){
@@ -294,7 +286,7 @@ class UserController extends Controller
         exit;
       }
     }else{
-      $this->render('page/modificationMdp');
+      $this->render('pages/auth/modificationMdp');
     }
   }
 
@@ -318,12 +310,9 @@ class UserController extends Controller
       }
 
     }else{
-      $this->render('page/reinitilisationMdp');
+      $this->render('pages/auth/reinitilisationMdp');
     }
   }
-    // Si role = utilisateur supprime , deconnecte, redirige acceuil
-    // Si role = utilisateur supprime , redirige acceuil
-
     public function deconnexion()
     {
       $_SESSION = [];
@@ -370,7 +359,7 @@ class UserController extends Controller
           header('location: /gestionEmployes');
           exit;
         }else{
-          $this->render('page/gestionEmploye');
+          $this->render('page/gestionEmployes');
         }
     }catch(Exception $e){
       $_SESSION['erreur'] = $e->getMessage();

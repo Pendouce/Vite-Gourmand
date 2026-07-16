@@ -22,7 +22,7 @@
   <?php
 
     //var_dump($affiche->afficheUtilisateur());
-   /** @var User $listeEmploye */;
+   /** @var UserController $listeEmploye */;
 
 
     foreach($listeEmploye as $employe){

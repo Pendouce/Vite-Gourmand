@@ -8,8 +8,7 @@
 <body>
   <h1>Detail Employe</h1>
 
-  <?php  ?>
-  <?php /** @var obj $infoEmploye */?>
+  <?php /** @var UserController $infoEmploye */?>
 
     <p>Nom : <?= $infoEmploye->getNom() ?></p>
     <p>Prénom : <?= $infoEmploye->getPrenom() ?></p>
