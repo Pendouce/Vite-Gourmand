@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Exceptions\EmailException;
 use App\Exceptions\MotDepasseException;
 use App\Service\UserService;
+use App\Service\MailService;
 use App\Repository\UserRepository;
 use Exception;
 
@@ -16,75 +17,9 @@ class UserController extends Controller
     // ici ou index.html ?
     session_start();
     $userRepository = new UserRepository();
-    $this->userService = new UserService($userRepository);
+    $mailService = new MailService();
+    $this->userService = new UserService($userRepository, $mailService);
   }
-  /* 
-  Inscription
-  recuperer les donnees du formulaire ✅
-  nettoyer les donnees ✅
-  verfie mdp 8 char min avec maj, chiffre et char spec === mdp confirm ✅
-  verifier les champs du formulaire filter_var() avec le filtre FILTER_VALIDATE_EMAIL.✅
-  appeller le service✅
-  si exception on reste sur le formulaire catch render->inscription✅
-  cree la session✅
-  envoyer a la vue✅
-  _______________________________
-  Creation d'un compte employé ✅
-  recuperer les donnees du formulaire ✅
-  nettoyer les donnees ✅
-  verifier les champs du formulaire ✅
-  appeller le service✅
-  rediriger sur inscription avec message succes✅
-  si exception on reste sur le formulaire catch render->inscriptionEmploye + message✅
-
-  _______________________________
-  Connexion ✅
-  recuperer les donnees du formulaire 
-  nettoyer les donnees 
-  verifier les champs du formulaire 
-  appeller le service
-  lancer la session
-  redirider vers acceuil✅
-    ____________________
-  limiter le nombre de tentatives 
-   Implémentez un système de verrouillage temporaire après plusieurs tentatives échouées, 
-   par exemple, après 5 tentatives, bloquez l'accès pendant 15 minutes. Cela réduit le risque d'attaques par force brute.
-    ____________________
-  si exception on reste sur le formulaire catch render->connexion + message
-
-  _______________________________
-  Afficher les infos utilisateur ✅
-  appeller le service
-  envoyer a la vue
-
-  _______________________________
-  Modifier les infos perso ✅
-  recuperer les donnees du formulaire 
-  nettoyer les donnees 
-  verifier les champs du formulaire 
-  appeller le service
-  rediriger sur infos perso avec message succes
-
-  _______________________________
-  Modifier le mdp✅
-  recuperer les donnees du formulaire 
-  nettoyer les donnees 
-  verfie mdp 8 char min avec maj, chiffre et char spec === mdp confirm 
-  appeller le service
-  rediriger sur infos perso avec message succes
-
-  _______________________________
-  Supression compte✅
-  appeller le service
-  detruire la session
-  _______________________________
-  Supression compte employé ✅
-  appeller le service
-  ———————————————————————————————
-  Deconnexion✅
-  session destroy
-
-  */
 
   public function inscription()
   {
@@ -176,7 +111,7 @@ class UserController extends Controller
 
           $_SESSION['succes'] = 'Inscription reussi !';
 
-          header('location: /inscriptionEmploye');
+          header('location: /gestionEmployes');
           //header('location: /gestionEmploye');
           exit;
         } catch (Exception $e) {
@@ -235,7 +170,7 @@ class UserController extends Controller
   public function afficheEmploye()
   {
     $listeEmploye = $this->userService->afficheEmploye();
-    $this->render('pages/admin/gestionEmploye', ['listeEmploye' => $listeEmploye]);
+    $this->render('pages/admin/gestionEmployes', ['listeEmploye' => $listeEmploye]);
   }
 
   public function modifierInfos()

@@ -8,33 +8,6 @@ use App\Exceptions\MotDepasseException;
 use App\Exceptions\UtilisateurIntrouvableException;
 use App\Repository\UserRepository;
 
-/* 
-  Inscription✅
-  verifier si l'email existe si oui erreur
-  hasher le mdp
-  attribuer le role utilisateur
-  tout est ok créer le compte
-
-  Envoyé un mail de confirmation
-  _______________________________
-  Creation d'un compte employé ✅
-  Envoyer un mail avec acces
-  _______________________________
-  Connexion ✅
-  _______________________________
-  Afficher les infos utilisateur ✅
-  _______________________________
-  Modifier les infos perso ✅
-  _______________________________
-  Modifier le mdp
-  _______________________________
-  Supression compte
-  _______________________________
-  Supression compte employé ✅
-  _______________________________
-  Methode hash mdp ✅
-*/
-
 class UserService
 {
   const ROLE_UTILISATEUR = 1;
@@ -42,10 +15,12 @@ class UserService
   const ROLE_ADMIN = 3;
 
   private UserRepository $userRepository;
+  private MailService $mailService;
 
-  public function __construct(UserRepository $userRepository)
+  public function __construct(UserRepository $userRepository, MailService $mailService)
   {
     $this->userRepository = $userRepository;
+    $this->mailService = $mailService;
   } 
 
   // Methode globale creation de compte
@@ -70,22 +45,25 @@ class UserService
   public function inscrirUtilisateur(string $email, string $mdp, array $data)
   {
     $compteUtilisateur = $this->creationCompte($email, $mdp, $data, self::ROLE_UTILISATEUR);
-    /* 
-      Envoyer le mail de confirmation
-    */
+  
+    //Envoye du mail de confirmation
+    $html = $this->mailService->recupererHtml('inscriptionMail', ['prenom' => $data['prenom']]);
+    $objet = 'Bienvenue chez vite et Gourmand';
+    $this->mailService->envoyer($data['email'], $objet, $html);
 
-      return $compteUtilisateur;
+    return $compteUtilisateur;
   }
 
   // Methode creation d'un compte employe
   public function creationCompteEmploye(string $email, array $data)
   {
     $mdp = $this->genererMdpAleatoire();
-    $mdpGenere = $mdp;
     $compteUtilisateur = $this->creationCompte($email, $mdp, $data, self::ROLE_EMPLOYE);
-    /* 
-      Envoyer le mail de avec acces
-    */
+    
+    // Envoie mail avec nouveau mdp
+    $html = $this->mailService->recupererHtml('inscriptionEmployeMail', ['prenom' => $data['prenom'], 'mdp' => $mdp]);
+    $objet = 'Identifiant Employe';
+    $this->mailService->envoyer($data['email'], $objet, $html);
 
       return $compteUtilisateur;
   }
@@ -152,31 +130,14 @@ class UserService
     $nouveauMdp = $this->hashMotDePasse($genereMdp);
     $data = $verifEmail->deshydrate();
     $data['mot_de_passe'] = $nouveauMdp;
+    $data['id'] = $verifEmail->getUserId();
     $this->modifieInfo($data);
 
-    /* 
-      Envoie mail avec nouveau mdp
-    */
+    // Envoie mail avec nouveau mdp
+    $html = $this->mailService->recupererHtml('reinitialisationMdpMail', ['prenom' => $data['prenom'], 'nouveauMdp' => $genereMdp]);
+    $objet = 'Reinitialisation de mot de passe';
+    $this->mailService->envoyer($data['email'], $objet, $html);
   }
-/*   // Reinitialiser le mdp
-  public function reinitialiseMdp(string $email, array $data)
-  {
-    $verifEmail = $this->userRepository->trouveUtilisateurByEmail($email);
-    if(!$verifEmail){
-      throw new UtilisateurIntrouvableException();
-    }
-
-    $genereMdp = $this->genererMdpAleatoire();
-    $nouveauMdp = $this->hashMotDePasse($genereMdp);
-    $data = $verifEmail->deshydrate();
-    $data['mot_de_passe'] = $nouveauMdp;
-    $data = $this->modifieInfo($data);
-
-    /* 
-      Envoie mail avec nouveau mdp
-    */
-    //return $data;
-  //} 
 
   // Modifier le mdp
   public function modifieMdp(string $ancienMdp, string $nouveauMdp,int $id, array $data)

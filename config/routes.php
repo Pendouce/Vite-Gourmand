@@ -8,7 +8,7 @@ return[
     "/mesInfos/" => ["controller" => "App\Controller\UserController", "action" => "afficheInfos"],
     "/modifierInfos/" => ["controller" => "App\Controller\UserController", "action" => "modifierInfos"],
     "/modificationMotDePasse/" => ["controller" => "App\Controller\UserController", "action" => "modifierMdp"],
-    "/motDePasseOublie/" => ["controller" => "App\Controller\UserController", "action" => "reinitilisationMdp"],
+    "/motDePasseOublie/" => ["controller" => "App\Controller\UserController", "action" => "reinitialiserMdp"],
     "/gestionEmployes/" => ["controller" => "App\Controller\UserController", "action" => "afficheEmploye"],
     "/detailEmploye/" => ["controller" => "App\Controller\UserController", "action" => "afficheInfosEmploye"],
     "/supprimerMonCmpte/" => ["controller" => "App\Controller\UserController", "action" => "supprimerCompteUtilisateur"],
