@@ -131,6 +131,17 @@ CREATE TABLE plat(
   plat_actif BOOL
 );
 
+ALTER table plat ADD COLUMN type_id INT;
+
+CREATE TABLE type_de_plat(
+  type_id INT AUTO_INCREMENT PRIMARY KEY,
+  libelle VARCHAR(255) NOT NULL
+);
+
+ALTER TABLE plat
+ADD CONSTRAINT fk_typ FOREIGN KEY (type_id) REFERENCES type_de_plat (type_id);
+
+
 CREATE TABLE menu_plat(
   menu_id INT,
   plat_id INT,
@@ -238,6 +249,8 @@ INSERT INTO allergene (libelle) VALUES
 ('Arachides'), ('Soja'), ('Lait'), ('Fruits à coque'),
 ('Céleri'), ('Moutarde'), ('Graines de sésame'), ('Sulfites'),
 ('Lupin'), ('Mollusques');
+
+INSERT INTO type_de_plat(libelle) VALUES('Entrée'), ('Plat'), ('Dessert');
 
 --INSERT INTO user(nom, prenom, email, mot_de_passe, role_id) VALUES 
 --('Garcia', 'José', 'jose@vg.fr', '$2y$12$hQxzhce4Qe7DelRyrhyOtO40hVA35QMA5VuqWbtvzM4L4DpsVSLdy', 3);
