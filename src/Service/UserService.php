@@ -114,8 +114,7 @@ class UserService
     unset($nouvellesDonnees['codePostal']);
     unset($nouvellesDonnees['user_id']);
     unset($nouvellesDonnees['roleId']);
-    $modification = $this->userRepository->modifieUtilisateur($nouvellesDonnees);
-    return $modification;
+    $this->userRepository->modifieUtilisateur($nouvellesDonnees);
   }
 
   // Reinitialiser le mdp
