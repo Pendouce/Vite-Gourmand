@@ -16,5 +16,6 @@ return[
     "/creeTypeDePlats/" => ["controller" => "App\Controller\TypeDePlatController", "action" => "creerTypeDePlat"],
     "/plats/" => ["controller" => "App\Controller\TypeDePlatController", "action" => "afficherTypeDePlat"],
     "/modifierTypeDePlat/" => ["controller" => "App\Controller\TypeDePlatController", "action" => "modifierTypeDePlat"],
+    "/supprimerTypeDePlat/" => ["controller" => "App\Controller\TypeDePlatController", "action" => "supprimerTypeDePlat"],
     
 ];

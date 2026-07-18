@@ -62,4 +62,21 @@ class TypeDePlatController extends Controller
     }
   }
 
+  public function supprimerTypeDePlat()
+  {
+    $id = $_GET['type_id'];
+    try{
+      $this->typeDePlatService->supprimeTypeDePlat($id);
+      $_SESSION['succes'] = 'Type de plat supprimé';
+      header('location: /plats');
+      exit;
+
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /plats');
+      exit;
+    }
+    //$this->render('pages/employe/supprimerTypeDePlat');
+  }
+
 }

@@ -73,5 +73,26 @@ class TypeDePlatRepository extends Repository
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
   }
+
   // Delete
+  public function supprimerTypeDePlat(int $id)
+  {
+    $sql = 'DELETE FROM type_de_plat WHERE type_id = :type_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':type_id', $id, PDO::PARAM_INT);
+
+    return $statement->execute();
+  }
+
+  public function estRattacheAUnPlatActif(int $id): bool
+  {
+    $sql = 'SELECT COUNT(*) FROM plat WHERE type_id = :type_id AND plat_actif = 1';
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':type_id', $id, PDO::PARAM_INT);
+    $statement->execute();
+
+    return $statement->fetchColumn() > 0;
+  }
+
 }

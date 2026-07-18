@@ -32,9 +32,7 @@ class TypeDePlatService
   {
     $this->existeEnBase($libelle);
 
-    if(!$this->typeDePlatRepository->trouverTypeDePlatById($id)){
-      throw new Exception('Type de plat introuvable');
-    }
+    $this->existePasEnBase($id);
 
     $data['libelle'] = $libelle;
     $data['type_id'] = $id;
@@ -42,10 +40,29 @@ class TypeDePlatService
     return $this->typeDePlatRepository->modifierTypeDePlat($data);
   }
 
+  public function supprimeTypeDePlat(int $id)
+  {
+    $this->existePasEnBase($id);
+    if($this->typeDePlatRepository->estRattacheAUnPlatActif($id)){
+      throw new Exception('Impossible de supprimer ce type de plat, ce type est encore utilisé par un plat actif');
+    }
+
+    return $this->typeDePlatRepository->supprimerTypeDePlat($id);
+  }
+
+  //////////
+
   private function existeEnBase(string $libelle)
   {
     if($this->typeDePlatRepository->trouverTypeDePlatByNom($libelle)){
       throw new LibelleExistantException($libelle);
+    }
+  }
+
+  private function existePasEnBase(int $id)
+  {
+    if(!$this->typeDePlatRepository->trouverTypeDePlatById($id)){
+      throw new Exception('Type de plat introuvable');
     }
   }
 }
