@@ -14,8 +14,7 @@ class UserController extends Controller
   private UserService $userService;
 
   public function __construct() {
-    // ici ou index.html ?
-    session_start();
+    parent::__construct();
     $userRepository = new UserRepository();
     $mailService = new MailService();
     $this->userService = new UserService($userRepository, $mailService);

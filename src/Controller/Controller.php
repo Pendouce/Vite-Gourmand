@@ -6,6 +6,9 @@ use App\Exceptions\PageInexistanteException;
 
 class Controller
 {
+  public function __construct() {
+    session_start();
+  }
   protected function render(string $path, array $params=[]): void
   {
     $filePath = APP_ROOT."/templates/$path.php";

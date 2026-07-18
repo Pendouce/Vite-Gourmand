@@ -23,7 +23,6 @@ class TypeDePlatRepository extends Repository
 
   // Read
 
-
   public function trouverTypeDePlatByNom(string $libelle)
   {
     $sql = 'SELECT * FROM type_de_plat WHERE libelle = :libelle';
