@@ -15,5 +15,6 @@ return[
     "/supprimerCompteEmploye/" => ["controller" => "App\Controller\UserController", "action" => "supprimerCompteEmploye"],
     "/creeTypeDePlats/" => ["controller" => "App\Controller\TypeDePlatController", "action" => "creerTypeDePlat"],
     "/plats/" => ["controller" => "App\Controller\TypeDePlatController", "action" => "afficherTypeDePlat"],
+    "/modifierTypeDePlat/" => ["controller" => "App\Controller\TypeDePlatController", "action" => "modifierTypeDePlat"],
     
 ];

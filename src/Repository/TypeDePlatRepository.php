@@ -48,6 +48,30 @@ class TypeDePlatRepository extends Repository
     return TypeDePlat::creerEtHydrate($data);
   }
 
+  public function trouverTypeDePlatById(int $id)
+  {
+    $sql = 'SELECT * FROM type_de_plat WHERE type_id = :type_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':type_id', $id, PDO::PARAM_INT);
+    $statement->execute();
+    
+    $data = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if ($data === false) {
+      return false;
+    }
+    return TypeDePlat::creerEtHydrate($data);
+  }
+
   // Update
+  public function modifierTypeDePlat(array $data)
+  {
+    $sql = 'UPDATE type_de_plat SET libelle = :libelle
+      WHERE type_id = :type_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
   // Delete
 }

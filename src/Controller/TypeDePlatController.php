@@ -38,7 +38,28 @@ class TypeDePlatController extends Controller
   public function afficherTypeDePlat()
   {
     $typeDePlat = $this->typeDePlatService->afficheTypeDePlat();
-    //var_dump($typeDePlat);
     $this->render('pages/employe/plat', ['typeDePlat' => $typeDePlat]);
   }
+
+  public function modifierTypeDePlat()
+  {
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $libelle = htmlspecialchars($_POST['libelle']);
+      $id = $_GET['type_id'];
+
+      try{
+        $this->typeDePlatService->modifieTypeDePlat($libelle, $id);
+        $_SESSION['succes'] = 'Type de plat modifié';
+        header('location: /plats');
+        exit;
+
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /modifierTypeDePlat');
+      }
+    }else{
+      $this->render('pages/employe/modifierTypeDePlat');
+    }
+  }
+
 }
