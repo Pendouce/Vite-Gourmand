@@ -8,6 +8,18 @@
 <body>
   <h1>Plats</h1>
 
+  <?php 
+    /** @var TypeDePlatController $typeDePlat */
+  
+    foreach($typeDePlat as $type){
+      echo '<pre>';
+      print_r($type);
+      echo '</pre>';
+    };
+  ?>
+
+  
+
   <?php if (isset($_SESSION['erreur'])): ?>
     <p class="erreur"><?= $_SESSION['erreur'] ?></p>
     <?php unset($_SESSION['erreur']); ?>

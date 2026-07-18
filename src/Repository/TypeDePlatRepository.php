@@ -22,6 +22,15 @@ class TypeDePlatRepository extends Repository
   }
 
   // Read
+  public function trouverTypeDePlat()
+  {
+    $sql = 'SELECT * FROM type_de_plat';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute();
+
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+  }
 
   public function trouverTypeDePlatByNom(string $libelle)
   {

@@ -13,6 +13,7 @@ return[
     "/detailEmploye/" => ["controller" => "App\Controller\UserController", "action" => "afficheInfosEmploye"],
     "/supprimerMonCmpte/" => ["controller" => "App\Controller\UserController", "action" => "supprimerCompteUtilisateur"],
     "/supprimerCompteEmploye/" => ["controller" => "App\Controller\UserController", "action" => "supprimerCompteEmploye"],
-    "/plats/" => ["controller" => "App\Controller\TypeDePlatController", "action" => "creerTypeDePlat"],
+    "/creeTypeDePlats/" => ["controller" => "App\Controller\TypeDePlatController", "action" => "creerTypeDePlat"],
+    "/plats/" => ["controller" => "App\Controller\TypeDePlatController", "action" => "afficherTypeDePlat"],
     
 ];

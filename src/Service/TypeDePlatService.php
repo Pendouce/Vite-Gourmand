@@ -23,4 +23,9 @@ class TypeDePlatService
 
     return $this->typeDePlatRepository->creerTypeDePlat($data);
   }
+
+  public function afficheTypeDePlat()
+  {
+    return $this->typeDePlatRepository->trouverTypeDePlat();
+  }
 }

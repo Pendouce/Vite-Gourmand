@@ -23,7 +23,6 @@ class TypeDePlatController extends Controller
       try{
         $this->typeDePlatService->creerTypeDePlat($libelle);
         $_SESSION['succes'] = "Type de plat ajouté";
-        var_dump($_SESSION);
         header('location: /plats');
         exit;
       }catch(Exception $e){
@@ -34,5 +33,12 @@ class TypeDePlatController extends Controller
     }else{
       $this->render('pages/employe/plat');
     }
+  }
+
+  public function afficherTypeDePlat()
+  {
+    $typeDePlat = $this->typeDePlatService->afficheTypeDePlat();
+    //var_dump($typeDePlat);
+    $this->render('pages/employe/plat', ['typeDePlat' => $typeDePlat]);
   }
 }
