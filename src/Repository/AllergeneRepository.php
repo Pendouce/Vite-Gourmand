@@ -7,6 +7,7 @@ use PDO;
 
 class AllergeneRepository extends Repository
 {
+  // Read
   public function trouverAllergenes()
   {
     $sql = 'SELECT * FROM allergene';

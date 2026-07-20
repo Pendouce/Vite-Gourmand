@@ -8,6 +8,10 @@ RUN pecl install mongodb && docker-php-ext-enable mongodb
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+RUN echo "upload_max_filesize = 10M" > /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size = 10M" >> /usr/local/etc/php/conf.d/uploads.ini
+
+
 WORKDIR /var/www/html
 
 COPY docker/entrypoint.sh /entrypoint.sh

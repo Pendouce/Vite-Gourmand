@@ -3,20 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/asset/css/style.css">
+
   <title>Document</title>
 </head>
 <body>
   <h1>Plats</h1>
 
   <?php 
-    /** @var TypeDePlatController $typeDePlat */
-  
-    foreach($typeDePlat as $type){
-      echo '<pre>';
-      print_r($type);
-      echo '</pre>';
-    };
+    /** @var PlatController $plats */
   ?>
+
+<?php foreach ($plats as $plat): ?>
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <img
+      src="<?= htmlspecialchars($plat->getImagePlat()) ?>"
+      alt="<?= htmlspecialchars($plat->getTitre()) ?>"
+      class="w-70 h-48 object-cover"
+    >
+    <div class="p-4">
+      <h3 class="text-lg font-bold"><?= htmlspecialchars($plat->getLibelle()) ?></h3>
+      <h3 class="text-lg font-semibold"><?= htmlspecialchars($plat->getTitre()) ?></h3>
+      <p class="text-gray-600 text-sm"><?= htmlspecialchars($plat->getDescriptionPlat()) ?></p>
+      <p class="text-gray-800 font-medium mt-2"><?= htmlspecialchars($plat->getPrixPersonne()) ?> €</p>
+      <p class="text-sm mt-1">
+        Stock : <?= htmlspecialchars($plat->getStockPlat()) ?>
+        <?php if (!$plat->isPlatActif()): ?>
+          <span class="text-red-500 font-semibold">(Indisponible)</span>
+        <?php endif; ?>
+      </p>
+    </div>
+  </div>
+<?php endforeach; ?>
+
+
 
   
 

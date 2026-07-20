@@ -126,12 +126,18 @@ ADD CONSTRAINT fk_mn Foreign Key (menu_id) REFERENCES menu (menu_id);
 CREATE TABLE plat(
   plat_id INT AUTO_INCREMENT PRIMARY KEY,
   titre VARCHAR(255) NOT NULL,
+  image_plat VARCHAR(255),
+  description_plat TEXT,
   prix_personne DOUBLE NOT NULL,
   stock_plat INT NOT NULL,
-  plat_actif BOOL
+  plat_actif BOOL,
+  type_id INT
 );
 
 ALTER table plat ADD COLUMN type_id INT;
+ALTER table plat ADD COLUMN image_plat VARCHAR(255);
+ALTER table plat ADD COLUMN description_plat VARCHAR(255);
+ALTER table plat DELETE COLUMN description_plat VARCHAR(255);
 
 CREATE TABLE type_de_plat(
   type_id INT AUTO_INCREMENT PRIMARY KEY,

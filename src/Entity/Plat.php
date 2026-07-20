@@ -2,13 +2,17 @@
 
 namespace App\Entity;
 
-class Plat
+class Plat extends Entity
 {
   protected ?int $platId = null;
   protected ?string $titre = null;
+  protected ?string $imagePlat = null;
+  protected ?string $descriptionPlat = null;
   protected ?float $prixPersonne = null;
-  protected ?int $stockPlat;
+  protected ?int $stockPlat = null;
+  protected ?int $typeId = null;
   protected ?bool $platActif = null;
+  protected ?string $libelle = null;
 
   /**
    * Get the value of platId
@@ -42,6 +46,42 @@ class Plat
   public function setTitre(?string $titre): self
   {
     $this->titre = $titre;
+
+    return $this;
+  }
+
+    /**
+   * Get the value of imagePlat
+   */
+  public function getImagePlat(): ?string
+  {
+    return $this->imagePlat;
+  }
+
+  /**
+   * Set the value of imagePlat
+   */
+  public function setImagePlat(?string $imagePlat): self
+  {
+    $this->imagePlat = $imagePlat;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of descriptionPlat
+   */
+  public function getDescriptionPlat(): ?string
+  {
+    return $this->descriptionPlat;
+  }
+
+  /**
+   * Set the value of descriptionPlat
+   */
+  public function setDescriptionPlat(?string $descriptionPlat): self
+  {
+    $this->descriptionPlat = $descriptionPlat;
 
     return $this;
   }
@@ -82,6 +122,24 @@ class Plat
     return $this;
   }
 
+    /**
+   * Get the value of typeId
+   */
+  public function getTypeId(): ?int
+  {
+    return $this->typeId;
+  }
+
+  /**
+   * Set the value of typeId
+   */
+  public function setTypeId(?int $typeId): self
+  {
+    $this->typeId = $typeId;
+
+    return $this;
+  }
+
   /**
    * Get the value of platActif
    */
@@ -96,6 +154,25 @@ class Plat
   public function setPlatActif(?bool $platActif): self
   {
     $this->platActif = $platActif;
+
+    return $this;
+  }
+
+
+  /**
+   * Get the value of libelle
+   */
+  public function getLibelle(): ?string
+  {
+    return $this->libelle;
+  }
+
+  /**
+   * Set the value of libelle
+   */
+  public function setLibelle(?string $libelle): self
+  {
+    $this->libelle = $libelle;
 
     return $this;
   }
