@@ -12,7 +12,9 @@ class Plat extends Entity
   protected ?int $stockPlat = null;
   protected ?int $typeId = null;
   protected ?bool $platActif = null;
+  
   protected ?string $libelle = null;
+  protected array $allergenes = [];
 
   /**
    * Get the value of platId
@@ -173,6 +175,24 @@ class Plat extends Entity
   public function setLibelle(?string $libelle): self
   {
     $this->libelle = $libelle;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of allergene
+   */
+  public function getAllergenes(): array
+  {
+    return $this->allergenes;
+  }
+
+  /**
+   * Set the value of allergene
+   */
+  public function setAllergenes(array $allergenes): self
+  {
+    $this->allergenes = $allergenes;
 
     return $this;
   }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\PlatRepository;
+use App\Repository\AllergeneRepository;
 use App\Service\PlatService;
 use Exception;
 
@@ -13,7 +14,8 @@ class PlatController extends Controller
   public function __construct() {
     parent::__construct();
     $platRepository = new PlatRepository();
-    $this->platService = new PlatService($platRepository);
+    $allergeneRepository = new AllergeneRepository();
+    $this->platService = new PlatService($platRepository, $allergeneRepository);
   }
 
   public function creerPlat()
@@ -33,10 +35,14 @@ class PlatController extends Controller
         'plat_actif' => $_POST['plat_actif'],
         'type_id' => $_POST['type_id'],
       ];
+      $allergeneId = $_POST['allergene'];
       $this->nettoyerDonnees($data);
 
+
       try{
-        $this->platService->creerPlat($data);
+        $platCreer = $this->platService->creerPlat($data);
+        $platId = $platCreer->getPlatId();
+        $this->platService->ajouterAllergeneAuplat($platId, $allergeneId);
         $_SESSION['succes'] = "Plat ajouté";
         header('location: /plats');
         exit;

@@ -7,6 +7,7 @@ use PDO;
 
 class PlatRepository extends Repository
 {
+  // Create
   public function creerPlat(array $data)
   {
     $sql = 'INSERT INTO plat (titre, image_plat, description_plat, prix_personne, stock_plat, type_id, plat_actif) VALUES(:titre, :image_plat, :description_plat, :prix_personne, :stock_plat, :type_id, :plat_actif)';
@@ -28,13 +29,11 @@ class PlatRepository extends Repository
     $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
     $statement->bindValue(':allergene_id', $allergeneId, PDO::PARAM_INT);
     $statement->execute();
-
-    $data = $statement->fetch(PDO::FETCH_ASSOC);
-
-    if ($data === false) {
-        return false;
-    }
   }
+
+  // Read
+
+
 
   public function trouverPlatByNom(string $titre)
   {
@@ -47,7 +46,7 @@ class PlatRepository extends Repository
     return $statement->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function afficherPlat()
+  public function trouverPlat()
   {
     $sql = 'SELECT * FROM plat
     INNER JOIN type_de_plat ON plat.type_id = type_de_plat.type_id';
