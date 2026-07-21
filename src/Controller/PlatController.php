@@ -22,19 +22,19 @@ class PlatController extends Controller
   {
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-      $nomTmpImage = $_FILES['image_plat']['tmp_name'];
-      $image = "/upload/plat/".$_FILES['image_plat']['name'];
-      move_uploaded_file($nomTmpImage, APP_ROOT."/public/".$image);
+      
 
       $data = [
         'titre' => $_POST['titre'],
-        'image_plat' => $image,
         'description_plat' => $_POST['description_plat'],
         'prix_personne' => $_POST['prix_personne'],
         'stock_plat' => $_POST['stock_plat'],
         'plat_actif' => $_POST['plat_actif'],
         'type_id' => $_POST['type_id'],
       ];
+      if (key_exists('image_plat', $_FILES) && $_FILES['image_plat']['error'] === UPLOAD_ERR_OK) {
+        $data['image_plat'] = $this->uploadImage($_FILES['image_plat']);
+      }
       $allergeneId = $_POST['allergene'];
       $this->nettoyerDonnees($data);
 
@@ -112,6 +112,23 @@ class PlatController extends Controller
 
     }else{
       $this->render('pages/employe/modifierPlat');
+    }
+  }
+
+  public function modifierStatusPlat()
+  {
+    $status = (int) $_POST['plat_actif'];
+    $platId = $_GET['id'];
+
+    try{
+      $this->platService->modifierStatusPlat($platId, $status);
+      $_SESSION['succes'] = "Status modifié";
+      header('location: /detailPlat?id='.$platId);
+      exit;
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /detailPlat?='.$platId);
+      exit;
     }
   }
 

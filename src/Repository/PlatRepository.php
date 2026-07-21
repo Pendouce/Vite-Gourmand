@@ -104,6 +104,16 @@ class PlatRepository extends Repository
     $statement->execute($data);
   }
 
+  public function modifierStatusPlat(int $platId, int $status)
+  {
+    $sql = 'UPDATE plat SET plat_actif = :plat_actif WHERE plat_id = :plat_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':plat_actif', $status, PDO::PARAM_BOOL);
+    $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
+    $statement->execute();
+  }
+
   // Delete
 
   public function supprimerPlat(int $platId)
