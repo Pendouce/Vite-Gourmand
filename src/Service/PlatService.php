@@ -38,13 +38,28 @@ class PlatService
     // Je recupere tous les plats
     $plats = $this->platRepository->trouverPlat();
 
-    // Je boucle pour mettre dans ma propriete allergene de l'entity plats les allergenes liés a leurr plats
-    foreach($plats as $plat){
-      $platId = $plat->getPlatId();
-       $allergene = $this->allergeneRepository->trouverAllergenesDuPlat($platId);
-       $plat->setAllergenes($allergene);
-    }
-    // Je retourne plat qui contient maintenant les allergenes
-    return $plats;
+    // Je retourne plat qui contient maintenant ses allergenes
+     return $this->ajouterAllergenes($plats);
   }
+
+  public function afficherPlatsParType(int $typeId)
+  {
+    $plats = $this->platRepository->trouverPlatParType($typeId);
+
+    return $this->ajouterAllergenes($plats);
+  }
+
+  private function ajouterAllergenes(array $plats)
+  {
+        // Je boucle pour mettre dans ma propriete allergene de l'entity plats les allergenes liés a leurr plats
+      foreach($plats as $plat){
+        $platId = $plat->getPlatId();
+        $allergene = $this->allergeneRepository->trouverAllergenesDuPlat($platId);
+        $plat->setAllergenes($allergene);
+
+      return $plats;
+    }
+  }
+
+
 }
