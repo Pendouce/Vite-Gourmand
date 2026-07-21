@@ -21,5 +21,6 @@ return[
     "/plats/" => ["controller" => "App\Controller\PlatController", "action" => "afficherPlat"],
     "/detailPlat/" => ["controller" => "App\Controller\PlatController", "action" => "afficherDetailPlat"],
     "/modifierPlat/" => ["controller" => "App\Controller\PlatController", "action" => "modifierPlat"],
+    "/supprimerPlat/" => ["controller" => "App\Controller\PlatController", "action" => "supprimerPlat"],
     
 ];

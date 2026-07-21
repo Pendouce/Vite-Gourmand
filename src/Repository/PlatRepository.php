@@ -103,4 +103,16 @@ class PlatRepository extends Repository
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
   }
+
+  // Delete
+
+  public function supprimerPlat(int $platId)
+  {
+    $sql = 'DELETE FROM plat WHERE plat_id = :plat_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
+
+    return $statement->execute();
+  }
 }

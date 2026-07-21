@@ -26,6 +26,7 @@
       <h3 class="text-lg font-semibold"><?= htmlspecialchars($plat->getTitre()) ?></h3>
       <p class="text-gray-600 text-sm"><?= htmlspecialchars($plat->getDescriptionPlat()) ?></p>
       <p class="text-gray-800 font-medium mt-2"><?= htmlspecialchars($plat->getPrixPersonne()) ?> €</p>
+      <p class="text-gray-800 font-medium mt-2">Id :<?= htmlspecialchars($plat->getPlatId()) ?></p>
       <?php foreach ($plat->getAllergenes() as $allergene): ?>
   <p class="text-gray-800 font-medium mt-2"><?= htmlspecialchars($allergene->getLibelle()) ?></p>
 <?php endforeach; ?>

@@ -96,8 +96,7 @@ class PlatController extends Controller
       $allergeneId = $_POST['allergene'];
       $data = $this->nettoyerDonnees($data);
       try{
-        //$platId= $_GET['id'];
-        $platId= $_GET['id'];
+        $platId = $_GET['id'];
 
         $this->platService->modifierPlat($platId, $data);
         $this->platService->modifierAllergenesDuPlat($platId, $allergeneId);
@@ -113,6 +112,21 @@ class PlatController extends Controller
 
     }else{
       $this->render('pages/employe/modifierPlat');
+    }
+  }
+
+  public function supprimerPlat()
+  {
+    $platId = $_GET['id'];
+    try{
+      $this->platService->supprimerPlat($platId);
+      $_SESSION['succes'] = "Le plat a bien ete supprimé";
+      header('location: /plats');
+      exit;
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /plats');
+      exit;
     }
   }
 

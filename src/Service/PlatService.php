@@ -38,6 +38,8 @@ class PlatService
     // Je recupere tous les plats
     $plats = $this->platRepository->trouverPlat();
 
+    $this->ajouterAllergenes($plats);
+
     // Je retourne plat qui contient maintenant ses allergenes
      return $this->ajouterAllergenes($plats);
   }
@@ -46,13 +48,14 @@ class PlatService
   {
     // Je recupere tous les plats
     $plat = $this->platRepository->trouverPlatParId($platId);
-    $allergenes = $this->allergeneRepository->trouverAllergenesDuPlat($platId);
-    $plat->setAllergenes($allergenes);
-
+    
     if ($plat === false) {
       return false;
     }
-    
+
+    $allergenes = $this->allergeneRepository->trouverAllergenesDuPlat($platId);
+    $plat->setAllergenes($allergenes);
+
      return $plat;
   }
 
@@ -95,6 +98,12 @@ class PlatService
     $this->platRepository->modifierPlat($data);
   }
 
+  public function supprimerPlat(int $platId)
+  {
+    $this->allergeneRepository->supprimerPlat($platId);
+    $this->platRepository->supprimerPlat($platId);
+  }
+
   private function verifNom(string $nom)
   {
     if($this->platRepository->trouverPlatByNom($nom)){
@@ -104,14 +113,13 @@ class PlatService
 
   private function ajouterAllergenes(array $plats)
   {
-        // Je boucle pour mettre dans ma propriete allergene de l'entity plats les allergenes liés a leurr plats
+        // Je boucle pour mettre dans la propriete allergene de l'entity plats les allergenes liés a leurs plats
       foreach($plats as $plat){
         $platId = $plat->getPlatId();
         $allergene = $this->allergeneRepository->trouverAllergenesDuPlat($platId);
         $plat->setAllergenes($allergene);
-
+      }
       return $plats;
-    }
   }
 
 

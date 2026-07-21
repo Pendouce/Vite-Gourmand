@@ -71,4 +71,16 @@ class AllergeneRepository extends Repository
     $statement->bindValue(':allergene_id', $allergeneId, PDO::PARAM_INT);
     $statement->execute();
   }
+
+  // Delete
+
+  public function supprimerPlat(int $platId)
+  {
+    $sql = 'DELETE FROM plat_allergene WHERE plat_id = :plat_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
+
+    return $statement->execute();
+  }
 }
