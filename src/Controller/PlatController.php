@@ -60,7 +60,7 @@ class PlatController extends Controller
 
   public function afficherPlat()
   {
-    $plats = $this->platService->afficherPlat();
+    $plats = $this->platService->afficherPlats();
     $this->render('pages/employe/plat', ['plats' => $plats]);
   }
 }

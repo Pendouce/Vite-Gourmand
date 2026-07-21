@@ -4,24 +4,24 @@ namespace App\Entity;
 
 class Allergene extends Entity
 {
-  protected ?int $allergene_id = null;
+  protected ?int $allergeneId = null;
   protected ?string $libelle = null;
 
 
   /**
-   * Get the value of allergene_id
+   * Get the value of allergeneId
    */
   public function getAllergeneId(): ?int
   {
-    return $this->allergene_id;
+    return $this->allergeneId;
   }
 
   /**
-   * Set the value of allergene_id
+   * Set the value of allergeneId
    */
-  public function setAllergeneId(?int $allergene_id): self
+  public function setAllergeneId(?int $allergeneId): self
   {
-    $this->allergene_id = $allergene_id;
+    $this->allergeneId = $allergeneId;
 
     return $this;
   }

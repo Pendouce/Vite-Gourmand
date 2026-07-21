@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Allergene;
 use App\Entity\Plat;
 use PDO;
 
@@ -63,4 +64,6 @@ class PlatRepository extends Repository
 
     return $tabPlat;
   }
+
+  
 }

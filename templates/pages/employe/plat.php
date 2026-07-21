@@ -26,7 +26,10 @@
       <h3 class="text-lg font-semibold"><?= htmlspecialchars($plat->getTitre()) ?></h3>
       <p class="text-gray-600 text-sm"><?= htmlspecialchars($plat->getDescriptionPlat()) ?></p>
       <p class="text-gray-800 font-medium mt-2"><?= htmlspecialchars($plat->getPrixPersonne()) ?> €</p>
-      <p class="text-gray-800 font-medium mt-2"><?//= htmlspecialchars($plat->getAllergenes()) ?> €</p>
+      <?php foreach ($plat->getAllergenes() as $allergene): ?>
+  <p class="text-gray-800 font-medium mt-2"><?= htmlspecialchars($allergene->getLibelle()) ?></p>
+<?php endforeach; ?>
+
       <p class="text-sm mt-1">
         Stock : <?= htmlspecialchars($plat->getStockPlat()) ?>
         <?php if (!$plat->isPlatActif()): ?>
