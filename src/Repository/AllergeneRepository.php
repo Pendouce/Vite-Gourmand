@@ -7,6 +7,19 @@ use PDO;
 
 class AllergeneRepository extends Repository
 {
+  // Create
+
+    public function ajouterAllergeneAuxPlat(int $platId, int $allergeneId)
+  {
+    $sql = 'INSERT INTO plat_allergene (plat_id, allergene_id) VALUES(:plat_id, :allergene_id)';
+
+    $statement = $this->pdo->prepare($sql);
+
+    $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
+    $statement->bindValue(':allergene_id', $allergeneId, PDO::PARAM_INT);
+    $statement->execute();
+  }
+  
   // Read
   public function trouverAllergenes()
   {
@@ -43,5 +56,19 @@ class AllergeneRepository extends Repository
     }
 
     return $tabAllergenes;
+  }
+
+  // Update
+
+  public function supprimerAllergeneDuPlat(int $platId, int $allergeneId)
+  {
+    $sql = 'DELETE FROM plat_allergene
+    WHERE plat_id = :plat_id
+    AND allergene_id = :allergene_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
+    $statement->bindValue(':allergene_id', $allergeneId, PDO::PARAM_INT);
+    $statement->execute();
   }
 }

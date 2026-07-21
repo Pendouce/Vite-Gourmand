@@ -69,4 +69,58 @@ class PlatController extends Controller
     $plats = $this->platService->afficherPlats();
     $this->render('pages/employe/plat', ['plats' => $plats]);
   }
+
+  public function afficherDetailPlat()
+  {
+    $platId = $_GET['id'];
+    //var_dump($platId);
+    $plat = $this->platService->afficherParId($platId);
+    $this->render('pages/employe/detailPlat', ['plat' => $plat]);
+  }
+
+  public function modifierPlat()
+  {
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $data = [
+        'titre' => $_POST['titre'] ?? null,
+        'description_plat' => $_POST['description_plat'] ?? null,
+        'prix_personne' => $_POST['prix_personne'] ?? null,
+        'stock_plat' => $_POST['stock_plat'] ?? null,
+        'type_id' => $_POST['type_id'] ?? null,
+        'plat_actif' => $_POST['plat_actif'] ?? null,
+        //'libelle' => $_POST['libelle'] ?? null,
+      ];
+      if (key_exists('image_plat', $_FILES) && $_FILES['image_plat']['error'] === UPLOAD_ERR_OK) {
+        $data['image_plat'] = $this->uploadImage($_FILES['image_plat']);
+      }
+      $allergeneId = $_POST['allergene'];
+      $data = $this->nettoyerDonnees($data);
+      try{
+        //$platId= $_GET['id'];
+        $platId= $_GET['id'];
+
+        $this->platService->modifierPlat($platId, $data);
+        $this->platService->modifierAllergenesDuPlat($platId, $allergeneId);
+
+        $_SESSION['succes'] = "Plat modifié";
+        header('location: /detailPlat?id='.$platId);
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /detailPlat?id='.$platId);
+        exit;
+      }
+
+    }else{
+      $this->render('pages/employe/modifierPlat');
+    }
+  }
+
+  private function uploadImage(array $file)
+  {
+    $nomTmpImage = $file ['tmp_name'];
+    $image = "/upload/plat/".$file['name'];
+    move_uploaded_file($nomTmpImage, APP_ROOT."/public/".$image);
+    return $image;
+  }
 }

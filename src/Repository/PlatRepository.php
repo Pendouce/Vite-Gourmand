@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\Allergene;
 use App\Entity\Plat;
 use PDO;
 
 class PlatRepository extends Repository
 {
   // Create
+
   public function creerPlat(array $data)
   {
     $sql = 'INSERT INTO plat (titre, image_plat, description_plat, prix_personne, stock_plat, type_id, plat_actif) VALUES(:titre, :image_plat, :description_plat, :prix_personne, :stock_plat, :type_id, :plat_actif)';
@@ -21,20 +21,7 @@ class PlatRepository extends Repository
     return Plat::creerEtHydrate($data);
   }
 
-  public function ajouterAllergeneAuxPlat(int $platId, int $allergeneId)
-  {
-    $sql = 'INSERT INTO plat_allergene (plat_id, allergene_id) VALUES(:plat_id, :allergene_id)';
-
-    $statement = $this->pdo->prepare($sql);
-
-    $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
-    $statement->bindValue(':allergene_id', $allergeneId, PDO::PARAM_INT);
-    $statement->execute();
-  }
-
   // Read
-
-
 
   public function trouverPlatByNom(string $titre)
   {
@@ -96,7 +83,24 @@ class PlatRepository extends Repository
     $statement->execute();
 
     $plat = $statement->fetch(PDO::FETCH_ASSOC);
+    
+    if ($plat === false) {
+      return false;
+    }
 
     return Plat::creerEtHydrate($plat);
+  }
+
+  // Update
+
+  public function modifierPlat(array $data)
+  {
+    $sql = 'UPDATE plat SET 
+    titre = :titre, image_plat = :image_plat, description_plat = :description_plat, 
+    prix_personne = :prix_personne, stock_plat = :stock_plat, type_id = :type_id, plat_actif = :plat_actif
+    WHERE plat_id = :plat_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
   }
 }
