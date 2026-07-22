@@ -17,4 +17,3 @@ $dotenv->load();
 
 $router = new Router();
 $router->GererRequette($_SERVER['REQUEST_URI']);
-

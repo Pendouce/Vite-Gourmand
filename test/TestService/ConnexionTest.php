@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Test\TestUserServiceTest;
+namespace App\Test\TestService;
 
 use App\Exceptions\EmailMdpException;
 use App\Repository\UserRepository;
