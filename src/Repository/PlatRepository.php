@@ -21,6 +21,16 @@ class PlatRepository extends Repository
     return Plat::creerEtHydrate($data);
   }
 
+    public function ajouterPlatAuMenu(int $menuId, int $platId)
+  {
+    $sql = 'INSERT INTO menu_plat (menu_id, plat_id) VALUES (:menu_id, :plat_id)';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
+    $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
+    $statement->execute();
+  }
+
   // Read
 
   public function trouverPlatByNom(string $titre)
@@ -89,6 +99,27 @@ class PlatRepository extends Repository
     }
 
     return Plat::creerEtHydrate($plat);
+  }
+
+   public function trouverPlatDuMenu(int $menuId)
+  {
+    //$sql = 'SELECT menu_plat.menu_id, menu_plat.plat_id FROM menu_plat 
+    $sql = 'SELECT plat.* FROM menu_plat 
+    INNER JOIN plat ON menu_plat.plat_id = plat.plat_id
+    WHERE menu_id = :menu_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabPlat = [];
+    
+    foreach($data as $plat)
+      {
+        $tabPlat[] = Plat::creerEtHydrate($plat);
+      }
+    return $tabPlat;
   }
 
   // Update

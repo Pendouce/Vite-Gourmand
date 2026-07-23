@@ -6,15 +6,18 @@ class Menu extends Entity
 {
   protected ?int $menuId = null;
   protected ?string $titre = null;
-  protected ?float $prix_personne = null;
+  protected ?float $prixPersonne = null;
   protected ?int $nombrePersonneMin = null;
   protected ?string $conditions = null;
-  protected ?int $stocktDispo = null;
+  protected ?int $stockDispo = null;
   protected ?bool $menuActif = null;
 
+  protected array $plat = [];
   protected array $evenement = [];
   protected array $theme = [];
   protected array $regime = [];
+  protected ?string $imageMenu = null;
+
 
   /**
    * Get the value of menuId
@@ -53,19 +56,19 @@ class Menu extends Entity
   }
 
   /**
-   * Get the value of prix_personne
+   * Get the value of prixPersonne
    */
   public function getPrixPersonne(): ?float
   {
-    return $this->prix_personne;
+    return $this->prixPersonne;
   }
 
   /**
-   * Set the value of prix_personne
+   * Set the value of prixPersonne
    */
-  public function setPrixPersonne(?float $prix_personne): self
+  public function setPrixPersonne(?float $prixPersonne): self
   {
-    $this->prix_personne = $prix_personne;
+    $this->prixPersonne = $prixPersonne;
 
     return $this;
   }
@@ -107,19 +110,19 @@ class Menu extends Entity
   }
 
   /**
-   * Get the value of stocktDispo
+   * Get the value of stockDispo
    */
-  public function getStocktDispo(): ?int
+  public function getStockDispo(): ?int
   {
-    return $this->stocktDispo;
+    return $this->stockDispo;
   }
 
   /**
-   * Set the value of stocktDispo
+   * Set the value of stockDispo
    */
-  public function setStocktDispo(?int $stocktDispo): self
+  public function setStockDispo(?int $stockDispo): self
   {
-    $this->stocktDispo = $stocktDispo;
+    $this->stockDispo = $stockDispo;
 
     return $this;
   }
@@ -192,6 +195,42 @@ class Menu extends Entity
   public function setRegime(array $regime): self
   {
     $this->regime = $regime;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of plat
+   */
+  public function getPlat(): array
+  {
+    return $this->plat;
+  }
+
+  /**
+   * Set the value of plat
+   */
+  public function setPlat(array $plat): self
+  {
+    $this->plat = $plat;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of imageMenu
+   */
+  public function getImageMenu(): ?string
+  {
+    return $this->imageMenu;
+  }
+
+  /**
+   * Set the value of imageMenu
+   */
+  public function setImageMenu(?string $imageMenu): self
+  {
+    $this->imageMenu = $imageMenu;
 
     return $this;
   }

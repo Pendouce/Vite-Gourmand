@@ -116,7 +116,7 @@ class PlatService
     }
   }
 
-  private function ajouterAllergenes(array $plats)
+  public function ajouterAllergenes(array $plats)
   {
         // Je boucle pour mettre dans la propriete allergene de l'entity plats les allergenes liés a leurs plats
       foreach($plats as $plat){

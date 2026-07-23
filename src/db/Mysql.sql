@@ -108,9 +108,11 @@ CREATE TABLE menu(
   prix_personne DOUBLE NOT NULL,
   nombre_personne_min INT NOT NULL,
   conditions TEXT,
-  stockt_dispo INT NOT NULL,
+  stock_dispo INT NOT NULL,
   menu_actif BOOL
 );
+
+ALTER TABLE menu CHANGE stockt_dispo stock_dispo INT;
 
 CREATE TABLE commande_menu(
   nb_personne_menu INT NOT NULL,
@@ -260,3 +262,5 @@ INSERT INTO type_de_plat(libelle) VALUES('Entrée'), ('Plat'), ('Dessert');
 
 --INSERT INTO user(nom, prenom, email, mot_de_passe, role_id) VALUES 
 --('Garcia', 'José', 'jose@vg.fr', '$2y$12$hQxzhce4Qe7DelRyrhyOtO40hVA35QMA5VuqWbtvzM4L4DpsVSLdy', 3);
+
+--DELETE FROM menu WHERE menu_id IN (1,2,3,4,5)
