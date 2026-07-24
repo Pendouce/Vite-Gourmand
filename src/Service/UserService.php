@@ -106,14 +106,9 @@ class UserService
     // Parcourt chaques valeur du tableau et ne garde que celles qui ne sont pas null
     $data = array_filter($data, fn($value) => $value !== null);
     $nouvellesDonnees = array_merge($donneesActuel, $data);
-    // Je renomme par le nom attendu 
-    $nouvellesDonnees['mot_de_passe'] = $nouvellesDonnees['motDePasse'];
-    $nouvellesDonnees['code_postal'] = $nouvellesDonnees['codePostal'];
-    // Supression des anciennes cles nonutilisées par la requette
-    unset($nouvellesDonnees['motDePasse']);
-    unset($nouvellesDonnees['codePostal']);
+
     unset($nouvellesDonnees['user_id']);
-    unset($nouvellesDonnees['roleId']);
+    unset($nouvellesDonnees['role_id']);
     $this->userRepository->modifieUtilisateur($nouvellesDonnees);
   }
 
