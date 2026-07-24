@@ -77,4 +77,11 @@ class MenuController extends Controller
     $menus = $this->menuService->afficherMenus();
     $this->render('pages/employe/menu', ['menus' => $menus]);
   }
+
+  public function afficherDetailMenu()
+  {
+    $menuId = $_GET['id'];
+    $menu = $this->menuService->afficherMenuParId($menuId);
+    $this->render('pages/employe/detailMenu', ['menu' => $menu]);
+  }
 }

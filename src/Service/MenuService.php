@@ -8,6 +8,8 @@ use App\Repository\MenuRepository;
 use App\Repository\PlatRepository;
 use App\Repository\RegimeRepository;
 use App\Repository\ThemeRepository;
+use App\Entity\Menu;
+
 
 class MenuService
 {
@@ -68,7 +70,7 @@ class MenuService
     $menu = $this->menuRepository->trouverMenu();
     $this->ajouterPlat($menu);
     $this->ajouterAllergene($menu);
-    //var_dump($menu[0]->getPlat());
+
     $this->ajouterRegime($menu);
     $this->ajouterTheme($menu);
     $this->ajouterEvenement($menu);
@@ -82,9 +84,7 @@ class MenuService
   {
     foreach($menus as $menu){
       $menuId = $menu->getMenuId();
-      //var_dump($menuId);
       $plat = $this->platRepository->trouverPlatDuMenu($menuId);
-      //var_dump($plat);
       $menu->setPlat($plat);
     }
     return $menus;
@@ -93,11 +93,11 @@ class MenuService
   private function ajouterAllergene(array $menus)
   {
     foreach($menus as $menu){
-      $plats = $menu->getplat();
-      //var_dump($menuId);
+      $plats = $menu->getPlat();
       $plats = $this->platService->ajouterAllergenes($plats);
-      //var_dump($plat);
+      $allergene = $this->fusionnerAllergenes($plats);
       $menu->setPlat($plats);
+      $menu->setAllergene($allergene);
     }
     return $menus;
   }
@@ -135,6 +135,60 @@ class MenuService
   private function ajouterStock(array $menus)
 {
   foreach($menus as $menu){
+    $this->trouverleStockMinDesPlats($menu);
+  }
+  
+  return $menus;
+}
+
+private function ajouterImage(array $menus)
+{
+  foreach($menus as $menu){
+   $this->trouverImagePlatPrincipale($menu);
+  }
+
+  return $menus;
+}
+
+public function afficherMenuParId(int $menuId)
+{
+  $menu = $this->menuRepository->trouverMenuParId($menuId);
+
+  if ($menu == false) {
+    return false;
+  }
+
+  $plat = $this->platRepository->trouverPlatDuMenu($menuId);
+  $plat = $this->platService->ajouterAllergenes($plat);
+  $allergene = $this->fusionnerAllergenes($plat);
+  $menu->setPlat($plat);
+  $menu->setAllergene($allergene);
+  $evenement = $this->evenementRepository->trouverEvenementDuMenu($menuId);
+  $menu->setEvenement($evenement);
+  $regime = $this->regimeRepository->trouverRegimeDuMenu($menuId);
+  $menu->setRegime($regime);
+  $theme = $this->themeRepository->trouverThemeDuMenu($menuId);
+  $menu->setTheme($theme);
+  $this->trouverImagePlatPrincipale($menu);
+  $this->trouverleStockMinDesPlats($menu);
+
+  return $menu;
+}
+
+private function trouverImagePlatPrincipale(Menu $menu)
+{
+  $plats = $menu->getPlat();
+
+  foreach($plats as $plat){
+      if($plat->getTypeId() === 2){
+        $menu->setImageMenu($plat->getImagePlat());
+        break;
+      }
+    }
+}
+
+private function trouverleStockMinDesPlats(Menu $menu)
+{
     $plats = $menu->getPlat();
     
     // Pour chaques plats j'appelle le stock dispo
@@ -146,26 +200,24 @@ class MenuService
 
      // Je stocke le resultat dans le menu
     $menu->setStockDispo($stockMenu);
-  }
-  return $menus;
+  
+  return $menu;
 }
 
-private function ajouterImage(array $menus)
+
+  // Je transforme allergene en tableau associatif
+  // allergene = [$allergene => getAllergeneId()]
+private function fusionnerAllergenes(array $plats)
 {
-  foreach($menus as $menu){
-    $plats = $menu->getPlat();
-    
-    foreach($plats as $plat){
-      if($plat->getTypeId() === 2){
-        $menu->setImageMenu($plat->getImagePlat());
-        break;
-      }
+  $tousLesAllergenes = [];
+  foreach ($plats as $plat) {
+    foreach ($plat->getAllergenes() as $allergene) {
+      $tousLesAllergenes[$allergene->getAllergeneId()] = $allergene;
     }
   }
-  return $menus;
+
+  return $tousLesAllergenes;
 }
-
-
 
   private function menuExistant(string $menu)
   {

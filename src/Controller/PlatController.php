@@ -94,6 +94,7 @@ class PlatController extends Controller
         $data['image_plat'] = $this->uploadImage($_FILES['image_plat']);
       }
       $allergeneId = $_POST['allergene'];
+      //var_dump($allergeneId);
       $data = $this->nettoyerDonnees($data);
       try{
         $platId = $_GET['id'];

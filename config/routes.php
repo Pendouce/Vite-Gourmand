@@ -25,5 +25,6 @@ return[
     "/modifierStatusPlat/" => ["controller" => "App\Controller\PlatController", "action" => "modifierStatusPlat"],
     "/creerMenu/" => ["controller" => "App\Controller\MenuController", "action" => "creerMenu"],
     "/menu/" => ["controller" => "App\Controller\MenuController", "action" => "afficherMenus"],
+    "/detailMenu/" => ["controller" => "App\Controller\MenuController", "action" => "afficherDetailMenu"],
     
 ];

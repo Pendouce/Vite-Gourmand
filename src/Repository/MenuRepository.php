@@ -7,6 +7,8 @@ use PDO;
 
 class MenuRepository extends Repository
 {
+  // Create
+
   public function creerMenu(array $data)
   {
     $sql = 'INSERT INTO menu (titre, prix_personne, nombre_personne_min, conditions, stock_dispo, menu_actif)
@@ -18,6 +20,8 @@ class MenuRepository extends Repository
     $data['menu_id'] = $this->pdo->lastInsertId();
     return Menu::creerEtHydrate($data);
   }
+
+  // Read
 
   public function trouverMenuParNom(string $titre)
   {
@@ -43,5 +47,22 @@ class MenuRepository extends Repository
       $tabMenus[] = Menu::creerEtHydrate($menu);
     }
     return $tabMenus;
+  }
+
+  public function trouverMenuParId(int $menuId)
+  {
+    $sql = 'SELECT * FROM menu WHERE menu_id = :menu_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
+    $statement->execute();
+
+    $menu = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if ($menu === false) {
+      return false;
+    }
+
+    return Menu::creerEtHydrate($menu);
   }
 }

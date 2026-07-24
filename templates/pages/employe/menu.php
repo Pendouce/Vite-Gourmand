@@ -19,7 +19,7 @@
         <p>Minimum <?= $menu->getNombrePersonneMin() ?> personnes</p>
         <p><?= $menu->getConditions() ?></p>
 
-<img src="<?= $menu->getImageMenu() ?>" alt="<?= $menu->getTitre() ?>" style="width: 300px; height: auto; object-fit: cover;">
+        <img src="<?= $menu->getImageMenu() ?>" alt="<?= $menu->getTitre() ?>" style="width: 300px; height: auto; object-fit: cover;">
 
         <ul>
             <?php foreach ($menu->getPlat() as $plat): ?>
@@ -28,9 +28,9 @@
         </ul>
 
         <p>Allergènes :
-        <?php foreach ($plat->getAllergenes() as $allergene): ?>
-            <?= $allergene->getLibelle() ?>
-        <?php endforeach; ?>
+            <?php foreach($menu->getAllergene() as $allergene): ?>
+                <?= htmlspecialchars($allergene->getLibelle()) ?>
+            <?php endforeach; ?>>
 
 
         <p>Régime :
@@ -55,7 +55,7 @@
 
         <p>Actif : <?= $menu->isMenuActif() ? 'Oui' : 'Non' ?></p>
 
-        <p <?= $menu->getMenuId() ?>></p>
+        <p>Id :<?= $menu->getMenuId() ?></p>
     </div>
 <?php endforeach; ?>
 

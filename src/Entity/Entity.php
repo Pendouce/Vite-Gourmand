@@ -38,6 +38,15 @@ class Entity{
   // Transforme un objet en tableau associatif cle => valeur
   public function deshydrate(): array
   {
-    return get_object_vars($this);
+    $data = get_object_vars($this);
+    $dataConverties = [];
+
+    foreach($data as $key => $value){
+      // Je recherche chaques majuscules qui n'est pas en debut de chaine et ajoute un _ avant
+      // et les passe en minuscule
+      $convertionKey = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $key));
+      $dataConverties[$convertionKey] = $value;
+    }
+    return $dataConverties;
   }
 }

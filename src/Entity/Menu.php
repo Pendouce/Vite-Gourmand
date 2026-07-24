@@ -13,6 +13,7 @@ class Menu extends Entity
   protected ?bool $menuActif = null;
 
   protected array $plat = [];
+  protected array $allergene = [];
   protected array $evenement = [];
   protected array $theme = [];
   protected array $regime = [];
@@ -213,6 +214,24 @@ class Menu extends Entity
   public function setPlat(array $plat): self
   {
     $this->plat = $plat;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of allergene
+   */
+  public function getAllergene(): array
+  {
+    return $this->allergene;
+  }
+
+  /**
+   * Set the value of allergene
+   */
+  public function setAllergene(array $allergene): self
+  {
+    $this->allergene = $allergene;
 
     return $this;
   }

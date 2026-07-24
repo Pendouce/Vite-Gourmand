@@ -46,7 +46,6 @@ class PlatService
 
   public function afficherParId(int $platId)
   {
-    // Je recupere tous les plats
     $plat = $this->platRepository->trouverPlatParId($platId);
     
     if ($plat === false) {
@@ -91,11 +90,22 @@ class PlatService
 
   public function modifierPlat(int $platId, array $data)
   {
-    if(key_exists('titre', $data)){
+    if(!empty($data['titre'])){
       $this->verifNom($data['titre']);
     }
-    $data['plat_id'] = $platId;
-    $this->platRepository->modifierPlat($data);
+
+    $platActuel = $this->afficherParId($platId);
+    $donneesActuel = $platActuel->deshydrate();
+    //var_dump($donneesActuel);
+
+    $data = array_filter($data, fn($value) => $value !== null);
+    $nouvellesDonnees = array_merge($donneesActuel, $data);
+    $nouvellesDonnees['plat_id'] = $platId;
+    unset($nouvellesDonnees['allergenes']);
+    unset($nouvellesDonnees['libelle']);
+    //var_dump($nouvellesDonnees);
+
+    $this->platRepository->modifierPlat($nouvellesDonnees);
   }
 
   public function modifierStatusPlat(int $platId, int $status)
