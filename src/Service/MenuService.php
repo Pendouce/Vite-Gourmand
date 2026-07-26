@@ -68,14 +68,7 @@ class MenuService
   public function afficherMenus()
   {
     $menu = $this->menuRepository->trouverMenu();
-    $this->ajouterPlat($menu);
-    $this->ajouterAllergene($menu);
-
-    $this->ajouterRegime($menu);
-    $this->ajouterTheme($menu);
-    $this->ajouterEvenement($menu);
-    $this->ajouterStock($menu);
-    $this->ajouterImage($menu);
+    $this->ajouterElementsMenu($menu);
 
     return $menu;
   }
@@ -158,19 +151,8 @@ public function afficherMenuParId(int $menuId)
     return false;
   }
 
-  $plat = $this->platRepository->trouverPlatDuMenu($menuId);
-  $plat = $this->platService->ajouterAllergenes($plat);
-  $allergene = $this->fusionnerAllergenes($plat);
-  $menu->setPlat($plat);
-  $menu->setAllergene($allergene);
-  $evenement = $this->evenementRepository->trouverEvenementDuMenu($menuId);
-  $menu->setEvenement($evenement);
-  $regime = $this->regimeRepository->trouverRegimeDuMenu($menuId);
-  $menu->setRegime($regime);
-  $theme = $this->themeRepository->trouverThemeDuMenu($menuId);
-  $menu->setTheme($theme);
-  $this->trouverImagePlatPrincipale($menu);
-  $this->trouverleStockMinDesPlats($menu);
+  $menus = [$menu];
+  $this->ajouterElementsMenu($menus);
 
   return $menu;
 }
@@ -217,7 +199,21 @@ private function fusionnerAllergenes(array $plats)
   }
 
   return $tousLesAllergenes;
-}
+  }
+  
+  private function ajouterElementsMenu(array $menus)
+  {
+    $this->ajouterPlat($menus);
+    $this->ajouterAllergene($menus);
+
+    $this->ajouterRegime($menus);
+    $this->ajouterTheme($menus);
+    $this->ajouterEvenement($menus);
+    $this->ajouterStock($menus);
+    $this->ajouterImage($menus);
+
+    return $menus;
+  }
 
   private function menuExistant(string $menu)
   {
