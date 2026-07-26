@@ -65,4 +65,106 @@ class MenuRepository extends Repository
 
     return Menu::creerEtHydrate($menu);
   }
+
+  public function trouverMenuParEvenement(int $evenementId)
+  {
+    $sql = 'SELECT * FROM menu 
+    INNER JOIN menu_evenement ON menu_evenement.menu_id = menu.menu_id
+    INNER JOIN evenement ON menu_evenement.evenement_id = evenement.evenement_id
+    WHERE menu_evenement.evenement_id = :evenement_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':evenement_id', $evenementId, PDO::PARAM_INT);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabMenuEvenement = [];
+
+    foreach($data as $menuEvenement){
+      $tabMenuEvenement[] = Menu::creerEtHydrate($menuEvenement);
+    }
+
+    return $tabMenuEvenement;
+  }
+
+  public function trouverMenuParTheme(int $themeId)
+  {
+    $sql = 'SELECT * FROM menu
+    INNER JOIN menu_theme ON menu_theme.menu_id = menu_id
+    INNER JOIN theme ON menu_theme.theme_id = theme.theme_id
+    WHERE theme.theme_id = :theme_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':theme_id', $themeId, PDO::PARAM_INT);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabMenuTheme = [];
+
+    foreach($data as $menuTheme){
+      $tabMenuTheme[] = Menu::creerEtHydrate($menuTheme);
+    }
+
+    return $tabMenuTheme;
+  }
+
+  public function trouverMenuParRegime(int $regimeId)
+  {
+    $sql = 'SELECT * FROM menu
+    INNER JOIN menu_regime ON menu_regime.menu_id = menu_id
+    INNER JOIN regime ON menu_regime.regime_id = regime.regime_id
+    WHERE regime.regime_id = :regime_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':regime_id', $regimeId, PDO::PARAM_INT);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabMenuRegime = [];
+    foreach($data as $menuRegime){
+      $tabMenuRegime[] = Menu::creerEtHydrate($menuRegime);
+    }
+
+    return $tabMenuRegime;
+  }
+
+  public function trouverMenuParPrix(float $prixMax)
+  {
+    $sql = 'SELECT * FROM menu
+    WHERE prix_personne <= :prix_personne';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':prix_personne', $prixMax, PDO::PARAM_STR);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabPrixMenu = [];
+
+    foreach($data as $prixmenu){
+      $tabPrixMenu[] = Menu::creerEtHydrate($prixmenu);
+    }
+
+    return $tabPrixMenu;
+  }
+
+  public function trouverMenuParNbPersonneMin(int $nbPersonneMin)
+  {
+    $sql = 'SELECT * FROM menu 
+    WHERE nombre_personne_min <= :nombre_personne_min';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':nombre_personne_min', $nbPersonneMin, PDO::PARAM_INT);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabNbPersonnes = [];
+
+    foreach($data as $nbPersonnes){
+      $tabNbPersonnes[] = Menu::creerEtHydrate($nbPersonnes);
+    }
+
+    return $tabNbPersonnes;
+  }
+
+
 }
