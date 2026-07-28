@@ -54,4 +54,16 @@ class ThemeRepository extends Repository
     return $tabThemes;
   }
 
+  public function supprimerThemeDuMenu(int $menuId, int $themeId)
+  {
+    $sql = 'DELETE FROM menu_theme
+    WHERE menu_id = :menu_id
+    AND theme_id = :theme_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
+    $statement->bindValue(':theme_id', $themeId, PDO::PARAM_INT);
+    $statement->execute();
+  }
+
 }

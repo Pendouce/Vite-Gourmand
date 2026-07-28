@@ -27,5 +27,7 @@ return[
     "/menu/" => ["controller" => "App\Controller\MenuController", "action" => "afficherMenus"],
     "/detailMenu/" => ["controller" => "App\Controller\MenuController", "action" => "afficherDetailMenu"],
     "/menuFiltre/" => ["controller" => "App\Controller\MenuController", "action" => "afficherMenuFiltre"],
+    "/modifierMenu/" => ["controller" => "App\Controller\MenuController", "action" => "modifierMenu"],
+    "/modifierStatusMenu/" => ["controller" => "App\Controller\MenuController", "action" => "modifierStatusMenu"],
     
 ];

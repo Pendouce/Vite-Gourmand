@@ -145,6 +145,18 @@ class PlatRepository extends Repository
     $statement->execute();
   }
 
+  public function supprimerPlatDuMenu(int $menuId, int $platId)
+  {
+    $sql = 'DELETE FROM menu_plat
+    WHERE menu_id = :menu_id
+    AND plat_id = :plat_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
+    $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
+    $statement->execute();
+  }
+
   // Delete
 
   public function supprimerPlat(int $platId)

@@ -53,4 +53,16 @@ class EvenementRepository extends Repository
       }
     return $tabEvenements;
   }
+
+  public function supprimerEvenementDuMenu(int $menuId, int $evenementId)
+  {
+    $sql = 'DELETE FROM menu_evenement
+    WHERE menu_id = :menu_id
+    AND evenement_id = :evenement_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
+    $statement->bindValue(':evenement_id', $evenementId, PDO::PARAM_INT);
+    $statement->execute();
+  }
 }

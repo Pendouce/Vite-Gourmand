@@ -140,6 +140,97 @@ class MenuService
     return $menus;
   }
 
+  public function modifierMenu(int $menuId, array $data)
+  {
+    if(!empty($data['titre'])){
+      $this->menuExistant($data['titre']);
+    }
+
+    $ancienMenu = $this->afficherMenuParId($menuId);
+    $anciennesDonnees = $ancienMenu->deshydrate();
+
+    $data = array_filter($data, fn($value) => $value !== null);
+
+    $nouvellesDonnees = array_merge($anciennesDonnees, $data);
+    $nouvellesDonnees['menu_id'] = $menuId;
+
+    //var_dump($anciennesDonnees);
+
+    unset($nouvellesDonnees['id']);
+    unset($nouvellesDonnees['plat']);
+    unset($nouvellesDonnees['allergene']);
+    unset($nouvellesDonnees['image_menu']);
+    unset($nouvellesDonnees['evenement']);
+    unset($nouvellesDonnees['regime']);
+    unset($nouvellesDonnees['theme']);
+
+    //var_dump($nouvellesDonnees);
+
+    $this->menuRepository->modifierMenu($nouvellesDonnees);
+  }
+
+  public function modifierPlatsDuMenu(int $menuId, array $platIds)
+  {
+    $repo = $this->platRepository;
+    $this->ModifierElementDuMenu(
+      $menuId, 
+      $platIds, 
+      $repo, 
+      'trouverPlatDuMenu',
+      'getPlatId',
+      fn($menuId, $id) => $repo->ajouterPlatAuMenu($menuId, $id),
+      fn($menuId, $id) => $repo->supprimerPlatDuMenu($menuId, $id),
+      );
+  }
+  public function modifierEvenementsDuMenu(int $menuId, array $evenementIds)
+  {
+    $repo = $this->evenementRepository;
+    $this->ModifierElementDuMenu(
+      $menuId, 
+      $evenementIds, 
+      $repo, 
+      'trouverEvenementDuMenu',
+      'getEvenementId',
+      fn($menuId, $id) => $repo->ajouterEvenementAuMenu($menuId, $id),
+      fn($menuId, $id) => $repo->supprimerEvenementDuMenu($menuId, $id),
+      );
+  }
+
+  public function modifierThemesDuMenu(int $menuId, array $themeIds): void
+  {
+    $repo = $this->themeRepository;
+
+    $this->modifierElementDuMenu(
+        $menuId,
+        $themeIds,
+        $repo,
+        'trouverThemeDuMenu',
+        'getThemeId',
+        fn($menuId, $id) => $repo->ajouterThemeAuMenu($menuId, $id),
+        fn($menuId, $id) => $repo->supprimerThemeDuMenu($menuId, $id)
+    );
+  }
+
+  public function modifierRegimesDuMenu(int $menuId, array $regimeIds): void
+  {
+    $repo = $this->regimeRepository;
+
+    $this->modifierElementDuMenu(
+        $menuId,
+        $regimeIds,
+        $repo,
+        'trouverRegimeDuMenu',
+        'getRegimeId',
+        fn($menuId, $id) => $repo->ajouterRegimeAuMenu($menuId, $id),
+        fn($menuId, $id) => $repo->supprimerRegimeDuMenu($menuId, $id)
+    );
+  }
+
+  public function modifierStatusMenu(int $menuId, int $status)
+  {
+    $this->menuRepository->modifierStatusMenu($menuId, $status);
+  }
+
   private function ajouterPlat(array $menus)
   {
     foreach($menus as $menu){
@@ -272,6 +363,22 @@ class MenuService
   {
     if($this->menuRepository->trouverMenuParNom($menu)){
       throw new LibelleExistantException($menu);
+    }
+  }
+
+  private function ModifierElementDuMenu(int $menuId, array $nouveauxId, object $repo, string $mehodeTrouver, string $getId, callable $ajouter, callable $supprimer)
+  {
+    $nvxElements = $nouveauxId;
+    $anciensElement = $repo->$mehodeTrouver($menuId);
+    $anciensElementId = array_map(fn($element) => $element->$getId(), $anciensElement);
+    $aSupprimer = array_diff($anciensElementId, $nvxElements);
+    $aAjouter = array_diff($nvxElements, $anciensElementId);
+
+    foreach($aSupprimer as $id){
+      $supprimer($menuId, $id);
+    }
+    foreach($aAjouter as $id){
+      $ajouter($menuId, $id);
     }
   }
 

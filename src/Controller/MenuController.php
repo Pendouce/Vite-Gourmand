@@ -112,4 +112,63 @@ class MenuController extends Controller
     $menus = $this->menuService->afficherMenuFiltre($menuFiltre);
     $this->render('pages/client/menuFiltre', ['menus' => $menus]);
   }
+
+  public function modifierMenu()
+  {
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $data = [
+        'titre' => $_POST['titre'] ?? null,
+        'prix_personne' => $_POST['prix_personne'] ?? null,
+        'nombre_personne_min' => $_POST['nombre_personne_min'] ?? null,
+        'conditions' => $_POST['conditions'] ?? null,
+        'menu_actif' => $_POST['menu_actif'] ?? null,
+      ];
+
+      $data = $this->nettoyerDonnees($data);
+
+      try{
+        $menuId = (int) $_GET['id'];
+        $platId = $_POST['plat'] ?? [];
+        //$allergeneId = $_POST['allergene'];
+        $evenementId = $_POST['evenement'] ?? [];
+        $themeId = $_POST['theme'] ?? [];
+        $regimeId = $_POST['regime'] ?? [];
+        //var_dump($menuId);
+        $this->menuService->modifierPlatsDuMenu($menuId, $platId);
+        //$this->menuService->ajouterAllergeneAuplat($platId, $allergeneId);
+        $this->menuService->modifierEvenementsDuMenu($menuId, $evenementId);
+        $this->menuService->modifierThemesDuMenu($menuId, $themeId);
+        $this->menuService->modifierRegimesDuMenu($menuId, $regimeId);
+        $this->menuService->modifierMenu($menuId, $data);
+
+        $_SESSION['succes'] = "Menu modifié";
+        header('location: /detailMenu?='.$menuId);
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /modifierMenu');
+        exit;
+      }
+
+    }else{
+      $this->render('pages/employe/modifierMenu');
+    }
+  }
+
+  public function modifierStatusMenu()
+  {
+    $status = (int) $_POST['plat_actif'];
+    $menuId = (int) $_GET['id'];
+
+    try{
+      $this->menuService->modifierStatusMenu($menuId, $status);
+      $_SESSION['succes'] = "Status modifié";
+      header('location: /detailMenu?id='.$menuId);
+      exit;
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /detailMenu?='.$menuId);
+      exit;
+    }
+  }
 }

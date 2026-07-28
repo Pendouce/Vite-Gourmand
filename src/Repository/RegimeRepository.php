@@ -53,4 +53,16 @@ class RegimeRepository extends Repository
     }
     return $tabRegimes;
   }
+
+  public function supprimerRegimeDuMenu(int $menuId, int $regimeId)
+  {
+    $sql = 'DELETE FROM menu_regime
+    WHERE menu_id = :menu_id
+    AND regime_id = :regime_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
+    $statement->bindValue(':regime_id', $regimeId, PDO::PARAM_INT);
+    $statement->execute();
+  }
 }

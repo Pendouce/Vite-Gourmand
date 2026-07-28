@@ -221,6 +221,27 @@ class MenuRepository extends Repository
     return $tabMenuFiltre;
   }
 
+  // Update
 
+  public function modifierMenu(array $data)
+  {
+    $sql = 'UPDATE menu SET 
+    titre = :titre, prix_personne = :prix_personne, nombre_personne_min = :nombre_personne_min,
+     conditions = :conditions, stock_dispo = :stock_dispo, menu_actif = :menu_actif
+    WHERE menu_id = :menu_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
+
+  public function modifierStatusMenu(int $menuId, int $status)
+  {
+    $sql = 'UPDATE menu SET menu_actif = :menu_actif WHERE menu_id = :menu_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':menu_actif', $status, PDO::PARAM_BOOL);
+    $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
+    $statement->execute();
+  }
 
 }
