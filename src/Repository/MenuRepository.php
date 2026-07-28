@@ -244,4 +244,13 @@ class MenuRepository extends Repository
     $statement->execute();
   }
 
+  public function supprimerMenu(int $menuId)
+  {
+    $sql = 'DELETE FROM menu WHERE menu_id = :menu_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
+    $statement->execute();
+  }
+
 }

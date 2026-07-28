@@ -171,4 +171,20 @@ class MenuController extends Controller
       exit;
     }
   }
+
+  public function supprimerMenu()
+  {
+    $menuId = (int) $_GET['id'];
+
+    try{
+      $this->menuService->supprimermenu($menuId);
+      $_SESSION['succes'] = "Le menu a bien ete supprimé";
+      header('location: /menu');
+      exit;
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /menu');
+      exit;
+    }
+  }
 }

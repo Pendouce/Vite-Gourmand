@@ -231,6 +231,15 @@ class MenuService
     $this->menuRepository->modifierStatusMenu($menuId, $status);
   }
 
+  public function supprimerMenu(int $menuId)
+  {
+    $this->platRepository->supprimerMenu($menuId);
+    $this->evenementRepository->supprimerMenu($menuId);
+    $this->regimeRepository->supprimerMenu($menuId);
+    $this->themeRepository->supprimerMenu($menuId);
+    $this->menuRepository->supprimerMenu($menuId);
+  }
+
   private function ajouterPlat(array $menus)
   {
     foreach($menus as $menu){
