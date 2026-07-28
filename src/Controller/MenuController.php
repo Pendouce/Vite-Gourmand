@@ -84,4 +84,32 @@ class MenuController extends Controller
     $menu = $this->menuService->afficherMenuParId($menuId);
     $this->render('pages/employe/detailMenu', ['menu' => $menu]);
   }
+
+  public function afficherMenuFiltre()
+  {
+    $menuFiltre = [];
+
+    if(isset($_GET['evenement_id'])){
+      $menuFiltre['evenement_id'] = $_GET['evenement_id'];
+    }
+    
+    if(isset($_GET['theme_id'])){
+      $menuFiltre['theme_id'] = $_GET['theme_id'];
+    }
+
+    if(isset($_GET['regime_id'])){
+      $menuFiltre['regime_id'] = $_GET['regime_id'];
+    }
+
+    if(isset($_GET['prix_personne'])){
+      $menuFiltre['prix_personne'] =(float) $_GET['prix_personne'];
+    }
+
+    if(isset($_GET['nombre_personne_min'])){
+      $menuFiltre['nombre_personne_min'] = (int) $_GET['nombre_personne_min'];
+    }
+
+    $menus = $this->menuService->afficherMenuFiltre($menuFiltre);
+    $this->render('pages/client/menuFiltre', ['menus' => $menus]);
+  }
 }

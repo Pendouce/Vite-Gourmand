@@ -65,7 +65,7 @@ class MenuRepository extends Repository
 
     return Menu::creerEtHydrate($menu);
   }
-
+/* 
   public function trouverMenuParEvenement(int $evenementId)
   {
     $sql = 'SELECT * FROM menu 
@@ -164,7 +164,63 @@ class MenuRepository extends Repository
     }
 
     return $tabNbPersonnes;
+  } */
+
+  public function trouverMenuFiltre(array $filtres)
+  {
+    $sql = 'SELECT DISTINCT menu.* FROM menu ';
+
+    $condtion = [];
+    $params = [];
+
+    if(!empty($filtres['evenement_id'])){
+      // Ajoute la jointure a la requette
+      $sql .= ' INNER JOIN menu_evenement ON menu_evenement.menu_id = menu.menu_id';
+      // Clause WHERE
+      $condtion[] = 'menu_evenement.evenement_id = :evenement_id';
+      // BindValue
+      $params[':evenement_id'] = $filtres['evenement_id'];
+    }
+
+    if(!empty($filtres['theme_id'])){
+      $sql .= ' INNER JOIN menu_theme ON menu_theme.menu_id = menu.menu_id';
+      $condtion[] = 'menu_theme.theme_id = :theme_id';
+      $params[':theme_id'] = $filtres['theme_id'];
+    }
+
+    if(!empty($filtres['regime_id'])){
+      $sql .= ' INNER JOIN menu_regime ON menu_regime.menu_id = menu.menu_id';
+      $condtion[] = 'menu_regime.regime_id = :regime_id';
+      $params[':regime_id'] = $filtres['regime_id'];
+    }
+
+    if(!empty($filtres['prix_personne'])){
+      $condtion[] = 'prix_personne <= :prix_personne';
+      $params[':prix_personne'] = $filtres['prix_personne'];
+    }
+
+    if(!empty($filtres['nombre_personne_min'])){
+      $condtion[] = 'nombre_personne_min <= :nombre_personne_min';
+      $params[':nombre_personne_min'] = $filtres['nombre_personne_min'];
+    }
+
+    if($condtion){
+      $sql .= " WHERE " .implode(" AND ", $condtion);
+    }
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($params);
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabMenuFiltre = [];
+
+    foreach($data as $menu){
+      $tabMenuFiltre[] = Menu::creerEtHydrate($menu);
+    }
+
+    return $tabMenuFiltre;
   }
+
 
 
 }

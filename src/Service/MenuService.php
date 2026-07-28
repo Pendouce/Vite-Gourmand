@@ -73,6 +73,73 @@ class MenuService
     return $menu;
   }
 
+  public function afficherMenuParId(int $menuId)
+  {
+    $menu = $this->menuRepository->trouverMenuParId($menuId);
+
+    if ($menu == false) {
+      return false;
+    }
+
+    $menus = [$menu];
+    $this->ajouterElementsMenu($menus);
+
+    return $menu;
+  }
+
+/*   public function afficherMenuParEvenement(int $evenementId)
+  {
+    $menus = $this->menuRepository->trouverMenuParEvenement($evenementId);
+
+    $this->ajouterElementsMenu($menus);
+
+    return $menus;
+  }
+
+  public function afficherMenuParThemes(int $themeId)
+  {
+    $menus = $this->menuRepository->trouverMenuParTheme($themeId);
+
+    $this->ajouterElementsMenu($menus);
+
+    return $menus;
+  }
+
+  public function afficherMenuParRegime(int $regimeId)
+  {
+    $menus = $this->menuRepository->trouverMenuParRegime($regimeId);
+
+    $this->ajouterElementsMenu($menus);
+
+    return $menus;
+  }
+
+  public function afficherMenuParPrix(float $prixMax)
+  {
+    $menus = $this->menuRepository->trouverMenuParPrix($prixMax);
+
+    $this->ajouterElementsMenu($menus);
+
+    return $menus;
+  }
+
+  public function afficherMenuParNbPersonneMin(int $nbMin)
+  {
+    $menus = $this->menuRepository->trouverMenuParNbPersonneMin($nbMin);
+
+    $this->ajouterElementsMenu($menus);
+
+    return $menus;
+  } */
+
+  public function afficherMenuFiltre(array $menuFiltre)
+  {
+    $menus = $this->menuRepository->trouverMenuFiltre($menuFiltre);
+    $this->ajouterElementsMenu($menus);
+
+    return $menus;
+  }
+
   private function ajouterPlat(array $menus)
   {
     foreach($menus as $menu){
@@ -126,71 +193,57 @@ class MenuService
   }
 
   private function ajouterStock(array $menus)
-{
-  foreach($menus as $menu){
-    $this->trouverleStockMinDesPlats($menu);
-  }
-  
-  return $menus;
-}
-
-private function ajouterImage(array $menus)
-{
-  foreach($menus as $menu){
-   $this->trouverImagePlatPrincipale($menu);
-  }
-
-  return $menus;
-}
-
-public function afficherMenuParId(int $menuId)
-{
-  $menu = $this->menuRepository->trouverMenuParId($menuId);
-
-  if ($menu == false) {
-    return false;
-  }
-
-  $menus = [$menu];
-  $this->ajouterElementsMenu($menus);
-
-  return $menu;
-}
-
-private function trouverImagePlatPrincipale(Menu $menu)
-{
-  $plats = $menu->getPlat();
-
-  foreach($plats as $plat){
-      if($plat->getTypeId() === 2){
-        $menu->setImageMenu($plat->getImagePlat());
-        break;
-      }
+  {
+    foreach($menus as $menu){
+      $this->trouverleStockMinDesPlats($menu);
     }
-}
+    
+    return $menus;
+  }
 
-private function trouverleStockMinDesPlats(Menu $menu)
-{
+  private function ajouterImage(array $menus)
+  {
+    foreach($menus as $menu){
+    $this->trouverImagePlatPrincipale($menu);
+    }
+
+    return $menus;
+  }
+
+  private function trouverImagePlatPrincipale(Menu $menu)
+  {
     $plats = $menu->getPlat();
-    
-    // Pour chaques plats j'appelle le stock dispo
-    $stocks = array_map(function($plat) {
-        return $plat->getStockPlat();
-    }, $plats);
-    
-    $stockMenu = min($stocks);
 
-     // Je stocke le resultat dans le menu
-    $menu->setStockDispo($stockMenu);
-  
-  return $menu;
-}
+    foreach($plats as $plat){
+        if($plat->getTypeId() === 2){
+          $menu->setImageMenu($plat->getImagePlat());
+          break;
+        }
+      }
+  }
+
+  private function trouverleStockMinDesPlats(Menu $menu)
+  {
+      $plats = $menu->getPlat();
+      
+      // Pour chaques plats j'appelle le stock dispo
+      $stocks = array_map(function($plat) {
+          return $plat->getStockPlat();
+      }, $plats);
+      
+      $stockMenu = min($stocks);
+
+      // Je stocke le resultat dans le menu
+      $menu->setStockDispo($stockMenu);
+    
+    return $menu;
+  }
 
 
   // Je transforme allergene en tableau associatif
   // allergene = [$allergene => getAllergeneId()]
-private function fusionnerAllergenes(array $plats)
-{
+  private function fusionnerAllergenes(array $plats)
+  {
   $tousLesAllergenes = [];
   foreach ($plats as $plat) {
     foreach ($plat->getAllergenes() as $allergene) {

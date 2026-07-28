@@ -17,7 +17,7 @@
 ?>
     
   <?php if($menu->getImageMenu()): ?>
-    <?php var_dump($menu->getImageMenu()) ?>
+    <?php //var_dump($menu->getImageMenu()) ?>
     <img src="<?= htmlspecialchars($menu->getImageMenu()) ?>" 
          alt="<?= htmlspecialchars($menu->getTitre()) ?>" 
          class="w-70 h-64 object-cover rounded-lg mb-6">
