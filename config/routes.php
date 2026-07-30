@@ -33,5 +33,6 @@ return[
     "/creerTypeDePresta/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "creerTypeDePresta"],
     "/prestations/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "afficherTypeDePresta"],
     "/modifierTypeDePresta/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "modifierTypeDePresta"],
+    "/supprimerTypeDePresta/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "supprimerTypeDePresta"],
     
 ];

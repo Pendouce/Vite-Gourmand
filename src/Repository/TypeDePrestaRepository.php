@@ -82,4 +82,26 @@ class TypeDePrestaRepository extends Repository
     $statement->execute($data);
   }
 
+  // Delete
+
+  public function supprimertypeDePresta(int $id)
+  {
+    $sql = 'DELETE FROM type_presta
+    WHERE type_presta_id = :type_presta_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':type_presta_id', $id, PDO::PARAM_INT);
+    $statement->execute();
+  }
+
+    public function estRattacheAUnTypeDePrestaActif(int $id): bool
+  {
+    $sql = 'SELECT COUNT(*) FROM type_presta WHERE type_presta_id = :type_presta_id AND prestation_actif = 1';
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':type_presta_id', $id, PDO::PARAM_INT);
+    $statement->execute();
+
+    return $statement->fetchColumn() > 0;
+  }
+
 }

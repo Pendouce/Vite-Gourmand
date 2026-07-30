@@ -2,7 +2,9 @@
 
 namespace App\Service;
 
+use App\Exceptions\IdInnexistantException;
 use App\Exceptions\LibelleExistantException;
+use App\Exceptions\RattacheActifException;
 use App\Repository\TypeDePrestaRepository;
 
 class TypeDePrestaService
@@ -30,6 +32,19 @@ class TypeDePrestaService
   {
     $this->typeDePrestaExistante($data['libelle']);
     $this->typeDePrestaRepository->modifierTypeDePresta($data);
+  }
+
+  public function supprimerTypeDePresta(int $id)
+  {
+    if (!$this->typeDePrestaRepository->trouverTypeDePrestaParId($id)){
+      throw new IdInnexistantException('Type de prestaion');
+    }
+
+   /*  if($this->typeDePrestaRepository->estRattacheAUnTypeDePrestaActif($id)){
+      throw new RattacheActifException('prestation', 'une prestation active');
+    } */
+
+    return $this->typeDePrestaRepository->supprimertypeDePresta($id);
   }
 
 

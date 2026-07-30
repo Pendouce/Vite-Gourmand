@@ -2,7 +2,9 @@
 
 namespace App\Service;
 
+use App\Exceptions\IdInnexistantException;
 use App\Exceptions\LibelleExistantException;
+use App\Exceptions\RattacheActifException;
 use App\Repository\TypeDePlatRepository;
 use Exception;
 
@@ -44,7 +46,7 @@ class TypeDePlatService
   {
     $this->existePasEnBase($id);
     if($this->typeDePlatRepository->estRattacheAUnPlatActif($id)){
-      throw new Exception('Impossible de supprimer ce type de plat, ce type est encore utilisé par un plat actif');
+      throw new RattacheActifException("plat", "un plat actif");
     }
 
     return $this->typeDePlatRepository->supprimerTypeDePlat($id);
@@ -62,7 +64,7 @@ class TypeDePlatService
   private function existePasEnBase(int $id)
   {
     if(!$this->typeDePlatRepository->trouverTypeDePlatById($id)){
-      throw new Exception('Type de plat introuvable');
+      throw new IdInnexistantException('Type de plat');
     }
   }
 }

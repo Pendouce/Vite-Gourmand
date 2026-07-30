@@ -55,7 +55,7 @@ class TypeDePrestaController extends Controller
 
       try{
         $this->typeDePrestaService->modifierTypeDePresta($data);
-        $_SESSION['succes'] = "Type de prestation modifier";
+        $_SESSION['succes'] = "Type de prestation modifié";
         header('location: /prestations');
         exit;
       }catch(Exception $e){
@@ -66,5 +66,20 @@ class TypeDePrestaController extends Controller
     }else{
       $this->render('pages/employe/prestations');
     }
+  }
+
+  public function supprimerTypeDePresta()
+  {
+    $id = (int) $_GET['id'];
+    try{
+        $this->typeDePrestaService->supprimerTypeDePresta($id);
+        $_SESSION['succes'] = "Type de prestation supprimé";
+        header('location: /prestations');
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /prestations');
+        exit;
+      }
   }
 }
