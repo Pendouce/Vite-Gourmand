@@ -56,14 +56,25 @@ CREATE table avis(
 
 CREATE TABLE prestation(
   prestation_id INT AUTO_INCREMENT PRIMARY KEY,
-  type_presta VARCHAR(255) NOT NULL,
+  #type_presta VARCHAR(255) NOT NULL,
   nom_presta VARCHAR(255) NOT NULL,
   prix_presta DOUBLE NOT NULL,
   description_presta TEXT,
   img_presta VARCHAR(255),
   necessite_retour BOOL,
-  prestation_actif BOOL
+  prestation_actif BOOL,
+  type_presta_id INT
 );
+
+ALTER TABLE prestation CHANGE type_presta type_presta_id INT;
+ALTER TABLE prestation
+ADD CONSTRAINT fk_tp FOREIGN KEY (type_presta_id) REFERENCES type_presta (type_presta_id);
+
+CREATE TABLE type_presta(
+  type_presta_id INT AUTO_INCREMENT PRIMARY KEY,
+  libelle VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE commande_prestation(
   prix_total_presta DOUBLE NOT NULL,
   date_presta DATETIME NOT NULL,
@@ -259,6 +270,7 @@ INSERT INTO allergene (libelle) VALUES
 ('Lupin'), ('Mollusques');
 
 INSERT INTO type_de_plat(libelle) VALUES('Entrée'), ('Plat'), ('Dessert');
+INSERT INTO type_presta(libelle) VALUES('Location de materiel'), ('Service professionnel');
 
 --INSERT INTO user(nom, prenom, email, mot_de_passe, role_id) VALUES 
 --('Garcia', 'José', 'jose@vg.fr', '$2y$12$hQxzhce4Qe7DelRyrhyOtO40hVA35QMA5VuqWbtvzM4L4DpsVSLdy', 3);

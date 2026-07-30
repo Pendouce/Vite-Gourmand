@@ -5,13 +5,14 @@ namespace App\Entity;
 class Prestation extends Entity
 {
   protected ?int $prestationId = null;
-  protected ?string $typePresta = null;
   protected ?string $nomPresta = null;
   protected ?float $prixPresta = null;
   protected ?string $descriptionPresta = null;
   protected ?string $imgPresta = null;
   protected ?bool $necessiteRetour = null;
   protected ?bool $prestationActif = null;
+  
+  protected ?string $typePresta = null;
 
 
   /**

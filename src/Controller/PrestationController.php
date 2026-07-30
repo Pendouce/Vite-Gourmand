@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\PrestationRepository;
+use App\Repository\TypeDePrestaRepository;
 use App\Service\PrestationService;
 
 
@@ -14,6 +15,9 @@ class PrestationController extends Controller
   {
     parent::__construct();
     $prestationRepository = new PrestationRepository();
-    $this->prestationService = new PrestationService($prestationRepository);
+    $typePrestaRepository = new TypeDePrestaRepository();
+    $this->prestationService = new PrestationService($prestationRepository, $typePrestaRepository);
   }
+
+  
 }
