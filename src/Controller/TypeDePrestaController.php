@@ -41,4 +41,30 @@ class TypeDePrestaController extends Controller
     $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
     $this->render('pages/employe/prestations', ['typeDePresta'=> $typeDePresta]);
   }
+
+  public function modifierTypeDePresta()
+  {
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $libelle = htmlspecialchars($_POST['libelle']);
+      $id = (int) $_GET['id'];
+
+      $data = [
+        'libelle' => $libelle,
+        'type_presta_id' => $id
+      ];
+
+      try{
+        $this->typeDePrestaService->modifierTypeDePresta($data);
+        $_SESSION['succes'] = "Type de prestation modifier";
+        header('location: /prestations');
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /prestations');
+        exit;
+      }
+    }else{
+      $this->render('pages/employe/prestations');
+    }
+  }
 }

@@ -32,5 +32,6 @@ return[
     "/supprimerMenu/" => ["controller" => "App\Controller\MenuController", "action" => "supprimerMenu"],
     "/creerTypeDePresta/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "creerTypeDePresta"],
     "/prestations/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "afficherTypeDePresta"],
+    "/modifierTypeDePresta/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "modifierTypeDePresta"],
     
 ];

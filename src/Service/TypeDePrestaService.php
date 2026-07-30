@@ -26,6 +26,13 @@ class TypeDePrestaService
     return $this->typeDePrestaRepository->trouverTypeDePresta();
   }
 
+  public function modifierTypeDePresta(array $data)
+  {
+    $this->typeDePrestaExistante($data['libelle']);
+    $this->typeDePrestaRepository->modifierTypeDePresta($data);
+  }
+
+
   private function typeDePrestaExistante(string $libelle)
   {
     if($this->typeDePrestaRepository->trouverTypeDePrestaParNom($libelle)){

@@ -73,5 +73,13 @@ class TypeDePrestaRepository extends Repository
     return TypeDePresta::creerEtHydrate($data);
   }
 
+  public function modifiertypeDePresta(array $data)
+  {
+    $sql = 'UPDATE type_presta SET libelle = :libelle
+    WHERE type_presta_id = :type_presta_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
 
 }
