@@ -8,7 +8,12 @@
 <body>
   <h1>Prestation</h1>
 
+    
+    <?php /** @var TypeDePrestaController $typeDePresta */ ?>
 
+  <?php foreach($typeDePresta as $presta): ?>
+    <p> <?= $presta->getLibelle(); ?></p>
+  <?php endforeach; ?>
 
   <?php if (isset($_SESSION['erreur'])): ?>
     <p class="erreur"><?= $_SESSION['erreur'] ?></p>

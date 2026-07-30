@@ -35,4 +35,10 @@ class TypeDePrestaController extends Controller
       $this->render('pages/employe/prestations');
     }
   }
+
+  public function afficherTypeDePresta()
+  {
+    $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
+    $this->render('pages/employe/prestations', ['typeDePresta'=> $typeDePresta]);
+  }
 }

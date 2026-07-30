@@ -21,6 +21,11 @@ class TypeDePrestaService
     $this->typeDePrestaRepository->creerTypeDePresta($data);
   }
 
+  public function afficherTypeDePresta()
+  {
+    return $this->typeDePrestaRepository->trouverTypeDePresta();
+  }
+
   private function typeDePrestaExistante(string $libelle)
   {
     if($this->typeDePrestaRepository->trouverTypeDePrestaParNom($libelle)){
