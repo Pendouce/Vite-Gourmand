@@ -22,8 +22,6 @@ class PlatController extends Controller
   {
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-      
-
       $data = [
         'titre' => $_POST['titre'],
         'description_plat' => $_POST['description_plat'],
@@ -33,7 +31,7 @@ class PlatController extends Controller
         'type_id' => $_POST['type_id'],
       ];
       if (key_exists('image_plat', $_FILES) && $_FILES['image_plat']['error'] === UPLOAD_ERR_OK) {
-        $data['image_plat'] = $this->uploadImage($_FILES['image_plat']);
+        $data['image_plat'] = $this->uploadImage($_FILES['image_plat'], "plat");
       }
       $allergeneId = $_POST['allergene'];
       $this->nettoyerDonnees($data);
@@ -91,7 +89,7 @@ class PlatController extends Controller
         //'libelle' => $_POST['libelle'] ?? null,
       ];
       if (key_exists('image_plat', $_FILES) && $_FILES['image_plat']['error'] === UPLOAD_ERR_OK) {
-        $data['image_plat'] = $this->uploadImage($_FILES['image_plat']);
+        $data['image_plat'] = $this->uploadImage($_FILES['image_plat'], "plat");
       }
       $allergeneId = $_POST['allergene'];
       //var_dump($allergeneId);
@@ -148,11 +146,4 @@ class PlatController extends Controller
     }
   }
 
-  private function uploadImage(array $file)
-  {
-    $nomTmpImage = $file ['tmp_name'];
-    $image = "/upload/plat/".$file['name'];
-    move_uploaded_file($nomTmpImage, APP_ROOT."/public/".$image);
-    return $image;
-  }
 }

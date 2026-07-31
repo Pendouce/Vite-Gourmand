@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Exceptions\PageInexistanteException;
+use Exception;
 
 class Controller
 {
@@ -29,6 +30,19 @@ class Controller
     }, $data);
     return $dataNettoye;
 }
+
+  protected function uploadImage(array $file, string $folder)
+  {
+    $nomTmpImage = $file ['tmp_name'];
+    $image = "/upload/".$folder."/".$file['name'];
+    $succes = move_uploaded_file($nomTmpImage, APP_ROOT."/public/".$image);
+
+    if (!$succes) {
+      throw new Exception("Echec de l'upload de l'image dans le dossier ".$folder);
+    }
+
+    return $image;
+  }
 
 
 }
