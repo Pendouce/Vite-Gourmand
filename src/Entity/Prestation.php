@@ -11,8 +11,7 @@ class Prestation extends Entity
   protected ?string $imgPresta = null;
   protected ?bool $necessiteRetour = null;
   protected ?bool $prestationActif = null;
-  
-  protected ?string $typePresta = null;
+  protected ?string $typePrestaId = null;
 
 
   /**
@@ -29,24 +28,6 @@ class Prestation extends Entity
   public function setPrestationId(?int $prestationId): self
   {
     $this->prestationId = $prestationId;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of typePresta
-   */
-  public function getTypePresta(): ?string
-  {
-    return $this->typePresta;
-  }
-
-  /**
-   * Set the value of typePresta
-   */
-  public function setTypePresta(?string $typePresta): self
-  {
-    $this->typePresta = $typePresta;
 
     return $this;
   }
@@ -158,4 +139,23 @@ class Prestation extends Entity
 
     return $this;
   }
+
+    /**
+   * Get the value of typePresta
+   */
+  public function getTypePrestaId(): ?string
+  {
+    return $this->typePrestaId;
+  }
+
+  /**
+   * Set the value of typePrestaId
+   */
+  public function setTypePrestaId(?string $typePrestaId): self
+  {
+    $this->typePrestaId = $typePrestaId;
+
+    return $this;
+  }
+
 }

@@ -31,8 +31,9 @@ return[
     "/modifierStatusMenu/" => ["controller" => "App\Controller\MenuController", "action" => "modifierStatusMenu"],
     "/supprimerMenu/" => ["controller" => "App\Controller\MenuController", "action" => "supprimerMenu"],
     "/creerTypeDePresta/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "creerTypeDePresta"],
-    "/prestations/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "afficherTypeDePresta"],
+    //"/prestations/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "afficherTypeDePresta"],
     "/modifierTypeDePresta/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "modifierTypeDePresta"],
     "/supprimerTypeDePresta/" => ["controller" => "App\Controller\TypeDePrestaController", "action" => "supprimerTypeDePresta"],
-    
+    "/creerPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "creerPrestation"],
+    "/prestations/" => ["controller" => "App\Controller\PrestationController", "action" => "creerPrestation"],
 ];
