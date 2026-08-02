@@ -58,4 +58,18 @@ class PrestationController extends Controller
       $this->render('pages/employe/creerPrestation');
     }
   }
+
+  public function afficherPrestation()
+  {
+    $prestations = $this->prestationService->afficherPrestation();
+    $this->render('pages/employe/prestations', ['prestations' => $prestations]);
+  }
+
+  public function afficherPrestationParId()
+  {
+    $id = (int) $_GET['id'];
+
+    $prestations = $this->prestationService->afficherPrestationParId($id);
+    $this->render('pages/employe/detailPresta', ['prestations' => $prestations]);
+  }
 }

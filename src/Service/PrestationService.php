@@ -24,6 +24,18 @@ class PrestationService
     return $this->prestationRepository->creerPrestation($data);
   }
 
+  public function afficherPrestation()
+  {
+    return $this->prestationRepository->trouverPrestation();
+  }
+
+  public function afficherPrestationParId(int $id)
+  {
+    return $this->prestationRepository->trouverPrestationParId($id);
+  }
+
+
+
   private function existeEnBase(string $nom)
   {
     if($this->prestationRepository->trouverPrestationParNom($nom))

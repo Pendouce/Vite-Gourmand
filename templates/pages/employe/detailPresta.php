@@ -4,16 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/asset/css/style.css">
-
   <title>Document</title>
 </head>
 <body>
-  <h1>Prestation</h1>
+  <h1>Detail Presta</h1>
 
-    
     <?php /** @var TypeDePrestaController $prestations */ ?>
 
-   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <?php foreach ($prestations as $prestation): ?>
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
 
@@ -55,26 +53,10 @@
              <p class="text-sm text-gray-500 mt-2">
               Id : <?= htmlspecialchars($prestation->getPrestationId()) ?>
             </p>
-
+            
         </div>
 
     </div>
 <?php endforeach; ?>
-
-</div>
-
-
-
-  <?php if (isset($_SESSION['erreur'])): ?>
-    <p class="erreur"><?= $_SESSION['erreur'] ?></p>
-    <?php unset($_SESSION['erreur']); ?>
-  <?php endif; ?>
-
-  <?php if (isset($_SESSION['succes'])): ?>
-    <p class="succes">
-        <?= $_SESSION['succes'] ?>
-    </p>
-    <?php unset($_SESSION['succes']); ?>
-  <?php endif; ?>
 </body>
 </html>

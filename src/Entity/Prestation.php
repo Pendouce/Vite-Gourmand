@@ -13,6 +13,9 @@ class Prestation extends Entity
   protected ?bool $prestationActif = null;
   protected ?string $typePrestaId = null;
 
+  protected ?string $libelle = null;
+
+
 
   /**
    * Get the value of prestationId
@@ -158,4 +161,22 @@ class Prestation extends Entity
     return $this;
   }
 
+
+  /**
+   * Get the value of libelle
+   */
+  public function getLibelle(): ?string
+  {
+    return $this->libelle;
+  }
+
+  /**
+   * Set the value of libelle
+   */
+  public function setLibelle(?string $libelle): self
+  {
+    $this->libelle = $libelle;
+
+    return $this;
+  }
 }
