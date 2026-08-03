@@ -51,14 +51,13 @@ class PrestationRepository extends Repository
     $statement->bindValue(':prestation_id', $id, PDO::PARAM_INT);
     $statement->execute();
 
-    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
-    $tabPresta = [];
+    $presta = $statement->fetch(PDO::FETCH_ASSOC);
 
-    foreach($data as $presta){
-      $tabPresta[] = Prestation::creerEtHydrate($presta);
+    if ($presta == false) {
+      return false;
     }
 
-    return $tabPresta;
+    return Prestation::creerEtHydrate($presta);
   }
 
 
@@ -72,6 +71,45 @@ class PrestationRepository extends Repository
     $statement->execute();
 
     return $statement->fetch(PDO::FETCH_ASSOC);
+  }
+
+  // Update
+
+  public function modifierPrestation(array $data)
+  {
+    $sql = 'UPDATE prestation SET 
+    nom_presta = :nom_presta, 
+    prix_presta = :prix_presta, 
+    description_presta = :description_presta, 
+    img_presta = :img_presta, 
+    necessite_retour = :necessite_retour, 
+    prestation_actif = :prestation_actif, 
+    type_presta_id = :type_presta_id
+    WHERE prestation_id = :prestation_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
+
+  public function modifierStatusPrestation(int $prestaId, int $status)
+  {
+    $sql = 'UPDATE prestation SET prestation_actif = :prestation_actif WHERE prestation_id = :prestation_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':prestation_actif', $status, PDO::PARAM_BOOL);
+    $statement->bindValue(':prestation_id', $prestaId, PDO::PARAM_INT);
+    $statement->execute();
+  }
+
+  // Delete
+  
+  public function supprimerPrestation(int $prestaId)
+  {
+    $sql = 'DELETE FROM prestation WHERE prestation_id = :prestation_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':prestation_id', $prestaId, PDO::PARAM_INT);
+    $statement->execute();
   }
 }
 

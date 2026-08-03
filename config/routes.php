@@ -37,4 +37,7 @@ return[
     "/creerPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "creerPrestation"],
     "/prestations/" => ["controller" => "App\Controller\PrestationController", "action" => "afficherPrestation"],
     "/detailPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "afficherPrestationParId"],
+    "/modifierPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "modifierPrestation"],
+    "/modifierStatusPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "modifierStatusPrestation"],
+    "/supprimerPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "supprimerPrestation"],
 ];

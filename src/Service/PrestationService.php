@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\IdInnexistantException;
 use App\Exceptions\LibelleExistantException;
 use App\Repository\PrestationRepository;
 use App\Repository\TypeDePrestaRepository;
@@ -34,7 +35,38 @@ class PrestationService
     return $this->prestationRepository->trouverPrestationParId($id);
   }
 
+  public function modifierPrestation(int $prestaId, array $data)
+  {
+    if(!empty($data['nom_prestation'])){
+      $this->existeEnBase($data['nom_prestation']);
+    }
 
+    $prestaActuels = $this->afficherPrestationParId($prestaId);
+    $donneesActuels = $prestaActuels->deshydrate();
+
+    $data = array_filter($data, fn ($value) => $value !== null);
+    $nouvellesDonnees = array_merge($donneesActuels, $data);
+
+    $nouvellesDonnees['prestation_id'] = $prestaId;
+    unset($nouvellesDonnees['libelle']);
+
+    $this->prestationRepository->modifierPrestation($nouvellesDonnees);
+
+  }
+
+  public function modifierStatusPrestation(int $prestaId, int $status)
+  {
+    return $this->prestationRepository->modifierStatusPrestation($prestaId, $status);
+  }
+
+  public function supprimerPrestation(int $prestaId)
+  {
+    if(!$this->afficherPrestationParId($prestaId)){
+      throw new IdInnexistantException('Prestation');
+    }
+
+    return $this->prestationRepository->supprimerPrestation($prestaId);
+  }
 
   private function existeEnBase(string $nom)
   {

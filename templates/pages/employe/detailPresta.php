@@ -9,10 +9,9 @@
 <body>
   <h1>Detail Presta</h1>
 
-    <?php /** @var TypeDePrestaController $prestations */ ?>
+    <?php /** @var TypeDePrestaController $prestation */ ?>
 
      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <?php foreach ($prestations as $prestation): ?>
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
 
         <img src="<?= htmlspecialchars($prestation->getImgPresta()) ?>" 
@@ -57,6 +56,17 @@
         </div>
 
     </div>
-<?php endforeach; ?>
+
+        <?php if (isset($_SESSION['erreur'])): ?>
+    <p class="erreur"><?= $_SESSION['erreur'] ?></p>
+    <?php unset($_SESSION['erreur']); ?>
+  <?php endif; ?>
+
+  <?php if (isset($_SESSION['succes'])): ?>
+    <p class="succes">
+        <?= $_SESSION['succes'] ?>
+    </p>
+    <?php unset($_SESSION['succes']); ?>
+  <?php endif; ?>
 </body>
 </html>
