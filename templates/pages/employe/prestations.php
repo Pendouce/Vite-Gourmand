@@ -30,6 +30,16 @@
                 <?= htmlspecialchars($prestation->getLibelle()) ?>
             </p>
 
+            <?php $contenu = $prestation->getContenuPresta(); ?>
+            <?php if (!empty($contenu)): ?>
+                <ul class="text-sm text-gray-600 mt-2 list-disc list-inside">
+                    <?php foreach ($contenu as $item): ?>
+                        <li><?= htmlspecialchars($item) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+
+
             <p class="text-sm text-gray-500 mt-2">
                 <?= htmlspecialchars($prestation->getDescriptionPresta()) ?>
             </p>

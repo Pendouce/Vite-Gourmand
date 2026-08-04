@@ -22,6 +22,13 @@ class PrestationService
   {
     $this->existeEnBase($data['nom_presta']);
 
+    // contenu_presta est un tableau PHP
+    // json_encode : tableau PHP -> string JSON
+
+    if($data['contenu_presta']){
+      $data['contenu_presta'] = json_encode($data['contenu_presta']);
+    }
+
     return $this->prestationRepository->creerPrestation($data);
   }
 
@@ -50,8 +57,12 @@ class PrestationService
     $nouvellesDonnees['prestation_id'] = $prestaId;
     unset($nouvellesDonnees['libelle']);
 
-    $this->prestationRepository->modifierPrestation($nouvellesDonnees);
+    // j'encode pour envoyer a la bdd un format JSON
+    if($nouvellesDonnees['contenu_presta']){
+      $nouvellesDonnees['contenu_presta'] = json_encode($nouvellesDonnees['contenu_presta']);
+    }
 
+    $this->prestationRepository->modifierPrestation($nouvellesDonnees);
   }
 
   public function modifierStatusPrestation(int $prestaId, int $status)

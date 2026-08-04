@@ -31,7 +31,8 @@ class PrestationController extends Controller
         'description_presta' => $_POST['description_presta'],
         'necessite_retour' => $_POST['necessite_retour'],
         'prestation_actif' => $_POST['prestation_actif'],
-        'type_presta_id' => (int) $_POST['type_presta_id']
+        'type_presta_id' => (int) $_POST['type_presta_id'],
+        'contenu_presta' => $_POST['contenu_presta']
       ];
 
       if (key_exists('img_presta', $_FILES) && $_FILES['img_presta']['error'] === UPLOAD_ERR_OK) {
@@ -39,6 +40,7 @@ class PrestationController extends Controller
       }
 
       $data = $this->nettoyerDonnees($data);
+      //$data['contenu_presta'] = $_POST['contenu_presta'];
 
       try{
         //var_dump($data);
@@ -82,7 +84,8 @@ class PrestationController extends Controller
         'description_presta' => $_POST['description_presta'] ?? null,
         'necessite_retour' => $_POST['necessite_retour'] ?? null,
         'prestation_actif' => $_POST['prestation_actif'] ?? null,
-        'type_presta_id' => (int) $_POST['type_presta_id'] ?? null
+        'type_presta_id' => !empty($_POST['type_presta_id']) ? (int) $_POST['type_presta_id'] : null,
+        'contenu_presta' => $_POST['contenu_presta'] ?? null
       ];
 
       if (key_exists('img_presta', $_FILES) && $_FILES['img_presta']['error'] === UPLOAD_ERR_OK) {

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use function PHPUnit\Framework\isString;
+
 class Prestation extends Entity
 {
   protected ?int $prestationId = null;
@@ -12,6 +14,7 @@ class Prestation extends Entity
   protected ?bool $necessiteRetour = null;
   protected ?bool $prestationActif = null;
   protected ?string $typePrestaId = null;
+  protected ?array $contenuPresta = null;
 
   protected ?string $libelle = null;
 
@@ -176,6 +179,31 @@ class Prestation extends Entity
   public function setLibelle(?string $libelle): self
   {
     $this->libelle = $libelle;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of contenuPresta
+   */
+  public function getContenuPresta(): ?array
+  {
+    return $this->contenuPresta;
+  }
+
+  /**
+   * Set the value of contenuPresta
+   */
+  public function setContenuPresta(string | array $contenuPresta): self
+  {
+    // ContenuPresta est une string JSON recu depuis l'hydratation
+    // Si je recois une string
+    // json_decode : string JSON -> tableau PHP
+    if(is_string($contenuPresta)){
+
+      $contenuPresta = json_decode($contenuPresta, true);
+    }
+    $this->contenuPresta = $contenuPresta;
 
     return $this;
   }

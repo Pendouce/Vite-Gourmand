@@ -67,6 +67,8 @@ CREATE TABLE prestation(
 );
 
 ALTER TABLE prestation CHANGE type_presta type_presta_id INT;
+
+ALTER TABLE prestation ADD COLUMN contenu_presta JSON;
 ALTER TABLE prestation
 ADD CONSTRAINT fk_tp FOREIGN KEY (type_presta_id) REFERENCES type_presta (type_presta_id);
 
@@ -268,6 +270,9 @@ INSERT INTO allergene (libelle) VALUES
 ('Arachides'), ('Soja'), ('Lait'), ('Fruits à coque'),
 ('Céleri'), ('Moutarde'), ('Graines de sésame'), ('Sulfites'),
 ('Lupin'), ('Mollusques');
+INSERT INTO status (libelle) VALUES 
+('Transmise'), ('Acceptée'), ('En preparation'), ('En cours de livraison'),
+('Livrée'), ('En attente du retour de matériel'), ('Terminée');
 
 INSERT INTO type_de_plat(libelle) VALUES('Entrée'), ('Plat'), ('Dessert');
 INSERT INTO type_presta(libelle) VALUES('Location de materiel'), ('Service professionnel');
