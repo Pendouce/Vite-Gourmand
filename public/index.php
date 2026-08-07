@@ -17,3 +17,17 @@ $dotenv->load();
 
 $router = new Router();
 $router->GererRequette($_SERVER['REQUEST_URI']);
+
+use App\Service\CalculPrixService;
+
+$calcul = new CalculPrixService();
+$presta = [10, 5, 5,10];
+$calcul->calculTotalpresta($presta);
+
+/* $depart = $calcul->geocoderAdresse("10 place de la bourse bordeaux");
+$arrive = $calcul->geocoderAdresse(" place gambetta bordeaux");
+
+/* var_dump($depart);
+var_dump($arrive); */
+
+//echo $calcul->calculerDistance($depart, $arrive);

@@ -6,212 +6,217 @@ use DateTimeImmutable;
 
 class Commande extends Entity
 {
-  private ?int $commande_id = null;
-  private ?int $nb_commande = null;
-  private ?DateTimeImmutable $date_commande = null;
-  private ?DateTimeImmutable $date_prestation = null;
-  private ?int $nb_personne = null;
-  private ?string $heure_Livraison = null;
-  private ?string $lieu_livraison = null;
-  private ?float $prix_livraison = null;
-  private ?float $prix_total = null;
-  private ?int $user_id = null;
-  private ?int $status_id = null;
+  protected ?int $commandeId = null;
+  protected ?int $nbCommande = null;
+  protected ?DateTimeImmutable $dateCommande = null;
+  protected ?DateTimeImmutable $datePrestation = null;
+  protected ?int $nbPersonne = null;
+  protected ?string $heureLivraison = null;
+  protected ?string $lieuLivraison = null;
+  protected ?float $prixLivraison = null;
+  protected ?float $prixTotal = null;
+  protected ?int $userId = null;
+  protected ?int $statusId = null;
+
+  protected ?array $prestaions = null;
+  protected ?int $prixTotalPresta = null;
+  protected ?DateTimeImmutable $datePresta = null;
+  protected ?DateTimeImmutable $dateRetourPrevu = null;
 
   /**
-   * Get the value of commande_id
+   * Get the value of commandeId
    */
   public function getCommandeId(): ?int
   {
-    return $this->commande_id;
+    return $this->commandeId;
   }
 
   /**
-   * Set the value of commande_id
+   * Set the value of commandeId
    */
-  public function setCommandeId(?int $commande_id): self
+  public function setCommandeId(?int $commandeId): self
   {
-    $this->commande_id = $commande_id;
+    $this->commandeId = $commandeId;
 
     return $this;
   }
 
   /**
-   * Get the value of nb_commande
+   * Get the value of nbCommande
    */
   public function getNbCommande(): ?int
   {
-    return $this->nb_commande;
+    return $this->nbCommande;
   }
 
   /**
-   * Set the value of nb_commande
+   * Set the value of nbCommande
    */
-  public function setNbCommande(?int $nb_commande): self
+  public function setNbCommande(?int $nbCommande): self
   {
-    $this->nb_commande = $nb_commande;
+    $this->nbCommande = $nbCommande;
 
     return $this;
   }
 
   /**
-   * Get the value of date_commande
+   * Get the value of dateCommande
    */
   public function getDateCommande(): ?DateTimeImmutable
   {
-    return $this->date_commande;
+    return $this->dateCommande;
   }
 
   /**
-   * Set the value of date_commande
+   * Set the value of dateCommande
    */
-  public function setDateCommande(?DateTimeImmutable $date_commande): self
+  public function setDateCommande(?DateTimeImmutable $dateCommande): self
   {
-    $this->date_commande = $date_commande;
+    $this->dateCommande = $dateCommande;
 
     return $this;
   }
 
   /**
-   * Get the value of date_prestation
+   * Get the value of datePrestation
    */
   public function getDatePrestation(): ?DateTimeImmutable
   {
-    return $this->date_prestation;
+    return $this->datePrestation;
   }
 
   /**
-   * Set the value of date_prestation
+   * Set the value of datePrestation
    */
-  public function setDatePrestation(?DateTimeImmutable $date_prestation): self
+  public function setDatePrestation(?DateTimeImmutable $datePrestation): self
   {
-    $this->date_prestation = $date_prestation;
+    $this->datePrestation = $datePrestation;
 
     return $this;
   }
 
   /**
-   * Get the value of nb_personne
+   * Get the value of nbPersonne
    */
   public function getNbPersonne(): ?int
   {
-    return $this->nb_personne;
+    return $this->nbPersonne;
   }
 
   /**
-   * Set the value of nb_personne
+   * Set the value of nbPersonne
    */
-  public function setNbPersonne(?int $nb_personne): self
+  public function setNbPersonne(?int $nbPersonne): self
   {
-    $this->nb_personne = $nb_personne;
+    $this->nbPersonne = $nbPersonne;
 
     return $this;
   }
 
   /**
-   * Get the value of heure_Livraison
+   * Get the value of heureLivraison
    */
   public function getHeureLivraison(): ?string
   {
-    return $this->heure_Livraison;
+    return $this->heureLivraison;
   }
 
   /**
-   * Set the value of heure_Livraison
+   * Set the value of heureLivraison
    */
-  public function setHeureLivraison(?string $heure_Livraison): self
+  public function setHeureLivraison(?string $heureLivraison): self
   {
-    $this->heure_Livraison = $heure_Livraison;
+    $this->heureLivraison = $heureLivraison;
 
     return $this;
   }
 
   /**
-   * Get the value of lieu_livraison
+   * Get the value of lieuLivraison
    */
   public function getLieuLivraison(): ?string
   {
-    return $this->lieu_livraison;
+    return $this->lieuLivraison;
   }
 
   /**
-   * Set the value of lieu_livraison
+   * Set the value of lieuLivraison
    */
-  public function setLieuLivraison(?string $lieu_livraison): self
+  public function setLieuLivraison(?string $lieuLivraison): self
   {
-    $this->lieu_livraison = $lieu_livraison;
+    $this->lieuLivraison = $lieuLivraison;
 
     return $this;
   }
 
   /**
-   * Get the value of prix_livraison
+   * Get the value of prixLivraison
    */
   public function getPrixLivraison(): ?float
   {
-    return $this->prix_livraison;
+    return $this->prixLivraison;
   }
 
   /**
-   * Set the value of prix_livraison
+   * Set the value of prixLivraison
    */
-  public function setPrixLivraison(?float $prix_livraison): self
+  public function setPrixLivraison(?float $prixLivraison): self
   {
-    $this->prix_livraison = $prix_livraison;
+    $this->prixLivraison = $prixLivraison;
 
     return $this;
   }
 
   /**
-   * Get the value of prix_total
+   * Get the value of prixTotal
    */
   public function getPrixTotal(): ?float
   {
-    return $this->prix_total;
+    return $this->prixTotal;
   }
 
   /**
-   * Set the value of prix_total
+   * Set the value of prixTotal
    */
-  public function setPrixTotal(?float $prix_total): self
+  public function setPrixTotal(?float $prixTotal): self
   {
-    $this->prix_total = $prix_total;
+    $this->prixTotal = $prixTotal;
 
     return $this;
   }
 
   /**
-   * Get the value of user_id
+   * Get the value of userId
    */
   public function getUserId(): ?int
   {
-    return $this->user_id;
+    return $this->userId;
   }
 
   /**
-   * Set the value of user_id
+   * Set the value of userId
    */
-  public function setUserId(?int $user_id): self
+  public function setUserId(?int $userId): self
   {
-    $this->user_id = $user_id;
+    $this->userId = $userId;
 
     return $this;
   }
 
   /**
-   * Get the value of status_id
+   * Get the value of statusId
    */
   public function getStatusId(): ?int
   {
-    return $this->status_id;
+    return $this->statusId;
   }
 
   /**
-   * Set the value of status_id
+   * Set the value of statusId
    */
-  public function setStatusId(?int $status_id): self
+  public function setStatusId(?int $statusId): self
   {
-    $this->status_id = $status_id;
+    $this->statusId = $statusId;
 
     return $this;
   }

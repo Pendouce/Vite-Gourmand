@@ -36,6 +36,9 @@ CREATE TABLE commande(
   status_id INT NOT NULL
 );
 
+ALTER TABLE commande CHANGE heure_Livraison heure_livraison TIME;
+
+
 CREATE TABLE status(
   status_id INT AUTO_INCREMENT PRIMARY KEY,
   libelle VARCHAR(255) NOT NULL
@@ -88,6 +91,9 @@ CREATE TABLE commande_prestation(
   prestation_id INT,
   PRIMARY KEY(commande_id, prestation_id)
 ); 
+
+ALTER TABLE commande_prestation CHANGE montant_penalité montant_penalite DOUBLE;
+ALTER TABLE commande_prestation DROP COLUMN montant_penalite;
 ALTER TABLE commande_prestation
 ADD CONSTRAINT fk_cmd Foreign Key (commande_id) REFERENCES commande (commande_id),
 ADD CONSTRAINT fk_prt Foreign Key (prestation_id) REFERENCES prestation (prestation_id);
