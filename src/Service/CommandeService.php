@@ -80,6 +80,13 @@ class CommandeService
       $prixPresta[] = $prestationParId->getPrixPresta();
     }
 
+    $dateLivraison = new DateTimeImmutable($data['date_livraison']);
+    $delaisMinimum = new DateTimeImmutable('now', new DateTimeZone('Europe/Paris'))->modify("+5 days");
+
+    if($dateLivraison < $delaisMinimum){
+      throw new Exception('Le delais minimum entre la commande et la livraison est de 5 jours');
+    }
+
     if($prixTotalPresta != $this->calculPrixService->calculerTotalpresta($menusCommande, $prixPresta)){
       throw new Exception('Erreur prix total presta '. $this->calculPrixService->calculerTotalpresta($menusCommande, $prixPresta));
     }
@@ -96,6 +103,8 @@ class CommandeService
     $data['status_id'] = 1;
     $data['nb_commande'] = $this->genererNbCommande();
     $data['nb_personne'] = $this->calculPrixService->calculerNbPersonneCommande($menusCommande);
+
+   
 
     //Envoie du mail de confirmation
 
