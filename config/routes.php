@@ -21,6 +21,7 @@ return[
     "/plats/" => ["controller" => "App\Controller\PlatController", "action" => "afficherPlat"],
     "/detailPlat/" => ["controller" => "App\Controller\PlatController", "action" => "afficherDetailPlat"],
     "/modifierPlat/" => ["controller" => "App\Controller\PlatController", "action" => "modifierPlat"],
+    "/modifierStockPlat/" => ["controller" => "App\Controller\PlatController", "action" => "modifierStockPlat"],
     "/supprimerPlat/" => ["controller" => "App\Controller\PlatController", "action" => "supprimerPlat"],
     "/modifierStatusPlat/" => ["controller" => "App\Controller\PlatController", "action" => "modifierStatusPlat"],
     "/creerMenu/" => ["controller" => "App\Controller\MenuController", "action" => "creerMenu"],

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\TypeDePlatRepository;
+use App\Factory\ContainerId;
 use App\Service\TypeDePlatService;
 use Exception;
 
@@ -12,8 +12,7 @@ class TypeDePlatController extends Controller
 
   public function __construct() {
     parent::__construct();
-    $typeDePlatRepository = new TypeDePlatRepository();
-    $this->typeDePlatService = new TypeDePlatService($typeDePlatRepository);
+    $this->typeDePlatService = ContainerId::getTypeDePlatService();
   }
 
   public function creerTypeDePlat()

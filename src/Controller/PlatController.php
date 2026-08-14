@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
-use App\Repository\PlatRepository;
-use App\Repository\AllergeneRepository;
 use App\Service\PlatService;
+use App\Factory\ContainerId;
 use Exception;
 
 class PlatController extends Controller
@@ -13,9 +12,7 @@ class PlatController extends Controller
   
   public function __construct() {
     parent::__construct();
-    $platRepository = new PlatRepository();
-    $allergeneRepository = new AllergeneRepository();
-    $this->platService = new PlatService($platRepository, $allergeneRepository);
+    $this->platService = ContainerId::getPlatService();
   }
 
   public function creerPlat()
@@ -122,6 +119,23 @@ class PlatController extends Controller
     try{
       $this->platService->modifierStatusPlat($platId, $status);
       $_SESSION['succes'] = "Status modifié";
+      header('location: /detailPlat?id='.$platId);
+      exit;
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /detailPlat?='.$platId);
+      exit;
+    }
+  }
+
+  public function modifierStockPlat()
+  {
+    $stock = (int) $_POST['stock_plat'];
+    $platId = $_GET['id'];
+
+    try{
+      $this->platService->modifierStockPlat($platId, $stock);
+      $_SESSION['succes'] = "Stock modifié";
       header('location: /detailPlat?id='.$platId);
       exit;
     }catch(Exception $e){

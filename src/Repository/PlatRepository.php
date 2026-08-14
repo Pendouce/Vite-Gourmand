@@ -145,6 +145,16 @@ class PlatRepository extends Repository
     $statement->execute();
   }
 
+  public function modifierStockPlat(int $platId, int $stock)
+  {
+    $sql = 'UPDATE plat SET stock_plat = :stock_plat WHERE plat_id = :plat_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':stock_plat', $stock, PDO::PARAM_INT);
+    $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
+    $statement->execute();
+  }
+
 // Delete
 
   public function supprimerPlatDuMenu(int $menuId, int $platId)

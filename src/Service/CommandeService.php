@@ -22,11 +22,13 @@ class CommandeService
   private UserRepository $userRepository;
   private CalculPrixService $calculPrixService;
   private MailService $mailService;
+  private MenuService $menuService;
 
   public function __construct(CommandeRepository $commandeRepository, CommandePrestaRepository $commandePrestaRepository, 
   CommandeMenuRepository $commandeMenuRepository, MenuRepository $menuRepository, 
   PrestationRepository $prestationRepository, UserRepository $userRepository,
-  CalculPrixService $calculPrixService, MailService $mailService)
+  CalculPrixService $calculPrixService, MailService $mailService,
+  MenuService $menuService)
   {
     $this->commandeRepository = $commandeRepository;
     $this->commandePrestaRepository = $commandePrestaRepository;
@@ -36,6 +38,7 @@ class CommandeService
     $this->calculPrixService = $calculPrixService;
     $this->userRepository = $userRepository;
     $this->mailService = $mailService;
+    $this->menuService = $menuService;
   }
 
   public function creerCommande(array $data, array $dataMenu, array $dataPresta, float $prixTotalPresta, array $dataUser)
@@ -66,6 +69,8 @@ class CommandeService
           'nombre_personne_min' => $nbPersMin, 
           'nb_personne_menu' => $menu['nb_personne_menu']
         ];
+
+      $this->menuService->verifStockDispo($menu['menu_id'], $menu['nb_personne_menu']);
     }
 
     // Je boucle sur mes prestation pour recuperer le prix de chacunes d'entres elles
@@ -76,7 +81,7 @@ class CommandeService
     }
 
     if($prixTotalPresta != $this->calculPrixService->calculerTotalpresta($menusCommande, $prixPresta)){
-      throw new Exception('Erreur prix total presta');
+      throw new Exception('Erreur prix total presta '. $this->calculPrixService->calculerTotalpresta($menusCommande, $prixPresta));
     }
 
     if($data['prix_livraison'] != $this->calculPrixService->calculerPrixDeLivraison(ADRESSE_VG , $data['lieu_livraison'])){
@@ -92,7 +97,8 @@ class CommandeService
     $data['nb_commande'] = $this->genererNbCommande();
     $data['nb_personne'] = $this->calculPrixService->calculerNbPersonneCommande($menusCommande);
 
-    //var_dump($data);
+    //Envoie du mail de confirmation
+
     return $this->commandeRepository->creerCommande($data);
   }
 
@@ -123,6 +129,9 @@ class CommandeService
     foreach($dataMenu as $data){
       $data['commande_id'] = $commandeId;
       $menu[] = $this->commandeMenuRepository->ajouterMenuCommande($data);
+
+      // Je decremente le stock des plats du menu commandé
+      $this->menuService->stockePlat($data['menu_id'], $data['nb_personne_menu']);
     }
 
     return $menu;
@@ -135,4 +144,5 @@ class CommandeService
     }
     return $nbGenere;
   }
+
 }

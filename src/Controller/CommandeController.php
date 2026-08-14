@@ -2,16 +2,10 @@
 
 namespace App\Controller;
 
-use App\Repository\CommandeMenuRepository;
-use App\Repository\CommandePrestaRepository;
-use App\Repository\CommandeRepository;
-use App\Repository\MenuRepository;
-use App\Repository\PrestationRepository;
-use App\Repository\UserRepository;
-use App\Service\CalculPrixService;
 use App\Service\CommandeService;
-use App\Service\MailService;
+use App\Factory\ContainerId;
 use Exception;
+
 
 class CommandeController extends Controller
 {
@@ -19,16 +13,7 @@ class CommandeController extends Controller
 
   public function __construct() {
     parent::__construct();
-    $commandeRepository = new CommandeRepository();
-    $commandePrestaRepository = new CommandePrestaRepository();
-    $commandeMenuRepository = new CommandeMenuRepository();
-    $menuRepository = new MenuRepository;
-    $prestationRepository = new PrestationRepository();
-    $userRepository = new UserRepository();
-    $calculPrixService = new CalculPrixService();
-    $mailService = new MailService();
-    $this->commandeService = new CommandeService($commandeRepository, $commandePrestaRepository,$commandeMenuRepository, 
-    $menuRepository, $prestationRepository, $userRepository, $calculPrixService, $mailService);
+    $this->commandeService = ContainerId::getCommandeService();
   }
 
   public function creerCommande()
@@ -42,6 +27,7 @@ class CommandeController extends Controller
           'menu_id' => (int) $menuId,
           'nb_personne_menu' => (int) $_POST['nb_personne_menu'][$index]
         ];
+        //var_dump($dataMenus);
       }
 
       $dataPrestas = [];
@@ -68,10 +54,11 @@ class CommandeController extends Controller
         'prix_livraison' => $_POST['prix_livraison'],
         'prix_total' => $_POST['prix_total'],
       ];
+      //var_dump($dataCommande['nb_personne']);
 
-      $this->nettoyerDonnees($dataCommande);
-      $this->nettoyerDonnees($dataMenus);
-      $this->nettoyerDonnees($dataPrestas);
+      $dataCommande = $this->nettoyerDonnees($dataCommande);
+      $dataMenus = $this->nettoyerDonnees($dataMenus);
+      $dataPrestas = $this->nettoyerDonnees($dataPrestas);
 
       try{
         $dataCommande['user_id'] = (int) $_SESSION['user_id'];

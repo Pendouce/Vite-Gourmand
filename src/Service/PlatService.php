@@ -113,6 +113,11 @@ class PlatService
     $this->platRepository->modifierStatusPlat($platId, $status);
   }
 
+  public function modifierStockPlat(int $platId, int $stock)
+  {
+    $this->platRepository->modifierStockPlat($platId, $stock);
+  }
+
   public function supprimerPlat(int $platId)
   {
     $this->allergeneRepository->supprimerPlat($platId);

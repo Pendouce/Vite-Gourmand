@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\TypeDePrestaRepository;
+use App\Factory\ContainerId;
 use App\Service\TypeDePrestaService;
 use Exception;
 
@@ -13,8 +13,7 @@ class TypeDePrestaController extends Controller
   public function __construct()
   {
     parent::__construct();
-    $typeDePrestaRepository = new TypeDePrestaRepository();
-    $this->typeDePrestaService = new TypeDePrestaService($typeDePrestaRepository);
+    $this->typeDePrestaService = ContainerId::getTypeDePrestaService();
   }
 
   public function creerTypeDePresta()

@@ -19,8 +19,9 @@ class MenuService
   private ThemeRepository $themeRepository;
   private PlatRepository $platRepository;
   private PlatService $platService;
+  private CalculStockService $calculStockService;
 
-  public function __construct(MenuRepository $menuRepository, RegimeRepository $regimeRepository,EvenementRepository $evenementRepository, ThemeRepository $themeRepository, PlatRepository $platRepository, PlatService $platService)
+  public function __construct(MenuRepository $menuRepository, RegimeRepository $regimeRepository,EvenementRepository $evenementRepository, ThemeRepository $themeRepository, PlatRepository $platRepository, PlatService $platService, CalculStockService $calculStockService)
   {
     $this->menuRepository = $menuRepository;
     $this->regimeRepository = $regimeRepository;
@@ -28,6 +29,7 @@ class MenuService
     $this->themeRepository = $themeRepository;
     $this->platRepository = $platRepository;
     $this->platService = $platService;
+    $this->calculStockService = $calculStockService;
   }
 
   public function creerMenu(array $data)
@@ -391,5 +393,31 @@ class MenuService
     }
   }
 
+  
+  public function stockePlat(int $menuId, int $nbPersonneMenu) : void
+  {
+    $plats = $this->platRepository->trouverPlatDuMenu($menuId);
+
+    foreach($plats as $plat){
+      $stockPlat = $this->calculStockService->calculerStockPlat($plat->getStockPlat(), $nbPersonneMenu);
+      $this->platRepository->modifierStockPlat($plat->getPlatId(), $stockPlat);
+    
+      $menuContenantPlats = $this->menuRepository->trouverMenuDePlat($plat->getPlatId());
+
+      foreach($menuContenantPlats as $menu){
+        $platDuMenu = $this->platRepository->trouverPlatDuMenu($menu->getMenuId());
+        $stockPlats = array_map(fn ($sp) => $sp->getStockPlat(), $platDuMenu);
+        $stockMenu = min($stockPlats);
+        $this->menuRepository->modifierStockMenu($menu->getMenuId(), $stockMenu);
+      }
+    }
+  }
+
+  public function verifStockDispo(int $menuId, int $nbPersonneMenu): void
+  {
+    $platsDuMenu = $this->platRepository->trouverPlatDuMenu($menuId);
+    $stocksPlats = array_map(fn($plat) => $plat->getStockPlat(), $platsDuMenu);
+    $this->calculStockService->calculerStockMenu($stocksPlats, $nbPersonneMenu);
+  }
 
 }

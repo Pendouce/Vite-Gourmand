@@ -221,6 +221,27 @@ class MenuRepository extends Repository
     return $tabMenuFiltre;
   }
 
+  // Trouver tous les menu contenants plat_id
+  public function trouverMenuDePlat(int $platId)
+  {
+    $sql = 'SELECT menu.* FROM menu_plat
+    INNER JOIN menu ON menu_plat.menu_id = menu.menu_id
+    WHERE menu_plat.plat_id = :plat_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':plat_id', $platId, PDO::PARAM_INT);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabMenu = [];
+    
+    foreach($data as $menu)
+    {
+      $tabMenu[] = Menu::creerEtHydrate($menu);
+    }
+    return $tabMenu;
+  }
+
   // Update
 
   public function modifierMenu(array $data)
@@ -240,6 +261,16 @@ class MenuRepository extends Repository
 
     $statement = $this->pdo->prepare($sql);
     $statement->bindValue(':menu_actif', $status, PDO::PARAM_BOOL);
+    $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
+    $statement->execute();
+  }
+
+    public function modifierStockMenu(int $menuId, int $stock)
+  {
+    $sql = 'UPDATE menu SET stock_dispo = :stock_dispo WHERE menu_id = :menu_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':stock_dispo', $stock, PDO::PARAM_INT);
     $statement->bindValue(':menu_id', $menuId, PDO::PARAM_INT);
     $statement->execute();
   }

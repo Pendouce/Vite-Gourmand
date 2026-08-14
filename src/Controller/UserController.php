@@ -4,9 +4,8 @@ namespace App\Controller;
 
 use App\Exceptions\EmailException;
 use App\Exceptions\MotDepasseException;
+use App\Factory\ContainerId;
 use App\Service\UserService;
-use App\Service\MailService;
-use App\Repository\UserRepository;
 use Exception;
 
 class UserController extends Controller
@@ -15,9 +14,7 @@ class UserController extends Controller
 
   public function __construct() {
     parent::__construct();
-    $userRepository = new UserRepository();
-    $mailService = new MailService();
-    $this->userService = new UserService($userRepository, $mailService);
+    $this->userService = ContainerId::getUserService();
   }
 
   public function inscription()
