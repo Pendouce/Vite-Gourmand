@@ -33,44 +33,73 @@ class CalculPrixTest extends TestCase
 
   public function testcalculTotalCommandeSansRemise()
   {
+
+    $menuCommande = [
+      [
+        'prix_personne' => 50.0, 
+        'nombre_personne_min' => 10, 
+        'nb_personne' => 12
+      ]
+    ];
+
     $total = $this->calculPrixService->calculTotalCommande(
       [],           // presta vide
+      //50.0,         // prixMenu
+      $menuCommande,
+      'adresse traiteur',
+      'adresse client'
+    );
+   /*  $total = $this->calculPrixService->calculTotalCommande(
+      [],           // presta vide
+      //50.0,         // prixMenu
       50.0,         // prixMenu
       10,           // nbPersonnesMin
       12,           // nbPersonnes (pas de remise)
       'adresse traiteur',
       'adresse client'
-    );
+    ); */
 
     $this->assertEquals(695.60, $total);
   }
 
   public function testcalculTotalCommandeAvecRemiseEtPresta()
   {
+    $menuCommande = [
+      [
+        'prix_personne' => 50.0,      // prixMenu
+        'nombre_personne_min' => 10,  // nbPersonnesMin
+        'nb_personne' => 15           // nbPersonnes (remise)
+      ]
+    ];
+
      $total = $this->calculPrixService->calculTotalCommande(
         [12, 20, 40],     // prix prestas
-        50.0,             // prixMenu
-        10,               // nbPersonnesMin
-        15,               // nbPersonnes (remise)
+        $menuCommande,
         'adresse traiteur',
         'adresse client'
     );
 
-    $this->assertEquals(842.60, $total);
+    $this->assertEquals(962.60, $total);
   }
 
   public function testcalculTotalCommandeClientBordeaux()
   {
+  $menuCommande = [
+      [
+        'prix_personne' => 50.0,      // prixMenu
+        'nombre_personne_min' => 10,  // nbPersonnesMin
+        'nb_personne' => 15           // nbPersonnes (remise)
+      ]
+    ];
+
      $total = $this->calculPrixService->calculTotalCommande(
         [12, 20, 40],     // prix prestas
-        50.0,             // prixMenu
-        10,               // nbPersonnesMin
-        15,               // nbPersonnes (remise)
+        $menuCommande,
         'adresse traiteur',
         'adresse client bordeaux'
     );
 
-    $this->assertEquals(752.00, $total);
+    $this->assertEquals(872.00, $total);
   }
 
 }

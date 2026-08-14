@@ -40,4 +40,5 @@ return[
     "/modifierPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "modifierPrestation"],
     "/modifierStatusPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "modifierStatusPrestation"],
     "/supprimerPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "supprimerPrestation"],
+    "/commandeMenu/" => ["controller" => "App\Controller\CommandeController", "action" => "creerCommande"],
 ];

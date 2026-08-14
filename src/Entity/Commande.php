@@ -9,9 +9,8 @@ class Commande extends Entity
   protected ?int $commandeId = null;
   protected ?int $nbCommande = null;
   protected ?DateTimeImmutable $dateCommande = null;
-  protected ?DateTimeImmutable $datePrestation = null;
+  protected ?DateTimeImmutable $dateLivraison = null;
   protected ?int $nbPersonne = null;
-  protected ?string $heureLivraison = null;
   protected ?string $lieuLivraison = null;
   protected ?float $prixLivraison = null;
   protected ?float $prixTotal = null;
@@ -78,19 +77,19 @@ class Commande extends Entity
   }
 
   /**
-   * Get the value of datePrestation
+   * Get the value of dateLivraison
    */
-  public function getDatePrestation(): ?DateTimeImmutable
+  public function getDateLivraison(): ?DateTimeImmutable
   {
-    return $this->datePrestation;
+    return $this->dateLivraison;
   }
 
   /**
-   * Set the value of datePrestation
+   * Set the value of dateLivraison
    */
-  public function setDatePrestation(?DateTimeImmutable $datePrestation): self
+  public function setDateLivraison(?DateTimeImmutable $dateLivraison): self
   {
-    $this->datePrestation = $datePrestation;
+    $this->dateLivraison = $dateLivraison;
 
     return $this;
   }
@@ -109,24 +108,6 @@ class Commande extends Entity
   public function setNbPersonne(?int $nbPersonne): self
   {
     $this->nbPersonne = $nbPersonne;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of heureLivraison
-   */
-  public function getHeureLivraison(): ?string
-  {
-    return $this->heureLivraison;
-  }
-
-  /**
-   * Set the value of heureLivraison
-   */
-  public function setHeureLivraison(?string $heureLivraison): self
-  {
-    $this->heureLivraison = $heureLivraison;
 
     return $this;
   }

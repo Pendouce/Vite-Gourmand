@@ -26,7 +26,7 @@ class Entity{
 
       if(method_exists($this, $methode)){
         if(str_contains($key, "date")){
-          $value = new DateTimeImmutable($value);
+          $value = $value !== null ? new DateTimeImmutable($value) : null;
         }
         $this->$methode($value);
       }else{

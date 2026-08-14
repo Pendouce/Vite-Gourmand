@@ -8,15 +8,66 @@ use App\Exceptions\IdInnexistantException;
 class CalculPrixService
 {
 
-  public function calculTotalCommande(array $presta, float $prixMenu, int $nbPersonnesMin, int $nbPersonnes, string $adresseVg, string $adresseClient)
+  public function calculTotalCommande(array $presta, array $menuCommande, string $adresseVg, string $adresseClient)
   {
-    $totalPresta = $this->calculerTotalpresta($presta);
+    $totalPresta = $this->calculerTotalpresta($menuCommande, $presta);
+    $totalMenu = 0;
+    foreach($menuCommande as $menu){
+      $totalMenu += $this->calculerTotalMenu(
+        $menu['prix_personne'], 
+        $menu['nombre_personne_min'], 
+        $menu['nb_personne_menu']);
+    }
+    $prixLivraison = $this->calculerPrixDeLivraison($adresseVg, $adresseClient);
+
+    $totalCommande = round($totalPresta + $totalMenu + $prixLivraison, 2);
+
+    return $totalCommande;
+  }
+/*   public function calculTotalCommande(array $presta, array $menuCommande, float $prixMenu, int $nbPersonnesMin, int $nbPersonnes, string $adresseVg, string $adresseClient)
+  {
+    $totalPresta = $this->calculerTotalpresta($menuCommande, $presta);
     $totalMenu = $this->calculerTotalMenu($prixMenu, $nbPersonnesMin, $nbPersonnes);
     $prixLivraison = $this->calculerPrixDeLivraison($adresseVg, $adresseClient);
 
     $totalCommande = round($totalPresta + $totalMenu + $prixLivraison, 2);
 
     return $totalCommande;
+  } */
+
+  private const SEUIL_DE_BASE = 5; // Prix presta fixe commence a partir de 5 prsn
+  private const PALIER = 5; // Calcul par 5 personnes (si nbPersonne = 7, presta pour 10)
+  private const SUPPLEMENT = 20; // 20€ ajouté par pallier
+
+  public function calculerTotalpresta(array $menuCommande, array $presta)
+  {
+    $nbPersonnes = $this->calculerNbPersonneCommande($menuCommande);
+    $seuil = self::SEUIL_DE_BASE;
+    $supplement = 0;
+
+    while($seuil < $nbPersonnes){
+      $seuil += self::PALIER;
+      $supplement += self::SUPPLEMENT;
+    }
+
+    // Je calcul le prix total de chaques prestations (map)
+    // Je les additionnent entres eux (sum)
+    $result = array_sum(
+      array_map(fn($prixPresta) => $prixPresta + $supplement, $presta)
+    );
+
+    return $result;
+  }
+
+  public function calculerNbPersonneCommande(array $menuCommande)
+  {
+    // J'additionne le nombre de personnes de chacun des menus de ma commande
+    // Puis j'additinne les totaux entre eux pour recuperer le nombre total de personnes de tous les menus
+    $totalNbPersonnes = array_sum(
+      array_map(fn($menu) => $menu['nb_personne_menu'], $menuCommande)
+    );
+
+    return $totalNbPersonnes;
   }
 
   private function calculerTotalMenu(float $prixMenu, int $nbPersonnesMin, int $nbPersonnes)
@@ -31,16 +82,9 @@ class CalculPrixService
     return $prixTotalMenu;
   }
 
-  private function calculerTotalpresta(array $presta)
-  {
-    //$presta = [10, 5, 5];
-    $result = array_reduce($presta, fn($sum, $presta) => $sum + $presta, 0);
-    //echo $result;
-    return $result;
-  }
-
   protected function geocoderAdresse(string $adresse)
   {
+    // Je recupere une api geocode url encode pour avoir le bon format d'adresse
     $json = file_get_contents('https://data.geopf.fr/geocodage/search?q='.urlencode($adresse));
     $parse = json_decode($json);
 
@@ -54,6 +98,7 @@ class CalculPrixService
 
   private function calculerDistance(array $coordoneesDepart, array $coordoneesArrivee)
   {
+    // Formule de Haversine calcule la distance en km a vol d'oiseau
 
     [$lon1, $lat1] = $coordoneesDepart;
     [$lon2, $lat2] = $coordoneesArrivee;
@@ -70,7 +115,7 @@ class CalculPrixService
     return $rayonTerre * $c;
   }
 
-  private function calculerPrixDeLivraison(string $adresseVg, string $adresseClient)
+  public function calculerPrixDeLivraison(string $adresseVg, string $adresseClient)
   {
     $fraisLivraison = 5;
     $geoVg = $this->geocoderAdresse($adresseVg);

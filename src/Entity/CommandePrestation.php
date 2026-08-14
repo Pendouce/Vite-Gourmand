@@ -6,10 +6,11 @@ use DateTimeImmutable;
 
 class CommandePrestation extends Entity
 {
-  protected ?int $prixTotalPresta = null;
+  protected ?float $prixTotalPresta = null;
   protected ?DateTimeImmutable $datePresta = null;
   protected ?DateTimeImmutable $dateRetourPrevu = null;
   protected ?DateTimeImmutable $dateRetour = null;
+  protected ?string $adressePresta = null;
   protected ?float $tauxRetard = null;
   protected ?int $commandeId = null;
   protected ?int $prestationId = null;
@@ -17,7 +18,7 @@ class CommandePrestation extends Entity
   /**
    * Get the value of prixTotalPresta
    */
-  public function getPrixTotalPresta(): ?int
+  public function getPrixTotalPresta(): ?float
   {
     return $this->prixTotalPresta;
   }
@@ -25,7 +26,7 @@ class CommandePrestation extends Entity
   /**
    * Set the value of prixTotalPresta
    */
-  public function setPrixTotalPresta(?int $prixTotalPresta): self
+  public function setPrixTotalPresta(?float $prixTotalPresta): self
   {
     $this->prixTotalPresta = $prixTotalPresta;
 
@@ -136,6 +137,24 @@ class CommandePrestation extends Entity
   public function setPrestationId(?int $prestationId): self
   {
     $this->prestationId = $prestationId;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of adressePresta
+   */
+  public function getAdressePresta(): ?string
+  {
+    return $this->adressePresta;
+  }
+
+  /**
+   * Set the value of adressePresta
+   */
+  public function setAdressePresta(?string $adressePresta): self
+  {
+    $this->adressePresta = $adressePresta;
 
     return $this;
   }

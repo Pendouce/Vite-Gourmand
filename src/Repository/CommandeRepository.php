@@ -3,17 +3,18 @@
 namespace App\Repository;
 
 use App\Entity\Commande;
+use PDO;
 
 class CommandeRepository extends Repository
 {
   public function creerCommande(array $data)
   {
     $sql = 'INSERT INTO commande (
-    commande_id, nb_commande, date_commande, date_prestation, nb_personne, 
-    heure_Livraison, lieu_livraison, prix_livraison, prix_total, user_id, status_id)
+    nb_commande, date_commande, nb_personne, 
+    date_livraison, lieu_livraison, prix_livraison, prix_total, user_id, status_id)
     VALUES (
-    :commande_id, :nb_commande, :date_commande, :date_prestation, :nb_personne, :
-    heure_Livraison, :lieu_livraison, :prix_livraison, :prix_total, :user_id, :status_id)
+    :nb_commande, :date_commande, :nb_personne, 
+    :date_livraison, :lieu_livraison, :prix_livraison, :prix_total, :user_id, :status_id)
     ';
 
     $statement = $this->pdo->prepare($sql);
@@ -24,4 +25,15 @@ class CommandeRepository extends Repository
     return Commande::creerEtHydrate($data);
   }
 
+  public function trouverCommandeParNb(int $nbCommande): bool
+  {
+    $sql = 'SELECT COUNT(*) FROM commande
+    WHERE nb_commande = :nb_commande';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':nb_commande', $nbCommande, PDO::PARAM_INT);
+    $statement->execute();
+
+    return $statement->fetchColumn();
+  }
 }
