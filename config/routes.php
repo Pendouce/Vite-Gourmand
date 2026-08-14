@@ -41,5 +41,8 @@ return[
     "/modifierPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "modifierPrestation"],
     "/modifierStatusPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "modifierStatusPrestation"],
     "/supprimerPrestation/" => ["controller" => "App\Controller\PrestationController", "action" => "supprimerPrestation"],
+    "/creerBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "creerBoisson"],
+    "/boisson/" => ["controller" => "App\Controller\BoissonController", "action" => "afficherBoisson"],
+    "/detailBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "afficherBoissonParId"],
     "/commandeMenu/" => ["controller" => "App\Controller\CommandeController", "action" => "creerCommande"],
 ];

@@ -31,7 +31,7 @@ class MenuRepository extends Repository
     $statement->bindValue(':titre', $titre, PDO::PARAM_STR);
     $statement->execute();
 
-    return $statement->fetch(PDO::PARAM_STR);
+    return $statement->fetch(PDO::FETCH_ASSOC);
   }
 
   public function trouverMenu()

@@ -3,6 +3,7 @@
 namespace App\Factory;
 
 use App\Repository\AllergeneRepository;
+use App\Repository\BoissonRepository;
 use App\Repository\CommandeMenuRepository;
 use App\Repository\CommandePrestaRepository;
 use App\Repository\CommandeRepository;
@@ -15,6 +16,7 @@ use App\Repository\ThemeRepository;
 use App\Repository\TypeDePlatRepository;
 use App\Repository\TypeDePrestaRepository;
 use App\Repository\UserRepository;
+use App\Service\BoissonService;
 use App\Service\CalculPrixService;
 use App\Service\CalculStockService;
 use App\Service\CommandeService;
@@ -90,6 +92,13 @@ class ContainerId
       new CalculPrixService(),
       new MailService(),
       self::getMenuService()
+    );
+  }
+
+  public static function getBoissonService(): BoissonService
+  {
+    return new BoissonService(
+      new BoissonRepository()
     );
   }
 }
