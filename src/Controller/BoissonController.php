@@ -66,4 +66,95 @@ class BoissonController extends Controller
 
     $this->render('pages/employe/detailBoisson', ['boisson' => $boisson]);
   }
+
+  public function modifierBoisson()
+  {
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $data = [
+        'nom_boisson' => $_POST['nom_boisson'] ?? null,
+        'prix_boisson' => $_POST['prix_boisson'] ?? null,
+        'alcool' => $_POST['alcool'] ?? null,
+        'stock_boisson' => $_POST['stock_boisson'] ?? null,
+        'boisson_actif' => $_POST['boisson_actif'] ?? null,
+      ];
+
+      if (key_exists('photo_boisson', $_FILES) && $_FILES['photo_boisson']['error'] === UPLOAD_ERR_OK) {
+        $data['photo_boisson'] = $this->uploadImage($_FILES['photo_boisson'], "boisson");
+      }
+
+      $data = $this->nettoyerDonnees($data);
+
+      try{
+        $boissonId = (int) $_GET['id'];
+        
+        $this->boissonService->modifierBoisson($boissonId, $data);
+        $_SESSION['succes'] = 'Boisson Modifiée';
+        header('location: /detailBoisson?id='.$boissonId);
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /modifierBoisson');
+        exit;
+      }
+
+    }else{
+      $this->render('pages/employe/modifierBoisson');
+    }
+  }
+
+  public function modifierStatusBoisson()
+  {
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $status = htmlspecialchars($_POST['boisson_actif']);
+      $boissonId = (int)$_GET['id'];
+
+      //var_dump($boissonId, $status);
+      try{
+        $this->boissonService->modifierStatusBoisson($boissonId, $status);
+        //var_dump('ok');
+        $_SESSION['succes'] = 'Status modifié';
+        header('location: /detailBoisson?id='.$boissonId);
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /detailBoisson?id='.$boissonId);
+        exit;
+      }
+    }
+  }
+
+  public function modifierStockBoisson()
+  {
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $stock = htmlspecialchars($_POST['stock_boisson']);
+      $boissonId = $_GET['id'];
+
+      //var_dump($stock);
+      try{
+        $this->boissonService->modifierStockBoisson($boissonId, $stock);
+        $_SESSION['succes'] = 'Stock modifié';
+        header('location: /detailBoisson?id='.$boissonId);
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /detailBoisson?id='.$boissonId);
+        exit;
+      }
+    }
+  }
+
+  public function supprimerBoisson()
+  {
+    $boissonId = $_GET['id'];
+    try{
+        $this->boissonService->supprimerBoisson($boissonId);
+        $_SESSION['succes'] = 'Boisson supprimée';
+        header('location: /boisson');
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /detailBoisson?id='.$boissonId);
+        exit;
+      }
+  }
 }

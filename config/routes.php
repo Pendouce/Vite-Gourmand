@@ -44,5 +44,9 @@ return[
     "/creerBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "creerBoisson"],
     "/boisson/" => ["controller" => "App\Controller\BoissonController", "action" => "afficherBoisson"],
     "/detailBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "afficherBoissonParId"],
+    "/modifierBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "modifierBoisson"],
+    "/modifierStatusBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "modifierStatusBoisson"],
+    "/modifierStockBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "modifierStockBoisson"],
+    "/supprimerBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "supprimerBoisson"],
     "/commandeMenu/" => ["controller" => "App\Controller\CommandeController", "action" => "creerCommande"],
 ];

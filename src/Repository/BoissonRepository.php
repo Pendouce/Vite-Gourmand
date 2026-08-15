@@ -69,5 +69,51 @@ class BoissonRepository extends Repository
     return Boisson::creerEtHydrate($boisson);
   }
   //Update
+
+  public function modifierBoisson(array $data)
+  {
+    $sql = 'UPDATE boisson SET nom_boisson = :nom_boisson,
+    photo_boisson = :photo_boisson,
+    prix_boisson = :prix_boisson,
+    alcool = :alcool,
+    stock_boisson = :stock_boisson,
+    boisson_actif = :boisson_actif
+    WHERE boisson_id = :boisson_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
+
+  public function modifierStatusBoisson(int $boissonId, int $status)
+  {
+    $sql = 'UPDATE boisson SET boisson_actif = :boisson_actif
+    WHERE boisson_id = :boisson_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':boisson_id', $boissonId, PDO::PARAM_INT);
+    $statement->bindValue(':boisson_actif', $status, PDO::PARAM_BOOL);
+    $statement->execute();
+  }
+
+
+  public function modifierStockBoisson(int $boissonId, int $stock)
+  {
+    $sql = 'UPDATE boisson SET stock_boisson = :stock_boisson
+    WHERE boisson_id = :boisson_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':stock_boisson', $stock, PDO::PARAM_INT);
+    $statement->bindValue(':boisson_id', $boissonId, PDO::PARAM_INT);
+    $statement->execute();
+  }
   //Delete
+
+  public function supprimerBoisson(int $boissonId)
+  {
+    $sql = 'DELETE FROM boisson WHERE boisson_id = :boisson_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':boisson_id', $boissonId, PDO::PARAM_INT);
+    $statement->execute();
+  }
 }
