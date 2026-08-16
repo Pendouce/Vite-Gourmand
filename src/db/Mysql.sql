@@ -121,6 +121,7 @@ CREATE TABLE commande_boisson(
   PRIMARY KEY(commande_id, boisson_id)
 ); 
 
+ALTER TABLE commande_boisson ADD COLUMN prix_unitaire DOUBLE;
 ALTER TABLE commande_boisson
 ADD CONSTRAINT fk_com Foreign Key (commande_id) REFERENCES commande (commande_id),
 ADD CONSTRAINT fk_bss Foreign Key (boisson_id) REFERENCES boisson (boisson_id);

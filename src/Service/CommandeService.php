@@ -126,11 +126,14 @@ class CommandeService
     $data['nb_commande'] = $this->genererNbCommande();
     $data['nb_personne'] = $this->calculPrixService->calculerNbPersonneCommande($menusCommande);
 
-   
+    $commande = $this->commandeRepository->creerCommande($data);
 
     //Envoie du mail de confirmation
+    $html = $this->mailService->recupererHtml('commandeMail', ['prenom' => $dataUser['prenom'], 'nbCommande' => $data['nb_commande']]);
+    $objet = 'Confirmation de votre commande';
+    $this->mailService->envoyer($dataUser['email'], $objet, $html);
 
-    return $this->commandeRepository->creerCommande($data);
+    return $commande;
   }
 
   public function ajouterPrestaCommande(int $commandeId, float $prixTotalPresta, array $dataPresta)
@@ -172,7 +175,9 @@ class CommandeService
   {
     $boisson = [];
     foreach($dataBoisson as $data){
+      $boissonParId = $this->boissonRepository->trouverBoissonParId($data['boisson_id']);
       $data['commande_id'] = $commandeId;
+      $data['prix_unitaire'] = $boissonParId->getPrixBoisson();
       $boisson[] = $this->commandeBoissonRepository->ajouterBoissonCommande($data);
 
       $this->menuService->stockePlat($data['boisson_id'], $data['quantite']);
