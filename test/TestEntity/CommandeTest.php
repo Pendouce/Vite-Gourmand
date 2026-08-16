@@ -17,9 +17,7 @@ class CommandeTest extends TestCase
       'commande_id' => '2',
       'nb_commande' => '788', 
       'date_commande' => '2026-05-01', 
-      'date_prestation' => '2026-06-08', 
       'nb_personne' => '2', 
-      'heure_Livraison' => '14:30', 
       'lieu_livraison' => 'Bordeaux', 
       'prix_livraison' => '5', 
       'prix_total' => '22.90', 
@@ -37,7 +35,7 @@ class CommandeTest extends TestCase
     $this->assertEquals(788, $commande->getNbCommande());
     $this->assertEquals('Bordeaux', $commande->getLieuLivraison());
     // Je verifie que datePrestation retourne bien un objet dateTime et pas une string
-    $this->assertInstanceOf(DateTimeImmutable::class, $commande->getDatePrestation());
+    $this->assertInstanceOf(DateTimeImmutable::class, $commande->getDateCommande());
   }
 
 }
