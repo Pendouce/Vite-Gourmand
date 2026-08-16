@@ -2,9 +2,11 @@
 
 namespace App\Service;
 
+use App\Repository\BoissonRepository;
+use App\Repository\CommandeBoissonRepository;
+use App\Repository\CommandeMenuRepository;
 use App\Repository\CommandePrestaRepository;
 use App\Repository\CommandeRepository;
-use App\Repository\CommandeMenuRepository;
 use App\Repository\MenuRepository;
 use App\Repository\PrestationRepository;
 use App\Repository\UserRepository;
@@ -17,31 +19,38 @@ class CommandeService
   private CommandeRepository $commandeRepository;
   private CommandePrestaRepository $commandePrestaRepository;
   private CommandeMenuRepository $commandeMenuRepository;
+  private CommandeBoissonRepository $commandeBoissonRepository;
   private MenuRepository $menuRepository;
   private PrestationRepository $prestationRepository;
+  private BoissonRepository $boissonRepository;
   private UserRepository $userRepository;
+  private BoissonService $boissonService;
   private CalculPrixService $calculPrixService;
   private MailService $mailService;
   private MenuService $menuService;
 
   public function __construct(CommandeRepository $commandeRepository, CommandePrestaRepository $commandePrestaRepository, 
-  CommandeMenuRepository $commandeMenuRepository, MenuRepository $menuRepository, 
-  PrestationRepository $prestationRepository, UserRepository $userRepository,
-  CalculPrixService $calculPrixService, MailService $mailService,
-  MenuService $menuService)
+  CommandeMenuRepository $commandeMenuRepository, CommandeBoissonRepository $commandeBoissonRepository, 
+  MenuRepository $menuRepository, 
+  PrestationRepository $prestationRepository, BoissonRepository $boissonRepository,
+  UserRepository $userRepository, BoissonService $boissonService, CalculPrixService $calculPrixService,
+  MailService $mailService, MenuService $menuService)
   {
     $this->commandeRepository = $commandeRepository;
     $this->commandePrestaRepository = $commandePrestaRepository;
     $this->commandeMenuRepository = $commandeMenuRepository;
+    $this->commandeBoissonRepository = $commandeBoissonRepository;
     $this->menuRepository = $menuRepository;
     $this->prestationRepository = $prestationRepository;
+    $this->boissonRepository = $boissonRepository;
     $this->calculPrixService = $calculPrixService;
     $this->userRepository = $userRepository;
+    $this->boissonService = $boissonService;
     $this->mailService = $mailService;
     $this->menuService = $menuService;
   }
 
-  public function creerCommande(array $data, array $dataMenu, array $dataPresta, float $prixTotalPresta, array $dataUser)
+  public function creerCommande(array $data, array $dataMenu, array $dataPresta, array $dataBoisson, float $prixTotalPresta, array $dataUser)
   {
     $user = $this->userRepository->trouveUtilisateurById($data['user_id']);
     if($dataUser['nom'] !== $user->getNom()||
@@ -80,6 +89,19 @@ class CommandeService
       $prixPresta[] = $prestationParId->getPrixPresta();
     }
 
+    $boissonsCommande = [];
+    foreach($dataBoisson as $boisson){
+      $boissonParId = $this->boissonRepository->trouverBoissonParId($boisson['boisson_id']);
+
+      $boissonsCommande[] = [
+        'prix_boisson' => $boissonParId->getPrixBoisson(),
+        'quantite' => $boisson['quantite']
+      ];
+
+      $this->boissonService->verifStockBoisson($boisson['boisson_id'], $boisson['quantite']);
+    }
+
+
     $dateLivraison = new DateTimeImmutable($data['date_livraison']);
     $delaisMinimum = new DateTimeImmutable('now', new DateTimeZone('Europe/Paris'))->modify("+5 days");
 
@@ -95,7 +117,7 @@ class CommandeService
       throw new Exception('Erreur de prix livraison');
     }
 
-    if($data['prix_total'] != $this->calculPrixService->calculTotalCommande($prixPresta, $menusCommande, ADRESSE_VG, $data['lieu_livraison'])){
+    if($data['prix_total'] != $this->calculPrixService->calculTotalCommande($prixPresta, $menusCommande, $boissonsCommande, ADRESSE_VG, $data['lieu_livraison'])){
       throw new Exception('Erreur de prix total');
     }
 
@@ -144,6 +166,21 @@ class CommandeService
     }
 
     return $menu;
+  }
+
+  public function ajouterBoissonCommande(int $commandeId, array $dataBoisson)
+  {
+    $boisson = [];
+    foreach($dataBoisson as $data){
+      $data['commande_id'] = $commandeId;
+      $boisson[] = $this->commandeBoissonRepository->ajouterBoissonCommande($data);
+
+      $this->menuService->stockePlat($data['boisson_id'], $data['quantite']);
+      $this->boissonService->decrementerStockBoisson($data['boisson_id'], $data['quantite']);
+
+    }
+
+    return $boisson;
   }
 
   private function genererNbCommande(){

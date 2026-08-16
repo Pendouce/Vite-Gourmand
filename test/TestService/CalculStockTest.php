@@ -84,4 +84,45 @@ class CalculStockTest extends TestCase
       $calculStock->calculerStockMenu($plat, $nbMenu);
     }
 
+    public function testCalculStockBoissonDispo()
+    {
+      $stockBoisson = 18;
+      $nbBoisson = 10;
+
+      $calculStock = new CalculStockService;
+      $result = $calculStock->calculerStockBoisson($stockBoisson, $nbBoisson);
+
+      $this->assertEquals(8, $result);
+    }
+
+    public function testCalculStockBoissonEgalZero()
+    {
+      $stockBoisson = 12;
+      $nbBoisson = 12;
+
+      $calculStock = new CalculStockService;
+      $result = $calculStock->calculerStockBoisson($stockBoisson, $nbBoisson);
+
+      $this->assertEquals(0, $result);
+    }
+    /*  public function calculStockBoisson(int $stockBoisson, int $nbBoissonCommande)
+  {
+    if($stockBoisson < $nbBoissonCommande){
+      throw new StockDispoException($stockBoisson, "cette boisson");
+    }
+
+    return $stockBoisson - $nbBoissonCommande;
+  } */
+
+    public function testExceptionStockBoisson()
+    {
+      $stockBoisson = 10;
+      $nbBoisson = 16;
+
+      $this->expectException(StockDispoException::class);
+
+      $calculStock = new CalculStockService;
+      $calculStock->calculerStockBoisson($stockBoisson, $nbBoisson);
+    }
+
 }

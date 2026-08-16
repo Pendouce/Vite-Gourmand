@@ -31,35 +31,33 @@ class CalculPrixTest extends TestCase
     });
   }
 
-  public function testcalculTotalCommandeSansRemise()
+  public function testcalculTotalCommandeSansRemiseAvecBoisson()
   {
 
     $menuCommande = [
       [
         'prix_personne' => 50.0, 
         'nombre_personne_min' => 10, 
-        'nb_personne' => 12
+        'nb_personne_menu' => 12
+      ]
+    ];
+
+    $boissonCommande = [
+      [
+        'prix_boisson' =>10,
+        'quantite' => 3
       ]
     ];
 
     $total = $this->calculPrixService->calculTotalCommande(
       [],           // presta vide
-      //50.0,         // prixMenu
       $menuCommande,
+      $boissonCommande,
       'adresse traiteur',
       'adresse client'
     );
-   /*  $total = $this->calculPrixService->calculTotalCommande(
-      [],           // presta vide
-      //50.0,         // prixMenu
-      50.0,         // prixMenu
-      10,           // nbPersonnesMin
-      12,           // nbPersonnes (pas de remise)
-      'adresse traiteur',
-      'adresse client'
-    ); */
 
-    $this->assertEquals(695.60, $total);
+    $this->assertEquals(725.60, $total);
   }
 
   public function testcalculTotalCommandeAvecRemiseEtPresta()
@@ -68,18 +66,26 @@ class CalculPrixTest extends TestCase
       [
         'prix_personne' => 50.0,      // prixMenu
         'nombre_personne_min' => 10,  // nbPersonnesMin
-        'nb_personne' => 15           // nbPersonnes (remise)
+        'nb_personne_menu' => 15           // nbPersonnes (remise)
+      ]
+    ];
+
+    $boissonCommande = [
+      [
+        'prix_boisson' =>10,
+        'quantite' => 3
       ]
     ];
 
      $total = $this->calculPrixService->calculTotalCommande(
         [12, 20, 40],     // prix prestas
         $menuCommande,
+        $boissonCommande,
         'adresse traiteur',
         'adresse client'
     );
 
-    $this->assertEquals(962.60, $total);
+    $this->assertEquals(992.60, $total);
   }
 
   public function testcalculTotalCommandeClientBordeaux()
@@ -88,13 +94,44 @@ class CalculPrixTest extends TestCase
       [
         'prix_personne' => 50.0,      // prixMenu
         'nombre_personne_min' => 10,  // nbPersonnesMin
-        'nb_personne' => 15           // nbPersonnes (remise)
+        'nb_personne_menu' => 15           // nbPersonnes (remise)
+      ]
+    ];
+
+    $boissonCommande = [
+      [
+        'prix_boisson' =>10,
+        'quantite' => 3
       ]
     ];
 
      $total = $this->calculPrixService->calculTotalCommande(
         [12, 20, 40],     // prix prestas
         $menuCommande,
+        $boissonCommande,
+        'adresse traiteur',
+        'adresse client bordeaux'
+    );
+
+    $this->assertEquals(902.00, $total);
+  }
+
+  public function testcalculTotalCommandeSansBoisson()
+  {
+  $menuCommande = [
+      [
+        'prix_personne' => 50.0,      // prixMenu
+        'nombre_personne_min' => 10,  // nbPersonnesMin
+        'nb_personne_menu' => 15           // nbPersonnes (remise)
+      ]
+    ];
+
+    $boissonCommande = [];
+
+     $total = $this->calculPrixService->calculTotalCommande(
+        [12, 20, 40],     // prix prestas
+        $menuCommande,
+        $boissonCommande,
         'adresse traiteur',
         'adresse client bordeaux'
     );

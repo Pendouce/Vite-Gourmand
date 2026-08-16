@@ -9,7 +9,7 @@ class CalculStockService
   public function calculerStockPlat(int $nbPlat, int $nbCommande): int
   {
     if ($nbPlat < $nbCommande) {
-      throw new StockDispoException($nbPlat, "plat");
+      throw new StockDispoException($nbPlat, "ce plat");
     }
     return $nbPlat - $nbCommande;
   }
@@ -20,9 +20,18 @@ class CalculStockService
    
     if($nbMenuDispo < $nbmenu)
     {
-      throw new StockDispoException($nbMenuDispo, "menu");
+      throw new StockDispoException($nbMenuDispo, "ce menu");
     }
 
     return $nbMenuDispo;
+  }
+
+  public function calculerStockBoisson(int $stockBoisson, int $nbBoissonCommande)
+  {
+    if($stockBoisson < $nbBoissonCommande){
+      throw new StockDispoException($stockBoisson, "cette boisson");
+    }
+
+    return $stockBoisson - $nbBoissonCommande;
   }
 }

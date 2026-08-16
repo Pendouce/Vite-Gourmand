@@ -9,9 +9,11 @@ use App\Repository\BoissonRepository;
 class BoissonService
 {
   private BoissonRepository $boissonRepository;
+  private CalculStockService $calculStockService;
 
-  public function __construct(BoissonRepository $boissonRepository) {
+  public function __construct(BoissonRepository $boissonRepository, CalculStockService $calculStockService) {
     $this->boissonRepository = $boissonRepository;
+    $this->calculStockService = $calculStockService;
   }
 
   public function creerBoisson(array $data)
@@ -45,7 +47,7 @@ class BoissonService
     //unset($nouvelleDonnees['boisson_id']);
 
     //var_dump($nouvelleDonnees);
-    var_dump($data['alcool']);
+    //var_dump($data['alcool']);
 
 
     $this->boissonRepository->modifierBoisson($nouvelleDonnees);
@@ -68,6 +70,31 @@ class BoissonService
 
       }
       $this->boissonRepository->supprimerBoisson($boissonId);
+  }
+
+/*   public function stockBoisson(int $boissonId, int $nbBoisson)
+  {
+    $boisson = $this->boissonRepository->trouverBoissonParId($boissonId);
+    $stockBoisson = $boisson->getStockBoisson();
+
+    $nouveauStock = $this->calculStockService->calculStockBoisson($stockBoisson, $nbBoisson);
+
+    $this->boissonRepository->modifierStockBoisson($boissonId, $nouveauStock);
+  } */
+
+  public function verifStockBoisson(int $boissonId, int $nbBoisson)
+  {
+    $boisson = $this->boissonRepository->trouverBoissonParId($boissonId);
+    $stockBoisson = $boisson->getStockBoisson();
+
+    return $this->calculStockService->calculerStockBoisson($stockBoisson, $nbBoisson);
+  }
+
+  public function decrementerStockBoisson(int $boissonId, int $nbBoisson)
+  {
+    $nouveauStock = $this->verifstockBoisson($boissonId, $nbBoisson);
+
+    $this->boissonRepository->modifierStockBoisson($boissonId, $nouveauStock);
   }
 
   private function existeEnBase(string $nom)

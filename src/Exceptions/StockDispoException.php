@@ -8,6 +8,6 @@ use Exception;
 {
     public function __construct(int $stock, string $type)
     {
-        parent::__construct($stock." disponible pour ce ".$type);
+        parent::__construct($stock." disponible pour ".$type);
     }
 }

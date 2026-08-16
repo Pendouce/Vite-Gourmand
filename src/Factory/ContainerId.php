@@ -4,6 +4,7 @@ namespace App\Factory;
 
 use App\Repository\AllergeneRepository;
 use App\Repository\BoissonRepository;
+use App\Repository\CommandeBoissonRepository;
 use App\Repository\CommandeMenuRepository;
 use App\Repository\CommandePrestaRepository;
 use App\Repository\CommandeRepository;
@@ -86,9 +87,12 @@ class ContainerId
       new CommandeRepository(),
       new CommandePrestaRepository(),
       new CommandeMenuRepository(),
+      new CommandeBoissonRepository(),
       new MenuRepository,
       new PrestationRepository(),
+      new BoissonRepository(),
       new UserRepository(),
+      self::getBoissonService(),
       new CalculPrixService(),
       new MailService(),
       self::getMenuService()
@@ -98,7 +102,8 @@ class ContainerId
   public static function getBoissonService(): BoissonService
   {
     return new BoissonService(
-      new BoissonRepository()
+      new BoissonRepository(),
+      new CalculStockService()
     );
   }
 }

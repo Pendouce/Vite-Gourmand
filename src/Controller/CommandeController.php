@@ -40,6 +40,14 @@ class CommandeController extends Controller
       }
       $prixTotalPresta = $_POST['prix_total_presta'];
 
+      $dataBoissons = [];
+      foreach($_POST['boisson'] as $index => $boissonId){
+        $dataBoissons[] = [
+          'boisson_id' => (int) $boissonId,
+          'quantite' => (int) $_POST['quantite'][$index]
+        ];
+      }
+      
       $dataUser = [
         'nom' => $_POST['nom'],
         'prenom' => $_POST['prenom'],
@@ -59,14 +67,16 @@ class CommandeController extends Controller
       $dataCommande = $this->nettoyerDonnees($dataCommande);
       $dataMenus = $this->nettoyerDonnees($dataMenus);
       $dataPrestas = $this->nettoyerDonnees($dataPrestas);
+      $dataBoissons = $this->nettoyerDonnees($dataBoissons);
 
       try{
         $dataCommande['user_id'] = (int) $_SESSION['user_id'];
-        $commande = $this->commandeService->creerCommande($dataCommande, $dataMenus, $dataPrestas, $prixTotalPresta, $dataUser);
+        $commande = $this->commandeService->creerCommande($dataCommande, $dataMenus, $dataPrestas, $dataBoissons, $prixTotalPresta, $dataUser);
 
         $commandeId = $commande->getCommandeId();
         $this->commandeService->ajouterMenuCommande($commandeId, $dataMenus);
         $this->commandeService->ajouterPrestaCommande($commandeId, $prixTotalPresta, $dataPrestas);
+        $this->commandeService->ajouterBoissonCommande($commandeId, $dataBoissons);
         $_SESSION['succes'] = 'Commande passée vous avez recus un mail de confirmation';
         header('location: /commandeMenu');
         exit;

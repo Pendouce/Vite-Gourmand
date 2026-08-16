@@ -28,9 +28,28 @@ echo $date->format('Y-m-d H:i:s'); */
 
 
 
-//use App\Service\CalculPrixService;
+/* use App\Service\CalculPrixService;
+$totalBoisson = [];
+//$boissons = [$boisson1[], $boisson2[]];
+$boissons = [
 
-/* $calcul = new CalculPrixService();
+$boisson1 = [
+  'prix_boisson' => 10,
+  'quantite' => 5,
+],
+$boisson2 = [
+  'prix_boisson' => 10,
+  'quantite' => 10,
+]
+];
+$calcul = new CalculPrixService();
+
+foreach($boissons as $boisson){
+  $totalBoisson[] = $calcul->calculerTotalBoisson($boissons);
+}
+
+ var_dump($totalBoisson); */
+/*
 $presta = [10, 5, 5,10];
 $calcul->calculTotalpresta($presta); */
 

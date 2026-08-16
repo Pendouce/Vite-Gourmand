@@ -8,7 +8,7 @@ use App\Exceptions\IdInnexistantException;
 class CalculPrixService
 {
 
-  public function calculTotalCommande(array $presta, array $menuCommande, string $adresseVg, string $adresseClient)
+  public function calculTotalCommande(array $presta, array $menuCommande, array $boissonCommande, string $adresseVg, string $adresseClient)
   {
     $totalPresta = $this->calculerTotalpresta($menuCommande, $presta);
     $totalMenu = 0;
@@ -18,22 +18,13 @@ class CalculPrixService
         $menu['nombre_personne_min'], 
         $menu['nb_personne_menu']);
     }
+    $totalBoisson = $this->calculerTotalBoisson($boissonCommande);
     $prixLivraison = $this->calculerPrixDeLivraison($adresseVg, $adresseClient);
 
-    $totalCommande = round($totalPresta + $totalMenu + $prixLivraison, 2);
+    $totalCommande = round($totalPresta + $totalMenu + $totalBoisson + $prixLivraison, 2);
 
     return $totalCommande;
   }
-/*   public function calculTotalCommande(array $presta, array $menuCommande, float $prixMenu, int $nbPersonnesMin, int $nbPersonnes, string $adresseVg, string $adresseClient)
-  {
-    $totalPresta = $this->calculerTotalpresta($menuCommande, $presta);
-    $totalMenu = $this->calculerTotalMenu($prixMenu, $nbPersonnesMin, $nbPersonnes);
-    $prixLivraison = $this->calculerPrixDeLivraison($adresseVg, $adresseClient);
-
-    $totalCommande = round($totalPresta + $totalMenu + $prixLivraison, 2);
-
-    return $totalCommande;
-  } */
 
   private const SEUIL_DE_BASE = 5; // Prix presta fixe commence a partir de 5 prsn
   private const PALIER = 5; // Calcul par 5 personnes (si nbPersonne = 7, presta pour 10)
@@ -68,6 +59,16 @@ class CalculPrixService
     );
 
     return $totalNbPersonnes;
+  }
+
+  public function calculerTotalBoisson(array $boissonCommande)
+  {
+
+    $result = array_sum(
+      array_map(fn($boisson) => $boisson['prix_boisson'] * $boisson['quantite'], $boissonCommande)
+    ) ;
+
+    return $result;
   }
 
   private function calculerTotalMenu(float $prixMenu, int $nbPersonnesMin, int $nbPersonnes)
