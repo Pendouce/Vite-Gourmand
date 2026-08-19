@@ -88,5 +88,24 @@ class CommandeController extends Controller
     }else{
       $this->render('pages/client/commandeMenu');
     }
-  }
+    }
+
+    public function afficherCommandesEmploye(){
+      $commandes = $this->commandeService->afficherCommandes();
+      $this->render('pages/employe/commandes', ['commandes' => $commandes]);
+    }
+
+    public function afficherCommandesUser(){
+      $userId = $_SESSION['user_id'];
+      $commandes = $this->commandeService->afficherCommandesUser($userId);
+      
+      $this->render('pages/client/mesCommandes', ['commandes' => $commandes]);
+    }
+
+    public function afficherCommandesParId(){
+      $commandeId = $_GET['id'];
+      $commande = $this->commandeService->afficherCommandeParId($commandeId);
+      $this->render('pages/detailCommande', ['commandes' => $commande]);
+    }
+
 }

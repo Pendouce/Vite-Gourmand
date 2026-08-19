@@ -15,6 +15,8 @@ class CommandePrestation extends Entity
   protected ?int $commandeId = null;
   protected ?int $prestationId = null;
 
+  protected ?Prestation $prestation = null;
+
   /**
    * Get the value of prixTotalPresta
    */
@@ -155,6 +157,24 @@ class CommandePrestation extends Entity
   public function setAdressePresta(?string $adressePresta): self
   {
     $this->adressePresta = $adressePresta;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of prestation
+   */
+  public function getPrestation(): ?Prestation
+  {
+    return $this->prestation;
+  }
+
+  /**
+   * Set the value of prestation
+   */
+  public function setPrestation(?Prestation $prestation): self
+  {
+    $this->prestation = $prestation;
 
     return $this;
   }

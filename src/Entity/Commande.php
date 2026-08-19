@@ -17,10 +17,10 @@ class Commande extends Entity
   protected ?int $userId = null;
   protected ?int $statusId = null;
 
-  protected ?array $prestaions = null;
-  protected ?int $prixTotalPresta = null;
-  protected ?DateTimeImmutable $datePresta = null;
-  protected ?DateTimeImmutable $dateRetourPrevu = null;
+  protected ?string $libelle = null;
+  protected ?array $commandePrestations = null;
+  protected ?array $commandeMenus = null;
+  protected ?array $commandeBoissons = null;
 
   /**
    * Get the value of commandeId
@@ -198,6 +198,78 @@ class Commande extends Entity
   public function setStatusId(?int $statusId): self
   {
     $this->statusId = $statusId;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of libelle
+   */
+  public function getLibelle(): ?string
+  {
+    return $this->libelle;
+  }
+
+  /**
+   * Set the value of libelle
+   */
+  public function setLibelle(?string $libelle): self
+  {
+    $this->libelle = $libelle;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of commandePrestations
+   */
+  public function getCommandePrestations(): ?array
+  {
+    return $this->commandePrestations;
+  }
+
+  /**
+   * Set the value of commandePrestations
+   */
+  public function setCommandePrestations(?array $commandePrestations): self
+  {
+    $this->commandePrestations = $commandePrestations;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of commandeMenus
+   */
+  public function getCommandeMenus(): ?array
+  {
+    return $this->commandeMenus;
+  }
+
+  /**
+   * Set the value of commandeMenus
+   */
+  public function setCommandeMenus(?array $commandeMenus): self
+  {
+    $this->commandeMenus = $commandeMenus;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of commandeBoissons
+   */
+  public function getCommandeBoissons(): ?array
+  {
+    return $this->commandeBoissons;
+  }
+
+  /**
+   * Set the value of commandeBoissons
+   */
+  public function setCommandeBoissons(?array $commandeBoissons): self
+  {
+    $this->commandeBoissons = $commandeBoissons;
 
     return $this;
   }

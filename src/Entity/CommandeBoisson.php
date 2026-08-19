@@ -9,6 +9,8 @@ class CommandeBoisson extends Entity
   protected ?int $quantite = null;
   protected ?float $prixUnitaire = null;
 
+  protected ?Boisson $boisson = null;
+
   /**
    * Get the value of commandeId
    */
@@ -77,6 +79,24 @@ class CommandeBoisson extends Entity
   public function setPrixUnitaire(?float $prixUnitaire): self
   {
     $this->prixUnitaire = $prixUnitaire;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of boisson
+   */
+  public function getBoisson(): ?Boisson
+  {
+    return $this->boisson;
+  }
+
+  /**
+   * Set the value of boisson
+   */
+  public function setBoisson(?Boisson $boisson): self
+  {
+    $this->boisson = $boisson;
 
     return $this;
   }

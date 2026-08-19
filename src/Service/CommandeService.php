@@ -188,12 +188,41 @@ class CommandeService
     return $boisson;
   }
 
+  public function afficherCommandes()
+  {
+    $commande = $this->commandeRepository->trouverCommande();
+    
+    return $this->ajouterElementCommande($commande);
+  }
+
+  public function afficherCommandesUser(int $userId)
+  {
+    $commande = $this->commandeRepository->trouverCommandeUser($userId);
+    
+    return $this->ajouterElementCommande($commande);
+  }
+
+  public function afficherCommandeParId(int $idCommande)
+  {
+    return $this->commandeRepository->trouverCommandeParId($idCommande);
+  }
+
   private function genererNbCommande(){
     $nbGenere = rand(100, 9999);
     while($this->commandeRepository->trouverCommandeParNb($nbGenere)){
       $nbGenere = rand(100, 9999);
     }
     return $nbGenere;
+  }
+
+  private function ajouterElementCommande(array $commandes)
+  {
+    foreach ($commandes as $commande) {
+        $commande->setCommandeMenus($this->commandeMenuRepository->trouverMenuDeLaCommande($commande->getCommandeId()));
+        $commande->setCommandePrestations($this->commandePrestaRepository->trouverPrestaDeLaCommande($commande->getCommandeId()));
+        $commande->setCommandeBoissons($this->commandeBoissonRepository->trouverBoissonDeLaCommande($commande->getCommandeId()));
+    }
+    return $commandes;
   }
 
 }

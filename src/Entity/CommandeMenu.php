@@ -8,6 +8,8 @@ class CommandeMenu extends Entity
   protected ?int $commandeId = null;
   protected ?int $menuId = null;
 
+  protected ?Menu $menu = null;
+
   /**
    * Get the value of nb_personneMenu
    */
@@ -58,6 +60,24 @@ class CommandeMenu extends Entity
   public function setMenuId(?int $menuId): self
   {
     $this->menuId = $menuId;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of menu
+   */
+  public function getMenu(): ?Menu
+  {
+    return $this->menu;
+  }
+
+  /**
+   * Set the value of menu
+   */
+  public function setMenu(?Menu $menu): self
+  {
+    $this->menu = $menu;
 
     return $this;
   }

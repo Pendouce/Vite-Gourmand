@@ -7,6 +7,7 @@ use PDO;
 
 class CommandeRepository extends Repository
 {
+  // Create 
   public function creerCommande(array $data)
   {
     $sql = 'INSERT INTO commande (
@@ -25,6 +26,8 @@ class CommandeRepository extends Repository
     return Commande::creerEtHydrate($data);
   }
 
+  // Read
+
   public function trouverCommandeParNb(int $nbCommande): bool
   {
     $sql = 'SELECT COUNT(*) FROM commande
@@ -35,5 +38,61 @@ class CommandeRepository extends Repository
     $statement->execute();
 
     return $statement->fetchColumn();
+  }
+
+  public function trouverCommande()
+  {
+    $sql = 'SELECT * FROM commande INNER JOIN status ON commande.status_id = status.status_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabCommande = [];
+
+    foreach($data as $commande){
+      $tabCommande[] = Commande::creerEtHydrate($commande);
+    }
+
+    return $tabCommande;
+  }
+
+  public function trouverCommandeUser(int $userId)
+  {
+    $sql = 'SELECT * FROM commande INNER JOIN status ON commande.status_id = status.status_id
+    WHERE user_id = :user_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':user_id', $userId, PDO::PARAM_INT);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabCommande = [];
+
+    foreach($data as $commande){
+      $tabCommande[] = Commande::creerEtHydrate($commande);
+    }
+
+    return $tabCommande;
+  }
+
+
+  public function trouverCommandeParId(int $id)
+  {
+    $sql = 'SELECT * FROM commande INNER JOIN status ON commande.status_id = status.status_id
+    WHERE commande_id = :commande_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':commande_id', $id, PDO::PARAM_INT);
+    $statement->execute();
+
+    $commande = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if($commande === false)
+    {
+      return false;
+    }
+
+    return Commande::creerEtHydrate($commande);
   }
 }

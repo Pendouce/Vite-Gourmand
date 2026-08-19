@@ -49,4 +49,7 @@ return[
     "/modifierStockBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "modifierStockBoisson"],
     "/supprimerBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "supprimerBoisson"],
     "/commandeMenu/" => ["controller" => "App\Controller\CommandeController", "action" => "creerCommande"],
+    "/commandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesEmploye"],
+    "/mesCommandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesUser"],
+    "/detailCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesParId"],
 ];
