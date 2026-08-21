@@ -21,8 +21,10 @@ class CommandePrestaRepository extends Repository
 
   public function trouverPrestaDeLaCommande(int $commandeId)
   {
-    $sql = 'SELECT commande_prestation.*, prestation.* FROM commande_prestation
+    $sql = 'SELECT commande_prestation.*, prestation.*, type_presta.libelle /* AS m_id  */
+    FROM commande_prestation
     INNER JOIN prestation ON commande_prestation.prestation_id = prestation.prestation_id
+    INNER JOIN type_presta ON prestation.type_presta_id = type_presta.type_presta_id
     WHERE commande_prestation.commande_id = :commande_id';
 
     $statement = $this->pdo->prepare($sql);
@@ -33,7 +35,7 @@ class CommandePrestaRepository extends Repository
     $tabPresta = [];
 
     foreach($data as $presta){
-      $keyPresta = ['nom_presta', 'prix_presta', 'description_presta', 'img_presta', 'necessite_retour', 'prestation_actif', 'type_presta_id', 'contenu_presta'];
+      $keyPresta = ['prestation_id', 'nom_presta', 'prix_presta', 'description_presta', 'img_presta', 'necessite_retour', 'prestation_actif', 'type_presta_id', 'contenu_presta', 'libelle'];
       $keyCommandePresta = ['prix_total_presta', 'adresse_presta', 'date_presta', 'date_retour_prevu', 'date_retour', 'taux_retard', 'commande_id', 'prestation_id'];
 
       $donneesPresta = [];

@@ -21,7 +21,8 @@ class CommandeMenuRepository extends Repository
 
   public function trouverMenuDeLaCommande(int $commandeId)
   {
-    $sql = 'SELECT commande_menu.*, menu.* FROM commande_menu
+    $sql = 'SELECT commande_menu.*, menu.*, menu.menu_id /* AS m_id */
+    FROM commande_menu
     INNER JOIN menu ON commande_menu.menu_id = menu.menu_id
     WHERE commande_menu.commande_id = :commande_id';
 
@@ -33,7 +34,7 @@ class CommandeMenuRepository extends Repository
     $tabMenuCommande = [];
 
     foreach($data as $menu){
-      $keyMenu = ['titre', 'prix_personne', 'nombre_personne_min', 'conditions', 'stock_dispo', 'menu_actif'];
+      $keyMenu = ['menu_id', 'titre', 'prix_personne', 'nombre_personne_min', 'conditions', 'stock_dispo', 'menu_actif'];
       $keyCommandeMenu = ['nb_personne_menu', 'commande_id', 'menu_id'];
 
       $donneesMenu = [];
