@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Commande;
 use App\Repository\BoissonRepository;
 use App\Repository\CommandeBoissonRepository;
 use App\Repository\CommandeMenuRepository;
@@ -14,8 +15,11 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 
+use function PHPUnit\Framework\isArray;
+
 class CommandeService
 {
+  private Commande $commande;
   private CommandeRepository $commandeRepository;
   private CommandePrestaRepository $commandePrestaRepository;
   private CommandeMenuRepository $commandeMenuRepository;
@@ -202,9 +206,12 @@ class CommandeService
     return $this->ajouterElementCommande($commande);
   }
 
-  public function afficherCommandeParId(int $idCommande)
+  public function afficherDetailsCommande(int $idCommande)
   {
-    return $this->commandeRepository->trouverCommandeParId($idCommande);
+    $commandeId = $this->commandeRepository->trouverCommandeParId($idCommande);
+    $commande = $this->ajouterElementCommande([$commandeId]);
+
+    return $commande[0];
   }
 
   private function genererNbCommande(){

@@ -102,10 +102,10 @@ class CommandeController extends Controller
       $this->render('pages/client/mesCommandes', ['commandes' => $commandes]);
     }
 
-    public function afficherCommandesParId(){
+    public function afficherDetailsCommande(){
       $commandeId = $_GET['id'];
-      $commande = $this->commandeService->afficherCommandeParId($commandeId);
-      $this->render('pages/detailCommande', ['commandes' => $commande]);
+      $commande = $this->commandeService->afficherDetailsCommande($commandeId);
+      $this->render('pages/detailCommande', ['commande' => $commande]);
     }
 
 }

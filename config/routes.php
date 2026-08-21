@@ -51,5 +51,5 @@ return[
     "/commandeMenu/" => ["controller" => "App\Controller\CommandeController", "action" => "creerCommande"],
     "/commandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesEmploye"],
     "/mesCommandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesUser"],
-    "/detailCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesParId"],
+    "/detailCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherDetailsCommande"],
 ];
