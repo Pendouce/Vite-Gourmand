@@ -65,4 +65,13 @@ class CommandeBoissonRepository extends Repository
     return $tabBoissonCommande;
   }
 
+  public function modifierBoissonDeLaCommande(array $data)
+  {
+    $sql = 'UPDATE commande_boisson SET quantite = :quantite
+    WHERE boisson_id = :boisson_id AND commande_id = :commande_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
+
 }

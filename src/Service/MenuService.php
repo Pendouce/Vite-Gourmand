@@ -394,12 +394,16 @@ class MenuService
   }
 
   
-  public function stockePlat(int $menuId, int $nbPersonneMenu) : void
+  public function stockePlatEtMenu(int $menuId, int $nbPersonneMenu, bool $increment) : void
   {
     $plats = $this->platRepository->trouverPlatDuMenu($menuId);
 
     foreach($plats as $plat){
-      $stockPlat = $this->calculStockService->calculerStockPlat($plat->getStockPlat(), $nbPersonneMenu);
+      if($increment == true){
+      $stockPlat = $this->calculStockService->calculerRetourStockPlat($plat->getStockPlat(), $nbPersonneMenu);
+      }else{
+        $stockPlat = $this->calculStockService->calculerStockPlat($plat->getStockPlat(), $nbPersonneMenu);
+      }
       $this->platRepository->modifierStockPlat($plat->getPlatId(), $stockPlat);
     
       $menuContenantPlats = $this->menuRepository->trouverMenuDePlat($plat->getPlatId());
@@ -412,6 +416,7 @@ class MenuService
       }
     }
   }
+
 
   public function verifStockDispo(int $menuId, int $nbPersonneMenu): void
   {

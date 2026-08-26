@@ -27,7 +27,6 @@ class CommandeController extends Controller
           'menu_id' => (int) $menuId,
           'nb_personne_menu' => (int) $_POST['nb_personne_menu'][$index]
         ];
-        //var_dump($dataMenus);
       }
 
       $dataPrestas = [];
@@ -62,7 +61,6 @@ class CommandeController extends Controller
         'prix_livraison' => $_POST['prix_livraison'],
         'prix_total' => $_POST['prix_total'],
       ];
-      //var_dump($dataCommande['nb_personne']);
 
       $dataCommande = $this->nettoyerDonnees($dataCommande);
       $dataMenus = $this->nettoyerDonnees($dataMenus);
@@ -107,5 +105,128 @@ class CommandeController extends Controller
       $commande = $this->commandeService->afficherDetailsCommande($commandeId);
       $this->render('pages/detailCommande', ['commande' => $commande]);
     }
+
+    public function modifierCommande()
+    {
+      if($_SERVER['REQUEST_METHOD'] === 'POST'){
+        $dataMenus = [];
+        foreach($_POST['menu'] as $index => $menuId){
+          $dataMenus[] = [
+            'menu_id' => (int) $menuId,
+            'nb_personne_menu' => (int) $_POST['nb_personne_menu'][$index]
+          ];
+        }
+
+        $dataPrestas = [];
+        foreach($_POST['prestation'] as $prestaId){
+          $dataPrestas[] = [
+            'prestation_id' => (int) $prestaId,
+            'date_presta' => $_POST['date_presta'],
+            'adresse_presta' => $_POST['adresse_presta'],
+          ];
+        }
+        $prixTotalPresta = $_POST['prix_total_presta'];
+        
+        $dataBoissons = [];
+        foreach($_POST['boisson'] as $index => $boissonId){
+          $dataBoissons[] = [
+            'boisson_id' => (int) $boissonId,
+            'quantite' => (int) $_POST['quantite'][$index]
+          ];
+        }
+
+        $dataCommande = [
+          'nb_personne' => $_POST['nb_personne'],
+          'date_livraison' => $_POST['date_livraison'],
+          'lieu_livraison' => $_POST['lieu_livraison'],
+          'prix_livraison' => $_POST['prix_livraison'],
+          'prix_total' => $_POST['prix_total'],
+        ];
+        
+
+        $dataCommande = $this->nettoyerDonnees($dataCommande);
+        $dataMenus = $this->nettoyerDonnees($dataMenus);
+        $dataPrestas = $this->nettoyerDonnees($dataPrestas);
+        $dataBoissons = $this->nettoyerDonnees($dataBoissons);
+
+        $motif = htmlspecialchars($_POST['motif']);
+
+        try{
+          $commandeId = (int) $_GET['id'];
+          $roleId = (int) $_SESSION['role_id'];
+          $this->commandeService->modifierCommande($commandeId, $roleId, $dataCommande, $dataMenus, $dataPrestas, $dataBoissons, $prixTotalPresta, $motif);
+
+          if($roleId === ROLE_UTILISATEUR){
+            $_SESSION['succes'] = 'Commande modifier vous avez recus un mail de confirmation';
+            header('location: /mesCommandes');
+            exit;
+          }elseif($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN){
+            $_SESSION['succes'] = 'Commande modifier un mail a été envoyé au client';
+            header('location: /commandes');
+            exit;
+          }
+
+        }catch(Exception $e){
+          $_SESSION['erreur'] = $e->getMessage();
+          header('location: /modifierCommande');
+          exit;
+          
+        }
+      }else{
+        $this->render('pages/modifierCommande');
+      }
+    }
+
+    public function modifierStatusCommande()
+    {
+      $commandeId = (int) $_GET['id'];
+      $status = htmlspecialchars((int) $_POST['status_id']);
+
+      try{
+        $this->commandeService->modifierStatusCommande($commandeId, $status);
+        $_SESSION['succes'] = 'Status modifié';
+        header('location: /commandes');
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /commandes');
+        exit;
+      }
+    }
+    
+    public function annulerCommandeUser()
+    {
+      $commandeId = (int) $_GET['id'];
+      $roleId = $_SESSION['role_id'];
+      $userId = $_SESSION['user_id'];
+      try{
+        $this->commandeService->annulerCommande($commandeId, $roleId, $userId);
+       $_SESSION['succes'] = 'Commande annulée';
+        header('location: /commandes');
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /commandes');
+        exit;
+      }
+    }
+
+    public function annulerCommandeEmploye()
+    {
+      $commandeId = (int) $_GET['id'];
+      $roleId = (int)$_SESSION['role_id'];
+      $userId = $_SESSION['user_id'];
+      $motif = htmlspecialchars($_POST['motif']);
+      try{
+        $this->commandeService->annulerCommande($commandeId, $roleId, $userId, $motif);
+       $_SESSION['succes'] = 'Commande annulée';
+        header('location: /mesCommandes');
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /mesCommandes');
+        exit;
+      }
+  }
 
 }

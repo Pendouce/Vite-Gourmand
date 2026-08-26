@@ -16,6 +16,7 @@
       <th>Date livraison</th>
       <th>Prix total</th>
       <th>Statut</th>
+      <th>Id</th>
     </tr>
   </thead>
   <tbody>
@@ -25,24 +26,24 @@
         <td><?= htmlspecialchars($commande->getNbCommande()) ?></td>
 
         <td>
-          <?php if (!empty($commande->getMenus())): ?>
-            <?= htmlspecialchars(implode(', ', array_map(fn($m) => $m->getTitre(), $commande->getMenus()))) ?>
+          <?php if (!empty($commande->getCommandeMenus())): ?>
+            <?= htmlspecialchars(implode(', ', array_map(fn($m) => $m->getMenu()->getTitre(), $commande->getCommandeMenus()))) ?>
           <?php else: ?>
             -
           <?php endif; ?>
         </td>
 
         <td>
-          <?php if (!empty($commande->getPrestations())): ?>
-            <?= htmlspecialchars(implode(', ', array_map(fn($p) => $p->getNomPresta(), $commande->getPrestations()))) ?>
+          <?php if (!empty($commande->getCommandePrestations())): ?>
+            <?= htmlspecialchars(implode(', ', array_map(fn($p) => $p->getPrestation()->getNomPresta(), $commande->getCommandePrestations()))) ?>
           <?php else: ?>
             -
           <?php endif; ?>
         </td>
 
         <td>
-          <?php if (!empty($commande->getBoissons())): ?>
-            <?= htmlspecialchars(implode(', ', array_map(fn($b) => $b->getNomBoisson(), $commande->getBoissons()))) ?>
+          <?php if (!empty($commande->getCommandeBoissons())): ?>
+            <?= htmlspecialchars(implode(', ', array_map(fn($b) => $b->getBoisson()->getNomBoisson(), $commande->getCommandeBoissons()))) ?>
           <?php else: ?>
             -
           <?php endif; ?>
@@ -53,11 +54,12 @@
         <td><?= number_format($commande->getPrixTotal(), 2, ',', ' ') ?> €</td>
 
         <td><?= htmlspecialchars($commande->getLibelle()) ?></td>
+
+        <td><?= htmlspecialchars($commande->getCommandeId()) ?></td>
       </tr>
     <?php endforeach; ?>
   </tbody>
 </table>
-
 
 </body>
 </html>

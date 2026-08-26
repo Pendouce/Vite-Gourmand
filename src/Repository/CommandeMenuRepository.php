@@ -55,5 +55,15 @@ class CommandeMenuRepository extends Repository
 
     return $tabMenuCommande;
   }
+
+  public function modifierMenuDeLaCommande(array $data)
+  {
+    $sql = 'UPDATE commande_menu SET 
+    nb_personne_menu = :nb_personne_menu
+    WHERE menu_id = :menu_id AND commande_id = :commande_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
 }
 

@@ -16,6 +16,7 @@
       <th>Date livraison</th>
       <th>Prix total</th>
       <th>Statut</th>
+      <th>Id</th>
     </tr>
   </thead>
   <tbody>
@@ -53,6 +54,8 @@
         <td><?= number_format($commande->getPrixTotal(), 2, ',', ' ') ?> €</td>
 
         <td><?= htmlspecialchars($commande->getLibelle()) ?></td>
+
+        <td><?= htmlspecialchars($commande->getCommandeId()) ?></td>
       </tr>
     <?php endforeach; ?>
   </tbody>

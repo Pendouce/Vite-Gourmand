@@ -26,12 +26,23 @@ class CalculStockService
     return $nbMenuDispo;
   }
 
-  public function calculerStockBoisson(int $stockBoisson, int $nbBoissonCommande)
+  public function calculerStockBoisson(int $stockBoisson, int $nbBoissonCommande): int
   {
     if($stockBoisson < $nbBoissonCommande){
       throw new StockDispoException($stockBoisson, "cette boisson");
     }
 
     return $stockBoisson - $nbBoissonCommande;
+  }
+
+  public function calculerRetourStockPlat(int $nbPlat, int $nbCommande): int
+  {
+    return $nbPlat + $nbCommande;
+  }
+
+
+  public function calculerRetourStockBoisson(int $stockBoisson, int $nbBoissonCommande): int
+  {
+    return $stockBoisson + $nbBoissonCommande;
   }
 }

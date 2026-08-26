@@ -97,6 +97,15 @@ class BoissonService
     $this->boissonRepository->modifierStockBoisson($boissonId, $nouveauStock);
   }
 
+  public function incrementerStockBoisson(int $boissonId, int $nbBoisson)
+  {
+    $boisson = $this->boissonRepository->trouverBoissonParId($boissonId);
+    $stock = $boisson->getStockBoisson();
+    $nouveauStock = $this->calculStockService->calculerRetourStockBoisson($stock, $nbBoisson);
+
+    $this->boissonRepository->modifierStockBoisson($boissonId, $nouveauStock);
+  }
+
   private function existeEnBase(string $nom)
   {
     if($this->boissonRepository->trouverBoissonParNom($nom)){

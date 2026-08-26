@@ -95,4 +95,28 @@ class CommandeRepository extends Repository
 
     return Commande::creerEtHydrate($commande);
   }
+
+  public function modifierCommande(array $data)
+  {
+    $sql = 'UPDATE commande SET 
+    nb_personne = :nb_personne, date_livraison = :date_livraison, lieu_livraison = :lieu_livraison,
+     prix_livraison = :prix_livraison, prix_total = :prix_total
+    WHERE commande_id = :commande_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
+  
+
+  public function modifierStatusCommande(int $commandId, int $status)
+  {
+    $sql = 'UPDATE commande SET 
+    status_id = :status_id
+    WHERE commande_id = :commande_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':status_id', $status, PDO::PARAM_INT);
+    $statement->bindValue(':commande_id', $commandId, PDO::PARAM_INT);
+    $statement->execute();
+  }
 }

@@ -45,6 +45,12 @@ class Entity{
       // Je recherche chaques majuscules qui n'est pas en debut de chaine et ajoute un _ avant
       // et les passe en minuscule
       $convertionKey = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $key));
+
+      // Je reconvertis les objets DateTimeImmutable en string pour avoir le bon format pour SQL
+      if($value instanceof DateTimeImmutable){
+        $value = $value->format('Y-m-d H:i:s');
+      }
+
       $dataConverties[$convertionKey] = $value;
     }
     return $dataConverties;

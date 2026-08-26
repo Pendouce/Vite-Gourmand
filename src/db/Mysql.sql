@@ -284,7 +284,8 @@ INSERT INTO allergene (libelle) VALUES
 INSERT INTO status (libelle) VALUES 
 ('Transmise'), ('Acceptée'), ('En preparation'), ('En cours de livraison'),
 ('Livrée'), ('En attente du retour de matériel'), ('Terminée');
-
+INSERT INTO status (libelle) VALUES 
+('Annulée');
 INSERT INTO type_de_plat(libelle) VALUES('Entrée'), ('Plat'), ('Dessert');
 INSERT INTO type_presta(libelle) VALUES('Location de materiel'), ('Service professionnel');
 
