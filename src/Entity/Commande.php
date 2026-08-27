@@ -18,6 +18,7 @@ class Commande extends Entity
   protected ?int $statusId = null;
 
   protected ?string $libelle = null;
+  protected ?User $user = null;
   protected ?array $commandePrestations = null;
   protected ?array $commandeMenus = null;
   protected ?array $commandeBoissons = null;
@@ -270,6 +271,24 @@ class Commande extends Entity
   public function setCommandeBoissons(?array $commandeBoissons): self
   {
     $this->commandeBoissons = $commandeBoissons;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of user
+   */
+  public function getUser(): ?User
+  {
+    return $this->user;
+  }
+
+  /**
+   * Set the value of user
+   */
+  public function setUser(?User $user): self
+  {
+    $this->user = $user;
 
     return $this;
   }

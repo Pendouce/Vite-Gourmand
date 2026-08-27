@@ -106,6 +106,35 @@ class CommandeController extends Controller
       $this->render('pages/detailCommande', ['commande' => $commande]);
     }
 
+    public function afficherCommandeFiltre()
+    {
+      $commandesFiltre = [];
+
+      if(!empty($_GET['menu'])){
+        $commandesFiltre['menu'] = $_GET['menu'];
+      }
+
+      if(!empty($_GET['boisson'])){
+        $commandesFiltre['boisson'] = $_GET['boisson'];
+      }
+
+      if(!empty($_GET['user'])){
+        $commandesFiltre['user'] = $_GET['user'];
+      }
+
+      if(!empty($_GET['status_id'])){
+        $commandesFiltre['status_id'] = $_GET['status_id'];
+      }
+
+      if(!empty($_GET['nb_commande'])){
+        $commandesFiltre['nb_commande'] = $_GET['nb_commande'];
+      }
+
+      $commandes = $this->commandeService->afficherCommandesFiltre($commandesFiltre);
+      $status = $this->commandeService->afficherStatusCommandes();
+      $this->render('pages/employe/commandesFiltre' , ['commandes' => $commandes, 'status' => $status]);
+    }
+
     public function modifierCommande()
     {
       if($_SERVER['REQUEST_METHOD'] === 'POST'){

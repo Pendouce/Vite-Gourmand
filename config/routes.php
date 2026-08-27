@@ -52,6 +52,7 @@ return[
     "/commandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesEmploye"],
     "/mesCommandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesUser"],
     "/detailCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherDetailsCommande"],
+    "/commandesFiltre/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandeFiltre"],
     "/modifierCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "modifierCommande"],
     "/modifierStatusCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "modifierStatusCommande"],
     "/annulerCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "annulerCommandeUser"],

@@ -13,6 +13,7 @@ use App\Repository\MenuRepository;
 use App\Repository\PlatRepository;
 use App\Repository\PrestationRepository;
 use App\Repository\RegimeRepository;
+use App\Repository\StatusRepository;
 use App\Repository\ThemeRepository;
 use App\Repository\TypeDePlatRepository;
 use App\Repository\TypeDePrestaRepository;
@@ -88,7 +89,8 @@ class ContainerId
       new CommandePrestaRepository(),
       new CommandeMenuRepository(),
       new CommandeBoissonRepository(),
-      new MenuRepository,
+      new StatusRepository(),
+      new MenuRepository(),
       new PrestationRepository(),
       new BoissonRepository(),
       new UserRepository(),

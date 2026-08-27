@@ -9,6 +9,7 @@ use App\Repository\CommandePrestaRepository;
 use App\Repository\CommandeRepository;
 use App\Repository\MenuRepository;
 use App\Repository\PrestationRepository;
+use App\Repository\StatusRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -25,6 +26,7 @@ class CommandeService
   private MenuRepository $menuRepository;
   private PrestationRepository $prestationRepository;
   private BoissonRepository $boissonRepository;
+  private StatusRepository $statusRepository;
   private UserRepository $userRepository;
   private BoissonService $boissonService;
   private CalculPrixService $calculPrixService;
@@ -33,7 +35,7 @@ class CommandeService
 
   public function __construct(CommandeRepository $commandeRepository, CommandePrestaRepository $commandePrestaRepository, 
   CommandeMenuRepository $commandeMenuRepository, CommandeBoissonRepository $commandeBoissonRepository, 
-  MenuRepository $menuRepository, 
+  StatusRepository $statusRepository, MenuRepository $menuRepository, 
   PrestationRepository $prestationRepository, BoissonRepository $boissonRepository,
   UserRepository $userRepository, BoissonService $boissonService, CalculPrixService $calculPrixService,
   MailService $mailService, MenuService $menuService)
@@ -42,6 +44,7 @@ class CommandeService
     $this->commandePrestaRepository = $commandePrestaRepository;
     $this->commandeMenuRepository = $commandeMenuRepository;
     $this->commandeBoissonRepository = $commandeBoissonRepository;
+    $this->statusRepository = $statusRepository;
     $this->menuRepository = $menuRepository;
     $this->prestationRepository = $prestationRepository;
     $this->boissonRepository = $boissonRepository;
@@ -155,7 +158,27 @@ class CommandeService
     return $commande[0];
   }
 
-    public function modifierStatusCommande(int $commandeId, int $status)
+  public function afficherCommandesFiltre(array $commandesFiltre)
+  {
+    $commandes = $this->commandeRepository->trouverCommandeFiltre($commandesFiltre);
+    $this->ajouterElementCommande($commandes);
+
+    foreach ($commandes as $commande) {
+        // Récupérer le user lié à la commande
+        $user = $this->userRepository->trouveUtilisateurById($commande->getUserId());
+        $commande->setUser($user);
+    }
+
+    return $commandes;
+  }
+
+
+  public function afficherStatusCommandes()
+  {
+    return $this->statusRepository->trouverStatus();
+  }
+
+  public function modifierStatusCommande(int $commandeId, int $status)
   {
     return $this->commandeRepository->modifierStatusCommande($commandeId, $status);
   }
