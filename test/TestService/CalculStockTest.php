@@ -105,14 +105,6 @@ class CalculStockTest extends TestCase
 
       $this->assertEquals(0, $result);
     }
-    /*  public function calculStockBoisson(int $stockBoisson, int $nbBoissonCommande)
-  {
-    if($stockBoisson < $nbBoissonCommande){
-      throw new StockDispoException($stockBoisson, "cette boisson");
-    }
-
-    return $stockBoisson - $nbBoissonCommande;
-  } */
 
     public function testExceptionStockBoisson()
     {
@@ -124,5 +116,27 @@ class CalculStockTest extends TestCase
       $calculStock = new CalculStockService;
       $calculStock->calculerStockBoisson($stockBoisson, $nbBoisson);
     }
+
+  public function testCalculerRetourStockPlat()
+  {
+    $nbPlat = 10;
+    $stockPlats = 5;
+
+    $calculRetour = new CalculStockService;
+    $result = $calculRetour->calculerRetourStockPlat($nbPlat, $stockPlats);
+
+    $this->assertEquals(15, $result);
+  }
+  
+  public function testCalculerRetourStockBoisson()
+  {
+    $nbBoisson = 20;
+    $stockBoisson = 8;
+
+    $calculRetour = new CalculStockService;
+    $result = $calculRetour->calculerRetourStockBoisson($nbBoisson, $stockBoisson);
+
+    $this->assertEquals(28, $result);
+  }
 
 }

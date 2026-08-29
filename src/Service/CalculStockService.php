@@ -35,9 +35,9 @@ class CalculStockService
     return $stockBoisson - $nbBoissonCommande;
   }
 
-  public function calculerRetourStockPlat(int $nbPlat, int $nbCommande): int
+  public function calculerRetourStockPlat(int $nbPlatCommande, int $stockPlat): int
   {
-    return $nbPlat + $nbCommande;
+    return $nbPlatCommande + $stockPlat;
   }
 
 
