@@ -3,6 +3,7 @@
 namespace App\Factory;
 
 use App\Repository\AllergeneRepository;
+use App\Repository\AvisRepository;
 use App\Repository\BoissonRepository;
 use App\Repository\CommandeBoissonRepository;
 use App\Repository\CommandeMenuRepository;
@@ -18,6 +19,7 @@ use App\Repository\ThemeRepository;
 use App\Repository\TypeDePlatRepository;
 use App\Repository\TypeDePrestaRepository;
 use App\Repository\UserRepository;
+use App\Service\AvisService;
 use App\Service\BoissonService;
 use App\Service\CalculPrixService;
 use App\Service\CalculStockService;
@@ -106,6 +108,13 @@ class ContainerId
     return new BoissonService(
       new BoissonRepository(),
       new CalculStockService()
+    );
+  }
+  
+  public static function getAvisService(): AvisService
+  {
+    return new AvisService(
+      new AvisRepository(),
     );
   }
 }

@@ -59,6 +59,8 @@ CREATE table avis(
   commande_id INT NOT NULL
 );
 
+ALTER TABLE avis MODIFY note INT NOT NULL;
+
 CREATE TABLE prestation(
   prestation_id INT AUTO_INCREMENT PRIMARY KEY,
   #type_presta VARCHAR(255) NOT NULL,
