@@ -55,6 +55,7 @@ class CommandeService
     $this->menuService = $menuService;
   }
 
+  // CREATION DE LA COMMANDE
   public function creerCommande(array $data, array $dataMenu, array $dataPresta, array $dataBoisson, float $prixTotalPresta, array $dataUser)
   {
     $user = $this->userRepository->trouveUtilisateurById($data['user_id']);
@@ -85,6 +86,7 @@ class CommandeService
     return $commande;
   }
 
+  // AJOUT DES ELEMENTS DE LA COMMANDE
   public function ajouterPrestaCommande(int $commandeId, float $prixTotalPresta, array $dataPresta)
   {
     $presta = [];
@@ -136,6 +138,7 @@ class CommandeService
     return $boisson;
   }
 
+  // AFFICHAGE COMMANDE
   public function afficherCommandes()
   {
     $commande = $this->commandeRepository->trouverCommande();
@@ -178,55 +181,7 @@ class CommandeService
     return $this->statusRepository->trouverStatus();
   }
 
-  public function modifierStatusCommande(int $commandeId, int $status)
-  {
-    return $this->commandeRepository->modifierStatusCommande($commandeId, $status);
-  }
-
-  public function annulerCommande(int $commandeId, int $roleId, int $userId, ?string $motif = null)
-  {
-    $this->modificationNonPermise($commandeId);
-    $status = STATUT_ANNULEE;
-    $this->modifierStatusCommande($commandeId, $status);
-
-    $this->restaurerStockBoisson($commandeId);
-    $this->restaurerStockMenu($commandeId);
-
-    $user = $this->userRepository->trouveUtilisateurById($userId);
-    $commande = $this->commandeRepository->trouverCommandeParId($commandeId);
-
-
-    if($roleId === ROLE_UTILISATEUR){
-      // Mail annulation
-      $html = $this->mailService->recupererHtml('commande/annulationClientMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $commande->getNbCommande()]);
-      $objet = 'Annulation de votre commande';
-      $this->mailService->envoyer($user->getEmail(), $objet, $html);
-    }elseif(($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN) && !empty($motif)){
-      // Mail annulation + motif
-      $html = $this->mailService->recupererHtml('commande/annulationEmployeMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $commande->getNbCommande(), 'motif' => $motif]);
-      $objet = 'Annulation de votre commande';
-      $this->mailService->envoyer($user->getEmail(), $objet, $html);
-    }
-  }
-
-  private function genererNbCommande(){
-    $nbGenere = rand(100, 9999);
-    while($this->commandeRepository->trouverCommandeParNb($nbGenere)){
-      $nbGenere = rand(100, 9999);
-    }
-    return $nbGenere;
-  }
-
-  private function ajouterElementCommande(array $commandes)
-  {
-    foreach ($commandes as $commande) {
-        $commande->setCommandeMenus($this->commandeMenuRepository->trouverMenuDeLaCommande($commande->getCommandeId()));
-        $commande->setCommandePrestations($this->commandePrestaRepository->trouverPrestaDeLaCommande($commande->getCommandeId()));
-        $commande->setCommandeBoissons($this->commandeBoissonRepository->trouverBoissonDeLaCommande($commande->getCommandeId()));
-    }
-    return $commandes;
-  }
-
+    // MODIFICATION DE LA COMMANDE
   public function modifierCommande(int $commandeId, int $roleId, array $dataCommande, array $dataMenu, array $dataPresta, array $dataBoisson, float $prixTotalPresta, ?string $motif = null)
   {
     $this->modificationNonPermise($commandeId);
@@ -419,6 +374,170 @@ class CommandeService
       $this->commandeRepository->rollBack();
       throw new Exception('Erreur lors de la modification de la commande : '. $e->getMessage());
     }
+  }
+
+  public function modifierStatusCommande(int $commandeId, int $status)
+  {
+    $this->commandeRepository->modifierStatusCommande($commandeId, $status);
+    $this->actionModifStatus($commandeId);
+  }
+
+  private function actionModifStatus(int $commandeId)
+  {
+    $commande = $this->commandeRepository->trouverCommandeParId($commandeId);
+    $user = $this->userRepository->trouveUtilisateurById($commande->getUserId());
+    $status = $commande->getStatusId();
+    $prestaCommande = $this->commandePrestaRepository->trouverPrestaDeLaCommande($commandeId);
+
+    switch($status){
+      case STATUT_ACCEPTEE :
+        // Mail commande acceptée
+        $html = $this->mailService->recupererHtml('commande/statuts/accepteMail', [
+          'prenom' => $user->getPrenom(), 
+          'nbCommande' => $commande->getNbCommande(), 
+          'dateLivraison' => $commande->getDateLivraison()->format('d/m/Y'), 
+          'adresseLivraison' => $commande->getLieuLivraison()
+        ]);
+        $objet = 'Commande acceptée';
+        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+      break;
+
+      case STATUT_EN_PREPARATION :
+        // Mail commande en preparation
+        $html = $this->mailService->recupererHtml('commande/statuts/preparationEnCoursMail', [
+          'prenom' => $user->getPrenom(), 
+          'nbCommande' => $commande->getNbCommande(), 
+          'dateLivraison' => $commande->getDateLivraison()->format('d/m/Y'), 
+          'adresseLivraison' => $commande->getLieuLivraison()
+        ]);
+        $objet = 'Commande en cours de préparation';
+        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+      break;
+
+      case STATUT_EN_COUR_LIV :
+        // Mail commande en cours de livraison
+        $html = $this->mailService->recupererHtml('commande/statuts/livraisonEncoursMail', [
+          'prenom' => $user->getPrenom(), 
+          'nbCommande' => $commande->getNbCommande(), 
+          'dateLivraison' => $commande->getDateLivraison()->format('d/m/Y'), 
+          'adresseLivraison' => $commande->getLieuLivraison()
+        ]);
+        $objet = 'Commande en cours de livraison';
+        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+      break;
+
+      case STATUT_LIVREE :
+        $necessiteRetour = false;
+
+        foreach($prestaCommande as $presta){
+          if($presta->getPrestation()->isNecessiteRetour()){
+            $necessiteRetour = true;
+          }
+        }
+        // Mail commande livrée
+        $html = $this->mailService->recupererHtml('commande/statuts/livreMail', [
+          'prenom' => $user->getPrenom(), 
+          'nbCommande' => $commande->getNbCommande(), 
+          'adresseLivraison' => $commande->getLieuLivraison()
+        ]);
+        $objet = 'Commande livrée';
+        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+        sleep(10);
+        if($necessiteRetour === false){
+          $this->modifierStatusCommande($commandeId, STATUT_TERMINEE);
+        }else{
+          $this->modifierStatusCommande($commandeId, STATUT_ATTEND_RETOUR);
+        }
+      break;
+
+      case STATUT_ATTEND_RETOUR :
+        $dateRetourPrevu = null;
+        $tauxRetard = null;
+
+        foreach($prestaCommande as $presta){
+          $dateRetourPrevu = $presta->getDateRetourPrevu()->format('d/m/Y');
+          $tauxRetard = $presta->getTauxRetard();
+        }
+        // Mail commande en attente de retour du materiel
+        $html = $this->mailService->recupererHtml('commande/statuts/attenteMaterielMail', [
+          'prenom' => $user->getPrenom(), 
+          'nbCommande' => $commande->getNbCommande(), 
+          'dateLivraison' => $commande->getDateLivraison()->format('d/m/Y'),
+          'adresseVG' => ADRESSE_VG,
+          'dateRetourMax' => $dateRetourPrevu,
+          'tauxRetard' => $tauxRetard
+        ]);
+        $objet = 'Commande en attente de retour du materiel';
+        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+      break;
+
+      case STATUT_TERMINEE :
+        $dateDujour = new DateTimeImmutable('now', new DateTimeZone('Europe/Paris'));
+        $dateRetour = $dateDujour->format('Y-m-d H:i:s');
+        
+        foreach($prestaCommande as $presta){
+          $this->commandePrestaRepository->modifierDateRetourPresta([
+            'prestation_id' => $presta->getPrestationId(), 
+            'commande_id' => $commandeId, 
+            'date_retour' => $dateRetour
+          ]);
+          $presta->setDateRetour($dateDujour);
+        }
+        // Mail commande terminée
+        $html = $this->mailService->recupererHtml('commande/statuts/termineMail', [
+          'prenom' => $user->getPrenom(), 
+          'nbCommande' => $commande->getNbCommande(), 
+          'lienAvis' => BASE_URL . '/avis?nbCommande='.$commande->getNbCommande()
+        ]);
+        $objet = 'Commande terminée';
+        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+      break;
+    }
+  }
+
+  // ANNULATION DE LA COMMANDE
+  public function annulerCommande(int $commandeId, int $roleId, int $userId, ?string $motif = null)
+  {
+    $this->modificationNonPermise($commandeId);
+    $status = STATUT_ANNULEE;
+    $this->modifierStatusCommande($commandeId, $status);
+
+    $this->restaurerStockBoisson($commandeId);
+    $this->restaurerStockMenu($commandeId);
+
+    $user = $this->userRepository->trouveUtilisateurById($userId);
+    $commande = $this->commandeRepository->trouverCommandeParId($commandeId);
+
+
+    if($roleId === ROLE_UTILISATEUR){
+      // Mail annulation
+      $html = $this->mailService->recupererHtml('commande/annulationClientMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $commande->getNbCommande()]);
+      $objet = 'Annulation de votre commande';
+      $this->mailService->envoyer($user->getEmail(), $objet, $html);
+    }elseif(($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN) && !empty($motif)){
+      // Mail annulation + motif
+      $html = $this->mailService->recupererHtml('commande/annulationEmployeMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $commande->getNbCommande(), 'motif' => $motif]);
+      $objet = 'Annulation de votre commande';
+      $this->mailService->envoyer($user->getEmail(), $objet, $html);
+    }
+  }
+
+  private function genererNbCommande(){
+    $nbGenere = rand(100, 9999);
+    while($this->commandeRepository->trouverCommandeParNb($nbGenere)){
+      $nbGenere = rand(100, 9999);
+    }
+    return $nbGenere;
+  }
+
+  private function ajouterElementCommande(array $commandes)
+  {
+    foreach ($commandes as $commande) {
+        $commande->setCommandeMenus($this->commandeMenuRepository->trouverMenuDeLaCommande($commande->getCommandeId()));
+        $commande->setCommandePrestations($this->commandePrestaRepository->trouverPrestaDeLaCommande($commande->getCommandeId()));
+        $commande->setCommandeBoissons($this->commandeBoissonRepository->trouverBoissonDeLaCommande($commande->getCommandeId()));
+    }
+    return $commandes;
   }
 
   private function modificationImpossible(int $nvlDonnees, array $ancDonnees)

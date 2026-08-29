@@ -71,5 +71,14 @@ class CommandePrestaRepository extends Repository
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
   }
+
+  public function modifierDateRetourPresta(array $data)
+  {
+    $sql = 'UPDATE commande_prestation SET date_retour = :date_retour
+    WHERE prestation_id = :prestation_id AND commande_id = :commande_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
 }
 

@@ -61,5 +61,17 @@
   </tbody>
 </table>
 
+<?php if (isset($_SESSION['erreur'])): ?>
+    <p class="erreur"><?= $_SESSION['erreur'] ?></p>
+    <?php unset($_SESSION['erreur']); ?>
+  <?php endif; ?>
+
+  <?php if (isset($_SESSION['succes'])): ?>
+    <p class="succes">
+        <?= $_SESSION['succes'] ?>
+    </p>
+  <?php unset($_SESSION['succes']); ?>
+  <?php endif; ?>
+
 </body>
 </html>
