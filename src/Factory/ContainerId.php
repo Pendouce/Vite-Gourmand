@@ -115,6 +115,7 @@ class ContainerId
   {
     return new AvisService(
       new AvisRepository(),
+      new CommandeRepository()
     );
   }
 }

@@ -28,7 +28,25 @@ class CommandeRepository extends Repository
 
   // Read
 
-  public function trouverCommandeParNb(int $nbCommande): bool
+  public function trouverCommandeParNb(int $nbCommande)
+  {
+    $sql = 'SELECT * FROM commande
+    WHERE nb_commande = :nb_commande';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':nb_commande', $nbCommande, PDO::PARAM_INT);
+    $statement->execute();
+
+    $commande = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if($commande === false)
+    {
+      return false;
+    }
+
+    return Commande::creerEtHydrate($commande);
+  }
+  /* public function trouverCommandeParNb(int $nbCommande): bool
   {
     $sql = 'SELECT COUNT(*) FROM commande
     WHERE nb_commande = :nb_commande';
@@ -38,7 +56,7 @@ class CommandeRepository extends Repository
     $statement->execute();
 
     return $statement->fetchColumn();
-  }
+  } */
 
   public function trouverCommande()
   {

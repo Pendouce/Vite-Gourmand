@@ -60,6 +60,7 @@ CREATE table avis(
 );
 
 ALTER TABLE avis MODIFY note INT NOT NULL;
+ALTER TABLE avis ADD CONSTRAINT chk_note CHECK (note BETWEEN 1 AND 5);
 
 CREATE TABLE prestation(
   prestation_id INT AUTO_INCREMENT PRIMARY KEY,

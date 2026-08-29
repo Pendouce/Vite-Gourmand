@@ -6,27 +6,28 @@ use DateTimeImmutable;
 
 class Avis extends Entity
 {
-  protected ?int $avis_id;
+  protected ?int $avisId;
   protected ?int $note;
   protected ?string $commentaire;
-  protected ?DateTimeImmutable $date_publication;
+  protected ?DateTimeImmutable $datePublication;
   protected ?bool $publie;
-  protected ?int $commande_id;
+  protected ?int $commandeId;
+
 
   /**
-   * Get the value of avis_id
+   * Get the value of avisId
    */
   public function getAvisId(): ?int
   {
-    return $this->avis_id;
+    return $this->avisId;
   }
 
   /**
-   * Set the value of avis_id
+   * Set the value of avisId
    */
-  public function setAvisId(?int $avis_id): self
+  public function setAvisId(?int $avisId): self
   {
-    $this->avis_id = $avis_id;
+    $this->avisId = $avisId;
 
     return $this;
   }
@@ -68,19 +69,19 @@ class Avis extends Entity
   }
 
   /**
-   * Get the value of date_publication
+   * Get the value of datePublication
    */
   public function getDatePublication(): ?DateTimeImmutable
   {
-    return $this->date_publication;
+    return $this->datePublication;
   }
 
   /**
-   * Set the value of date_publication
+   * Set the value of datePublication
    */
-  public function setDatePublication(?DateTimeImmutable $date_publication): self
+  public function setDatePublication(?DateTimeImmutable $datePublication): self
   {
-    $this->date_publication = $date_publication;
+    $this->datePublication = $datePublication;
 
     return $this;
   }
@@ -104,19 +105,19 @@ class Avis extends Entity
   }
 
   /**
-   * Get the value of commande_id
+   * Get the value of commandeId
    */
   public function getCommandeId(): ?int
   {
-    return $this->commande_id;
+    return $this->commandeId;
   }
 
   /**
-   * Set the value of commande_id
+   * Set the value of commandeId
    */
-  public function setCommandeId(?int $commande_id): self
+  public function setCommandeId(?int $commandeId): self
   {
-    $this->commande_id = $commande_id;
+    $this->commandeId = $commandeId;
 
     return $this;
   }

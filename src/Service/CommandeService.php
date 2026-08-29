@@ -487,7 +487,7 @@ class CommandeService
         $html = $this->mailService->recupererHtml('commande/statuts/termineMail', [
           'prenom' => $user->getPrenom(), 
           'nbCommande' => $commande->getNbCommande(), 
-          'lienAvis' => BASE_URL . '/avis?nbCommande='.$commande->getNbCommande()
+          'lienAvis' => BASE_URL . '/avis?nb_commande='.$commande->getNbCommande()
         ]);
         $objet = 'Commande terminée';
         $this->mailService->envoyer($user->getEmail(), $objet, $html);
