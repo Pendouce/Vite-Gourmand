@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class InformationsVg extends Entity
+class InformationVg extends Entity
 {
   protected ?int $infoId;
   protected ?string $adresse;
