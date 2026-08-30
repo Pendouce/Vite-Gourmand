@@ -61,4 +61,5 @@ return[
     "/afficherAvis/" => ["controller" => "App\Controller\AvisController", "action" => "afficherAvis"],
     "/modifierStatutAvis/" => ["controller" => "App\Controller\AvisController", "action" => "modifierStatutAvis"],
     "/afficherInfosVg/" => ["controller" => "App\Controller\InfoVgController", "action" => "afficherInfosVg"],
+    "/modifierInfosVg/" => ["controller" => "App\Controller\InfoVgController", "action" => "modifierInfosVg"],
 ];

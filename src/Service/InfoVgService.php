@@ -16,4 +16,17 @@ class InfoVgService
   {
     return $this->infoRepository->trouverInfosVg();
   }
+
+  public function modifierInfosVg(array $data)
+  {
+    $infos = $this->infoRepository->trouverInfosVg();
+
+    $anciennesDonnees = $infos->deshydrate();
+    $data = array_filter($data, fn ($value) => $value !== null);
+
+    $nouvellesDonnees = array_merge($anciennesDonnees, $data);
+    unset($nouvellesDonnees['info_id']);
+
+    $this->infoRepository->modifierInfosVg($nouvellesDonnees);
+  }
 }

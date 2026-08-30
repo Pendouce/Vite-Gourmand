@@ -18,4 +18,15 @@ class InformationVgRepository extends Repository
     
     return InformationVg::creerEtHydrate($info);
   }
+
+  public function modifierInfosVg(array $data)
+  {
+    $sql = 'UPDATE information_vg SET 
+    adresse = :adresse, telephone = :telephone, email = :email, 
+    horaires_semaine = :horaires_semaine, horaires_weekend = :horaires_weekend
+    WHERE info_id = 1';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
 }
