@@ -50,4 +50,31 @@ class AvisController extends Controller
     $this->render('pages/listeAvis', ['avis' => $avis]);
   }
 
+  public function modifierStatutAvis()
+  {
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+      $publier = htmlspecialchars($_POST['publie']);
+      
+      try{
+        $avisId = (int)$_GET['id'];
+        $this->avisService->modifierStatusPublie($avisId, $publier);
+
+        if($publier == 1){
+          $_SESSION['succes'] = 'Avis accepté';
+        }else{
+          $_SESSION['succes'] = 'Avis masqué';
+        }
+        header('location: /avis');
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /modifierStautAvis?id='.$avisId);
+        exit;
+      }
+    }else{
+      $this->render('pages/employe/modifierStatutAvis');
+    }
+  }
+
 }

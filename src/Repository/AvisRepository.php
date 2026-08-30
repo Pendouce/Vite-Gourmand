@@ -20,6 +20,17 @@ class AvisRepository extends Repository
     return Avis::creerEtHydrate($data);
   }
 
+  public function trouverAvisParId(int $avisId)
+  {
+    $sql = 'SELECT * FROM avis WHERE avis_id = :avis_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':avis_id', $avisId, PDO::PARAM_INT);
+    $statement->execute();
+
+    return $statement->fetch(PDO::FETCH_ASSOC);
+  }
+
   public function trouverAvisParCommande(int $commandeId)
   {
     $sql = 'SELECT * FROM avis WHERE commande_id = :commande_id';
@@ -39,6 +50,16 @@ class AvisRepository extends Repository
   public function trouverAvisAcceptes()
   {
     return $this->trouverAvisGenerique('SELECT * FROM avis WHERE publie = 1');
+  }
+
+  public function modifierStatutPublier(int $avisId, int $publie)
+  {
+    $sql = 'UPDATE avis SET publie = :publie WHERE avis_id = :avis_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':avis_id', $avisId, PDO::PARAM_INT);
+    $statement->bindValue(':publie', $publie, PDO::PARAM_INT);
+    $statement->execute();
   }
 
   private function trouverAvisGenerique(string $sql)

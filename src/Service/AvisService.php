@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\IdInnexistantException;
 use App\Repository\AvisRepository;
 use App\Repository\CommandeRepository;
 use DateTimeImmutable;
@@ -65,6 +66,15 @@ class AvisService
     }else{
       return $this->avisRepository->trouverAvisAcceptes();
     }
+  }
+
+  public function modifierStatusPublie(int $avisId, int $publie)
+  {
+    if(!$this->avisRepository->trouverAvisParId($avisId)){
+      throw new IdInnexistantException($avisId);
+    }
+
+    return $this->avisRepository->modifierStatutPublier($avisId, $publie);
   }
 
 }

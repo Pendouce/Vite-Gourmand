@@ -59,4 +59,5 @@ return[
     "/annulerCommandeEmploye/" => ["controller" => "App\Controller\CommandeController", "action" => "annulerCommandeEmploye"],
     "/avis/" => ["controller" => "App\Controller\AvisController", "action" => "creerAvis"],
     "/afficherAvis/" => ["controller" => "App\Controller\AvisController", "action" => "afficherAvis"],
+    "/modifierStatutAvis/" => ["controller" => "App\Controller\AvisController", "action" => "modifierStatutAvis"],
 ];
