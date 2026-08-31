@@ -78,5 +78,24 @@ class EquipeRepository extends Repository
 
     return $tabEquipe;
   }
+
+  public function modifierMembre(array $data)
+  {
+    $sql = 'UPDATE equipe SET nom = :nom, prenom = :prenom, photo = :photo, poste = :poste, description = :description
+    WHERE membre_id = :membre_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
+
+  public function modifierStatutMembre(int $id, int $statut)
+  {
+    $sql = 'UPDATE equipe SET actif = :actif WHERE membre_id = :membre_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':membre_id', $id, PDO::PARAM_INT);
+    $statement->bindValue(':actif', $statut, PDO::PARAM_INT);
+    $statement->execute();
+  }
  //:nom, :prenom, :photo, :poste, :description, :actif
 }

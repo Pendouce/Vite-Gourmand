@@ -66,4 +66,6 @@ return[
     "/modifierImageSite/" => ["controller" => "App\Controller\InfoVgController", "action" => "modifierImageSite"],
     "/creerMembre/" => ["controller" => "App\Controller\EquipeController", "action" => "creerMembre"],
     "/afficherMembres/" => ["controller" => "App\Controller\EquipeController", "action" => "afficherMembres"],
+    "/modifierMembre/" => ["controller" => "App\Controller\EquipeController", "action" => "modifierMembre"],
+    "/modifierStatutMembre/" => ["controller" => "App\Controller\EquipeController", "action" => "modifierStatutMembre"],
 ];
