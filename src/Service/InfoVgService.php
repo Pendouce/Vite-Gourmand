@@ -29,4 +29,22 @@ class InfoVgService
 
     $this->infoRepository->modifierInfosVg($nouvellesDonnees);
   }
+
+  public function afficherImagesSite()
+  {
+    return $this->infoRepository->trouverImagesSite();
+  }
+
+  public function modifierImageSite(array $data)
+  {
+    $image = $this->infoRepository->trouverImageSiteParId($data['id']);
+
+    $anciennesDonnees = $image->deshydrate();
+    $data = array_filter($data, fn ($value) => $value !== null);
+
+    $nouvellesDonnees = array_merge($anciennesDonnees, $data);
+
+    var_dump($nouvellesDonnees);
+    $this->infoRepository->modifierImagesSite($nouvellesDonnees);
+  }
 }

@@ -303,6 +303,8 @@ INSERT INTO type_presta(libelle) VALUES('Location de materiel'), ('Service profe
 INSERT INTO information_vg(adresse, telephone, email, horaires_semaine, horaires_weekend)
 VALUES ('27 Rue des Fauvettes 33000 Bordeaux', '05 56 87 42 13', 'contact@viteetgourmand.com',
   'Lun-Ven 09h00-18h00', 'Sam -Dim 10h00-16h00');
+INSERT INTO image_site(nom_img, chemin)
+VALUES ('test', '/upload/imageSite/pexels-elletakesphotos-2696064.jpg');
 
 --INSERT INTO user(nom, prenom, email, mot_de_passe, role_id) VALUES 
 --('Garcia', 'José', 'jose@vg.fr', '$2y$12$hQxzhce4Qe7DelRyrhyOtO40hVA35QMA5VuqWbtvzM4L4DpsVSLdy', 3);

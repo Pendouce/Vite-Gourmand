@@ -15,6 +15,7 @@ class InfoVgController extends Controller
     $this->infoVgService = ContainerId::getInfoVgService();
   }
 
+  // INFORMATIONS VITE ET GOURMAND
   public function afficherInfosVg()
   {
     $infos = $this->infoVgService->afficherInfosVg();
@@ -48,4 +49,39 @@ class InfoVgController extends Controller
       $this->render('pages/employe/modifierInfosVg');
     }
   }
+
+  // IMAGES DU SITE
+  public function afficherImagesSite()
+  {
+    $images = $this->infoVgService->afficherImagesSite();
+    $this->render('pages/imagesSite', ['images' => $images]);
+  }
+
+  public function modifierImageSite()
+  {
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $data['nom_img'] = $_POST['nom_img'] ?? null;
+
+      if (key_exists('chemin', $_FILES) && $_FILES['chemin']['error'] === UPLOAD_ERR_OK) {
+        $data['chemin'] = $this->uploadImage($_FILES['chemin'], "imageSite");
+      }
+
+      $data = $this->nettoyerDonnees($data);
+
+      try{
+        $data['id'] = $_GET['id'];
+        $this->infoVgService->modifierImageSite($data);
+         $_SESSION['succes'] = "Image modifié";
+        header('location: /imagesSite');
+        exit;
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+        header('location: /modifierImageSite?id='.$data['id']);
+        exit;
+      }
+    }else{
+      $this->render('pages/employe/modifierImageSite');
+    }
+  }
+
 }
