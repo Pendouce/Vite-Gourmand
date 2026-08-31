@@ -9,6 +9,7 @@ use App\Repository\CommandeBoissonRepository;
 use App\Repository\CommandeMenuRepository;
 use App\Repository\CommandePrestaRepository;
 use App\Repository\CommandeRepository;
+use App\Repository\EquipeRepository;
 use App\Repository\EvenementRepository;
 use App\Repository\InformationVgRepository;
 use App\Repository\MenuRepository;
@@ -25,6 +26,7 @@ use App\Service\BoissonService;
 use App\Service\CalculPrixService;
 use App\Service\CalculStockService;
 use App\Service\CommandeService;
+use App\Service\EquipeService;
 use App\Service\InfoVgService;
 use App\Service\MailService;
 use App\Service\MenuService;
@@ -125,6 +127,13 @@ class ContainerId
   {
     return new InfoVgService(
       new InformationVgRepository(),
+    );
+  }
+
+  public static function getEquipeService(): EquipeService
+  {
+    return new EquipeService(
+      new EquipeRepository(),
     );
   }
 }

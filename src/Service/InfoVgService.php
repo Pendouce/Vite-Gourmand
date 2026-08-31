@@ -44,7 +44,6 @@ class InfoVgService
 
     $nouvellesDonnees = array_merge($anciennesDonnees, $data);
 
-    var_dump($nouvellesDonnees);
     $this->infoRepository->modifierImagesSite($nouvellesDonnees);
   }
 }
