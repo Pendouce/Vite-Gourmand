@@ -44,5 +44,39 @@ class EquipeRepository extends Repository
 
     return $statement->fetch(PDO::FETCH_ASSOC);
   }
+
+  public function trouverMembresActif()
+  {
+    $sql = 'SELECT * FROM equipe WHERE actif = 1';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabEquipe = [];
+
+    foreach($data as $membre){
+      $tabEquipe[] = Equipe::creerEtHydrate($membre);
+    }
+
+    return $tabEquipe;
+  }
+
+  public function trouverTousLesMembres()
+  {
+    $sql = 'SELECT * FROM equipe';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabEquipe = [];
+
+    foreach($data as $membre){
+      $tabEquipe[] = Equipe::creerEtHydrate($membre);
+    }
+
+    return $tabEquipe;
+  }
  //:nom, :prenom, :photo, :poste, :description, :actif
 }

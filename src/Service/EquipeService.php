@@ -21,6 +21,15 @@ class EquipeService
     return $this->equipeRepository->creerMembre($data);
   }
 
+  public function afficherMembres(int $role)
+  {
+    if($role === ROLE_ADMIN){
+      return $this->equipeRepository->trouverTousLesMembres();
+    }else{
+      return $this->equipeRepository->trouverMembresActif();
+    }
+  }
+
   private function verifSiExisteDeja(string $nom, string $prenom)
   {
     if($this->equipeRepository->trouverMembreParNom($nom, $prenom)){

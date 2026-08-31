@@ -45,4 +45,12 @@ class EquipeController extends Controller
       $this->render('pages/admin/creerMembre');
     }
   }
+
+  public function afficherMembres()
+  {
+    $role = $_SESSION['role_id'];
+    $membres = $this->equipeService->afficherMembres($role);
+
+    $this->render('pages/equipe', ['membres' => $membres]);
+  }
 }
