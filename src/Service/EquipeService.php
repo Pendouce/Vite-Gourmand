@@ -57,6 +57,13 @@ class EquipeService
     return $this->equipeRepository->modifierStatutMembre($membreId, $statut);
   }
 
+  public function supprimerMembre(int $membreId)
+  {
+    $this->verifSiIdExisteDeja($membreId);
+
+    return $this->equipeRepository->supprimerMembre($membreId);
+  }
+
   private function verifSiExisteDeja(string $nom, string $prenom)
   {
     if($this->equipeRepository->trouverMembreParNom($nom, $prenom)){

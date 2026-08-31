@@ -97,5 +97,14 @@ class EquipeRepository extends Repository
     $statement->bindValue(':actif', $statut, PDO::PARAM_INT);
     $statement->execute();
   }
- //:nom, :prenom, :photo, :poste, :description, :actif
+
+  public function supprimerMembre(int $membreId)
+  {
+    $sql = 'DELETE FROM equipe WHERE membre_id = :membre_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':membre_id', $membreId, PDO::PARAM_INT);
+
+    return $statement->execute();
+  }
 }

@@ -68,4 +68,5 @@ return[
     "/afficherMembres/" => ["controller" => "App\Controller\EquipeController", "action" => "afficherMembres"],
     "/modifierMembre/" => ["controller" => "App\Controller\EquipeController", "action" => "modifierMembre"],
     "/modifierStatutMembre/" => ["controller" => "App\Controller\EquipeController", "action" => "modifierStatutMembre"],
+    "/supprimerMembre/" => ["controller" => "App\Controller\EquipeController", "action" => "supprimerMembre"],
 ];

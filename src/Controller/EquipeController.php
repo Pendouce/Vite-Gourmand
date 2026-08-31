@@ -34,7 +34,7 @@ class EquipeController extends Controller
       try{
         $this->equipeService->creerMembre($data);
          $_SESSION['succes'] = "Nouveau membre de l'équipe ajouté";
-        header('location: /equipeAdmin');
+        header('location: /afficherMembres');
         exit;
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
@@ -93,7 +93,7 @@ class EquipeController extends Controller
     {
       $statut = (int)$_POST['actif'];
       $membreId = (int)$_GET['id'];
-      
+
       try{
         $this->equipeService->modifierStatutMembre($membreId, $statut);
         if($statut == 0){
@@ -110,5 +110,21 @@ class EquipeController extends Controller
       }
     }
     $this->render('pages/admin/modifierStatutMembre');
+  }
+
+  public function supprimerMembre()
+  {
+    $membreId = (int)$_GET['id'];
+
+    try{
+      $this->equipeService->supprimerMembre($membreId);
+      $_SESSION['succes'] = "Membre affiché";
+      header('location: /afficherMembres');
+      exit;
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /modifierMembre?id='.$membreId);
+      exit;
+    }
   }
 }
