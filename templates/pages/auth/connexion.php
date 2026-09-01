@@ -7,7 +7,9 @@
 </head>
 <body>
   <h1>Connexion</h1>
-  
+  <?php /** @var string $csrfToken*/ ?>
+<?= $csrfToken; ?>
+
 
   <?php if(isset($erreur)): ?>
     <p class="erreur"><?= $erreur ?></p>

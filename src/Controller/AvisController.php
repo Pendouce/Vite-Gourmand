@@ -18,6 +18,8 @@ class AvisController extends Controller
   public function creerAvis()
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $this->checkCsrfToken();
+  
       $data = [
       'note' => $_POST['note'], 
       'commentaire' => $_POST['commentaire'], 
@@ -53,11 +55,12 @@ class AvisController extends Controller
   public function modifierStatutAvis()
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-
+      $this->checkCsrfToken();
+  
       $publier = htmlspecialchars($_POST['publie']);
+      $avisId = (int)$_POST['id'];
       
       try{
-        $avisId = (int)$_GET['id'];
         $this->avisService->modifierStatusPublie($avisId, $publier);
 
         if($publier == 1){
@@ -69,7 +72,7 @@ class AvisController extends Controller
         exit;
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
-        header('location: /modifierStautAvis?id='.$avisId);
+        header('location: /modifierStatutAvis?id='.$avisId);
         exit;
       }
     }else{

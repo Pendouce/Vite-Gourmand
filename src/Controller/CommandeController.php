@@ -19,6 +19,8 @@ class CommandeController extends Controller
   public function creerCommande()
   {
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $this->checkCsrfToken();
+
       // Je boucle sur les ids des menus que je vais recevoir
       // Et je recupere le nb_personne de chaque menu
       $dataMenus = [];
@@ -138,6 +140,8 @@ class CommandeController extends Controller
     public function modifierCommande()
     {
       if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+
         $dataMenus = [];
         foreach($_POST['menu'] as $index => $menuId){
           $dataMenus[] = [
@@ -181,7 +185,7 @@ class CommandeController extends Controller
         $motif = htmlspecialchars($_POST['motif']);
 
         try{
-          $commandeId = (int) $_GET['id'];
+          $commandeId = (int) $_POST['id'];
           $roleId = (int) $_SESSION['role_id'];
           $this->commandeService->modifierCommande($commandeId, $roleId, $dataCommande, $dataMenus, $dataPrestas, $dataBoissons, $prixTotalPresta, $motif);
 
@@ -199,7 +203,6 @@ class CommandeController extends Controller
           $_SESSION['erreur'] = $e->getMessage();
           header('location: /modifierCommande');
           exit;
-          
         }
       }else{
         $this->render('pages/modifierCommande');
@@ -208,8 +211,14 @@ class CommandeController extends Controller
 
     public function modifierStatusCommande()
     {
-      $commandeId = (int) $_GET['id'];
-      $status = htmlspecialchars((int) $_POST['status_id']);
+      if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('location: /');
+        exit;
+      }
+      $this->checkCsrfToken();
+
+      $commandeId = (int) $_POST['id'];
+      $status = (int)$_POST['status_id'];
 
       try{
         $this->commandeService->modifierStatusCommande($commandeId, $status);
@@ -225,7 +234,13 @@ class CommandeController extends Controller
     
     public function annulerCommandeUser()
     {
-      $commandeId = (int) $_GET['id'];
+      if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('location: /');
+        exit;
+      }
+      $this->checkCsrfToken();
+  
+      $commandeId = (int) $_POST['id'];
       $roleId = $_SESSION['role_id'];
       $userId = $_SESSION['user_id'];
       try{
@@ -242,7 +257,13 @@ class CommandeController extends Controller
 
     public function annulerCommandeEmploye()
     {
-      $commandeId = (int) $_GET['id'];
+      if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('location: /');
+        exit;
+      }
+      $this->checkCsrfToken();
+
+      $commandeId = (int) $_POST['id'];
       $roleId = (int)$_SESSION['role_id'];
       $userId = $_SESSION['user_id'];
       $motif = htmlspecialchars($_POST['motif']);

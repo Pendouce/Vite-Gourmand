@@ -18,6 +18,8 @@ class EquipeController extends Controller
   public function creerMembre()
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+    
       $data = [
         'nom' => $_POST['nom'],
         'prenom' => $_POST['prenom'],
@@ -54,10 +56,12 @@ class EquipeController extends Controller
     $this->render('pages/equipe', ['membres' => $membres]);
   }
 
-   public function modifierMembre()
+  public function modifierMembre()
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST')
     {
+      $this->checkCsrfToken();
+    
       $data = [
         'nom' => $_POST['nom'] ?? null,
         'prenom' => $_POST['prenom'] ?? null,
@@ -71,7 +75,7 @@ class EquipeController extends Controller
 
       $data = $this->nettoyerDonnees($data);
 
-      $data['membre_id'] = (int)$_GET['id'];
+      $data['membre_id'] = (int)$_POST['id'];
       try{
         $this->equipeService->modifierMembre($data);
 
@@ -91,8 +95,10 @@ class EquipeController extends Controller
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST')
     {
+      $this->checkCsrfToken();
+    
       $statut = (int)$_POST['actif'];
-      $membreId = (int)$_GET['id'];
+      $membreId = (int)$_POST['id'];
 
       try{
         $this->equipeService->modifierStatutMembre($membreId, $statut);
@@ -114,11 +120,17 @@ class EquipeController extends Controller
 
   public function supprimerMembre()
   {
-    $membreId = (int)$_GET['id'];
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+    
+    $membreId = (int)$_POST['id'];
 
     try{
       $this->equipeService->supprimerMembre($membreId);
-      $_SESSION['succes'] = "Membre affiché";
+      $_SESSION['succes'] = "Membre supprimé";
       header('location: /afficherMembres');
       exit;
     }catch(Exception $e){

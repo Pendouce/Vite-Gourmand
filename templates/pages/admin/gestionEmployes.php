@@ -8,6 +8,9 @@
 <body>
   <h1>Gestion Employe</h1>
 
+  <?php /** @var string $csrfToken*/ ?>
+  <?= $csrfToken ?>
+
   <?php if (isset($_SESSION['erreur'])): ?>
     <p class="erreur"><?= $_SESSION['erreur'] ?></p>
     <?php unset($_SESSION['erreur']); ?>

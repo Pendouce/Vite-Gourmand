@@ -21,6 +21,7 @@ class UserController extends Controller
   {
 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $this->checkCsrfToken();
       $data = [
         'nom' => $_POST['nom'],
         'prenom' => $_POST['prenom'],
@@ -69,24 +70,12 @@ class UserController extends Controller
     }else {
       $this->render('pages/client/inscription');
     }
-
- /*      $data = [
-        'nom' => 'Boug',
-        'prenom' => 'Hella',
-        'email' => 'fj@pk.cb',
-        'mdp' => 'ehe',
-        'telephone' => '01233455',
-        'ville' => 'Valenton',
-        'codePostal' => '94460',
-        'adresse' => '3 rtr erjker',
-      ];
-      $dataNettoye = $this->nettoyerDonnees($data);
-       var_dump($dataNettoye); */
   }
 
   public function inscriptionEmploye()
   {
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        $this->checkCsrfToken();
         $data = [
         'nom' => $_POST['nom'],
         'prenom' => $_POST['prenom'],
@@ -122,6 +111,7 @@ class UserController extends Controller
   public function connexion()
   {
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $this->checkCsrfToken();
       $data = [
         'email' => $_POST['email'],
         'mot_de_passe' => $_POST['mot_de_passe'],
@@ -137,6 +127,8 @@ class UserController extends Controller
         $nouvelUtilisateurRole = $connecte->getRoleId();
         $_SESSION['user_id'] = $nouvelUtilisateurId;
         $_SESSION['role_id'] = $nouvelUtilisateurRole;
+        // Je regenere l'id de session apres connexion
+        session_regenerate_id(true);
         header('location: /');
         exit;
 
@@ -171,6 +163,12 @@ class UserController extends Controller
 
   public function modifierInfos()
   {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
     $data = [
       'nom' => $_POST['nom'] ?? null,
       'prenom' => $_POST['prenom'] ?? null,
@@ -199,6 +197,7 @@ class UserController extends Controller
 
   public function modifierMdp(){
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $this->checkCsrfToken();
       $data = [
         'ancienMdp' => $_POST['ancienMdp'],
         'mot_de_passe' => $_POST['mot_de_passe'],
@@ -224,6 +223,7 @@ class UserController extends Controller
   public function reinitialiserMdp()
   {
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $this->checkCsrfToken();
       $data = [
         'email' => $_POST['email'],
       ];
@@ -246,6 +246,11 @@ class UserController extends Controller
   }
     public function deconnexion()
     {
+      if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('location: /');
+        exit;
+      }
+    $this->checkCsrfToken();
       $_SESSION = [];
 
       if (ini_get("session.use_cookies")) {
@@ -261,16 +266,19 @@ class UserController extends Controller
 
   public function supprimerCompteUtilisateur()
   {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
     try{
       $role = $_SESSION['role_id'];
       $id = $_SESSION['user_id'];
 
-      if($role === 1){
+      if($role === ROLE_UTILISATEUR){
         $this->userService->supprimeCompte($id);
         $this->deconnexion();
-        $_SESSION['succes'] = "Compte supprimé avec succes";
-        header('location: /');
-        exit;
       }
     }catch(Exception $e){
       $_SESSION['erreur'] = $e->getMessage();
@@ -281,10 +289,16 @@ class UserController extends Controller
 
   public function supprimerCompteEmploye()
   {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
     try{
       $role = $_SESSION['role_id'];
-      $id = $_GET['id'];
-      if($role === 3){
+      $id = $_POST['id'];
+      if($role === ROLE_ADMIN){
           $this->userService->supprimeCompte($id);
           $_SESSION['succes'] = "Compte supprimé avec succes";
           header('location: /gestionEmployes');

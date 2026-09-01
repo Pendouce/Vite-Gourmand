@@ -5,6 +5,7 @@ return[
     "/inscription/" => ["controller" => "App\Controller\UserController", "action" => "inscription"],
     "/inscriptionEmploye/" => ["controller" => "App\Controller\UserController", "action" => "inscriptionEmploye"],
     "/connexion/" => ["controller" => "App\Controller\UserController", "action" => "connexion"],
+    "/deconnexion/" => ["controller" => "App\Controller\UserController", "action" => "deconnexion"],
     "/mesInfos/" => ["controller" => "App\Controller\UserController", "action" => "afficheInfos"],
     "/modifierInfos/" => ["controller" => "App\Controller\UserController", "action" => "modifierInfos"],
     "/modificationMotDePasse/" => ["controller" => "App\Controller\UserController", "action" => "modifierMdp"],

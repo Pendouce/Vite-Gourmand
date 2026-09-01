@@ -25,6 +25,8 @@ class InfoVgController extends Controller
   public function modifierInfosVg()
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+    
       $data = [
         'adresse' => $_POST['adresse'] ?? null, 
         'telephone' => $_POST['telephone'] ?? null, 
@@ -60,6 +62,8 @@ class InfoVgController extends Controller
   public function modifierImageSite()
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+    
       $data['nom_img'] = $_POST['nom_img'] ?? null;
 
       if (key_exists('chemin', $_FILES) && $_FILES['chemin']['error'] === UPLOAD_ERR_OK) {
@@ -69,7 +73,7 @@ class InfoVgController extends Controller
       $data = $this->nettoyerDonnees($data);
 
       try{
-        $data['id'] = $_GET['id'];
+        $data['id'] = $_POST['id'];
         $this->infoVgService->modifierImageSite($data);
          $_SESSION['succes'] = "Image modifié";
         header('location: /imagesSite');

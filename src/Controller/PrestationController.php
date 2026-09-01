@@ -22,6 +22,8 @@ class PrestationController extends Controller
     // GERER L'IMAGE
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+
       $data = [
         'nom_presta' => $_POST['nom_presta'],
         'prix_presta' => $_POST['prix_presta'],
@@ -75,6 +77,8 @@ class PrestationController extends Controller
   public function modifierPrestation()
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+
       $data = [
         'nom_presta' => $_POST['nom_presta'] ?? null,
         'prix_presta' => $_POST['prix_presta'] ?? null,
@@ -91,7 +95,7 @@ class PrestationController extends Controller
 
       $data = $this->nettoyerDonnees($data);
 
-      $prestaId = (int) $_GET['id'];
+      $prestaId = (int) $_POST['id'];
       try{
         $this->prestationService->modifierPrestation($prestaId, $data);
 
@@ -112,8 +116,13 @@ class PrestationController extends Controller
 
   public function modifierStatusPrestation()
   {
-    $prestaId = (int) $_GET['id'];
-    //var_dump($prestaId);
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
+    $prestaId = (int) $_POST['id'];
     $status = $_POST['prestation_actif'];
 
     try{
@@ -132,7 +141,13 @@ class PrestationController extends Controller
 
   public function supprimerPrestation()
   {
-    $prestaId = (int) $_GET['id'];
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
+    $prestaId = (int) $_POST['id'];
 
     try{
         $this->prestationService->supprimerPrestation($prestaId);

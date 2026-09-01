@@ -18,6 +18,8 @@ class BoissonController extends Controller
   public function creerBoisson()
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+  
       $data = [
         'nom_boisson' => $_POST['nom_boisson'],
         'prix_boisson' => $_POST['prix_boisson'],
@@ -32,10 +34,6 @@ class BoissonController extends Controller
 
       $data = $this->nettoyerDonnees($data);
 
-      /* var_dump($data);
-      echo '_____________________________
-      ______________________';
-       */
       try{
         $this->boissonService->creerBoisson($data);
         $_SESSION['succes'] = 'Boisson ajoutée';
@@ -70,6 +68,8 @@ class BoissonController extends Controller
   public function modifierBoisson()
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+  
       $data = [
         'nom_boisson' => $_POST['nom_boisson'] ?? null,
         'prix_boisson' => $_POST['prix_boisson'] ?? null,
@@ -85,7 +85,7 @@ class BoissonController extends Controller
       $data = $this->nettoyerDonnees($data);
 
       try{
-        $boissonId = (int) $_GET['id'];
+        $boissonId = (int) $_POST['id'];
         
         $this->boissonService->modifierBoisson($boissonId, $data);
         $_SESSION['succes'] = 'Boisson Modifiée';
@@ -104,48 +104,59 @@ class BoissonController extends Controller
 
   public function modifierStatusBoisson()
   {
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
-      $status = htmlspecialchars($_POST['boisson_actif']);
-      $boissonId = (int)$_GET['id'];
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+  
+    $status = (int)$_POST['boisson_actif'];
+    $boissonId = (int)$_POST['id'];
 
-      //var_dump($boissonId, $status);
-      try{
-        $this->boissonService->modifierStatusBoisson($boissonId, $status);
-        //var_dump('ok');
-        $_SESSION['succes'] = 'Status modifié';
-        header('location: /detailBoisson?id='.$boissonId);
-        exit;
-      }catch(Exception $e){
-        $_SESSION['erreur'] = $e->getMessage();
-        header('location: /detailBoisson?id='.$boissonId);
-        exit;
-      }
+    try{
+      $this->boissonService->modifierStatusBoisson($boissonId, $status);
+      $_SESSION['succes'] = 'Status modifié';
+      header('location: /detailBoisson?id='.$boissonId);
+      exit;
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /detailBoisson?id='.$boissonId);
+      exit;
     }
   }
 
   public function modifierStockBoisson()
   {
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
-      $stock = htmlspecialchars($_POST['stock_boisson']);
-      $boissonId = $_GET['id'];
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+  
+    $stock = (int)$_POST['stock_boisson'];
+    $boissonId = $_POST['id'];
 
-      //var_dump($stock);
-      try{
-        $this->boissonService->modifierStockBoisson($boissonId, $stock);
-        $_SESSION['succes'] = 'Stock modifié';
-        header('location: /detailBoisson?id='.$boissonId);
-        exit;
-      }catch(Exception $e){
-        $_SESSION['erreur'] = $e->getMessage();
-        header('location: /detailBoisson?id='.$boissonId);
-        exit;
-      }
+    try{
+      $this->boissonService->modifierStockBoisson($boissonId, $stock);
+      $_SESSION['succes'] = 'Stock modifié';
+      header('location: /detailBoisson?id='.$boissonId);
+      exit;
+    }catch(Exception $e){
+      $_SESSION['erreur'] = $e->getMessage();
+      header('location: /detailBoisson?id='.$boissonId);
+      exit;
     }
   }
 
   public function supprimerBoisson()
   {
-    $boissonId = $_GET['id'];
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('location: /');
+        exit;
+      }
+      $this->checkCsrfToken();
+  
+    $boissonId = $_POST['id'];
     try{
         $this->boissonService->supprimerBoisson($boissonId);
         $_SESSION['succes'] = 'Boisson supprimée';

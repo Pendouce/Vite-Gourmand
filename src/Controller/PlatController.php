@@ -17,7 +17,8 @@ class PlatController extends Controller
 
   public function creerPlat()
   {
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
 
       $data = [
         'titre' => $_POST['titre'],
@@ -32,7 +33,6 @@ class PlatController extends Controller
       }
       $allergeneId = $_POST['allergene'];
       $this->nettoyerDonnees($data);
-
 
       try{
         $platCreer = $this->platService->creerPlat($data);
@@ -75,7 +75,9 @@ class PlatController extends Controller
 
   public function modifierPlat()
   {
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+  
       $data = [
         'titre' => $_POST['titre'] ?? null,
         'description_plat' => $_POST['description_plat'] ?? null,
@@ -92,7 +94,7 @@ class PlatController extends Controller
       //var_dump($allergeneId);
       $data = $this->nettoyerDonnees($data);
       try{
-        $platId = $_GET['id'];
+        $platId = $_POST['id'];
 
         $this->platService->modifierPlat($platId, $data);
         $this->platService->modifierAllergenesDuPlat($platId, $allergeneId);
@@ -113,8 +115,14 @@ class PlatController extends Controller
 
   public function modifierStatusPlat()
   {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
     $status = (int) $_POST['plat_actif'];
-    $platId = $_GET['id'];
+    $platId = $_POST['id'];
 
     try{
       $this->platService->modifierStatusPlat($platId, $status);
@@ -123,15 +131,21 @@ class PlatController extends Controller
       exit;
     }catch(Exception $e){
       $_SESSION['erreur'] = $e->getMessage();
-      header('location: /detailPlat?='.$platId);
+      header('location: /detailPlat?id='.$platId);
       exit;
     }
   }
 
   public function modifierStockPlat()
   {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
     $stock = (int) $_POST['stock_plat'];
-    $platId = $_GET['id'];
+    $platId = $_POST['id'];
 
     try{
       $this->platService->modifierStockPlat($platId, $stock);
@@ -140,14 +154,20 @@ class PlatController extends Controller
       exit;
     }catch(Exception $e){
       $_SESSION['erreur'] = $e->getMessage();
-      header('location: /detailPlat?='.$platId);
+      header('location: /detailPlat?id='.$platId);
       exit;
     }
   }
 
   public function supprimerPlat()
   {
-    $platId = $_GET['id'];
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
+    $platId = $_POST['id'];
     try{
       $this->platService->supprimerPlat($platId);
       $_SESSION['succes'] = "Le plat a bien ete supprimé";

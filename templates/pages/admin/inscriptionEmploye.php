@@ -6,14 +6,16 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>Inscription</h1>
+  <h1>Inscription Employe</h1>
   
 
   <?php 
 
     use App\Repository\UserRepository;
 
-    
+    /** @var string $csrfToken*/ 
+    echo $csrfToken;
+
     $affiche = new UserRepository();
 
     //var_dump($affiche->afficheUtilisateur());

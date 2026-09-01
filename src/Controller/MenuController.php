@@ -17,13 +17,16 @@ class MenuController extends Controller
   public function creerMenu()
   {
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
+      $this->checkCsrfToken();
+    
       $data = [
         'titre' => $_POST['titre'],
         'prix_personne' => $_POST['prix_personne'],
         'nombre_personne_min' => $_POST['nombre_personne_min'],
         'conditions' => $_POST['conditions'],
-        'stock_dispo' => $_GET['stock_dispo'],
-        'menu_actif' => $_POST['menu_actif'],
+        // A gerer dans le service
+        //'stock_dispo' => $_GET['stock_dispo'],
+        //'menu_actif' => $_POST['menu_actif'],
       ];
       //$data['stock_dispo'] = $_GET['stock_dispo'];
       $data = $this->nettoyerDonnees($data);
@@ -51,7 +54,6 @@ class MenuController extends Controller
         header('location: /menu');
         exit;
       }
-
 
     }else{
       $this->render('pages/employe/creerMenu');
@@ -102,6 +104,8 @@ class MenuController extends Controller
   public function modifierMenu()
   {
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+    
       $data = [
         'titre' => $_POST['titre'] ?? null,
         'prix_personne' => $_POST['prix_personne'] ?? null,
@@ -113,7 +117,7 @@ class MenuController extends Controller
       $data = $this->nettoyerDonnees($data);
 
       try{
-        $menuId = (int) $_GET['id'];
+        $menuId = (int) $_POST['id'];
         $platId = $_POST['plat'] ?? [];
         //$allergeneId = $_POST['allergene'];
         $evenementId = $_POST['evenement'] ?? [];
@@ -128,7 +132,7 @@ class MenuController extends Controller
         $this->menuService->modifierMenu($menuId, $data);
 
         $_SESSION['succes'] = "Menu modifié";
-        header('location: /detailMenu?='.$menuId);
+        header('location: /detailMenu?id='.$menuId);
         exit;
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
@@ -143,8 +147,14 @@ class MenuController extends Controller
 
   public function modifierStatusMenu()
   {
-    $status = (int) $_POST['plat_actif'];
-    $menuId = (int) $_GET['id'];
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+    
+    $status = (int) $_POST['menu_actif'];
+    $menuId = (int) $_POST['id'];
 
     try{
       $this->menuService->modifierStatusMenu($menuId, $status);
@@ -153,14 +163,20 @@ class MenuController extends Controller
       exit;
     }catch(Exception $e){
       $_SESSION['erreur'] = $e->getMessage();
-      header('location: /detailMenu?='.$menuId);
+      header('location: /detailMenu?id='.$menuId);
       exit;
     }
   }
 
   public function supprimerMenu()
   {
-    $menuId = (int) $_GET['id'];
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+    
+    $menuId = (int) $_POST['id'];
 
     try{
       $this->menuService->supprimermenu($menuId);

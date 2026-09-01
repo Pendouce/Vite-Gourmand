@@ -18,7 +18,9 @@ class TypeDePrestaController extends Controller
 
   public function creerTypeDePresta()
   {
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+
       $libelle = htmlspecialchars($_POST['libelle']);
       try{
         $this->typeDePrestaService->creerTypeDePresta($libelle);
@@ -43,9 +45,10 @@ class TypeDePrestaController extends Controller
 
   public function modifierTypeDePresta()
   {
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
       $libelle = htmlspecialchars($_POST['libelle']);
-      $id = (int) $_GET['id'];
+      $id = (int) $_POST['id'];
 
       $data = [
         'libelle' => $libelle,
@@ -69,7 +72,13 @@ class TypeDePrestaController extends Controller
 
   public function supprimerTypeDePresta()
   {
-    $id = (int) $_GET['id'];
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
+    $id = (int) $_POST['id'];
     try{
         $this->typeDePrestaService->supprimerTypeDePresta($id);
         $_SESSION['succes'] = "Type de prestation supprimé";

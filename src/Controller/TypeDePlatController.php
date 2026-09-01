@@ -17,7 +17,9 @@ class TypeDePlatController extends Controller
 
   public function creerTypeDePlat()
   {
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+
       $libelle = htmlspecialchars($_POST['libelle']);
       try{
         $this->typeDePlatService->creerTypeDePlat($libelle);
@@ -42,9 +44,11 @@ class TypeDePlatController extends Controller
 
   public function modifierTypeDePlat()
   {
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+      $this->checkCsrfToken();
+
       $libelle = htmlspecialchars($_POST['libelle']);
-      $id = $_GET['type_id'];
+      $id = $_POST['type_id'];
 
       try{
         $this->typeDePlatService->modifieTypeDePlat($libelle, $id);
@@ -55,6 +59,7 @@ class TypeDePlatController extends Controller
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
         header('location: /modifierTypeDePlat');
+        exit;
       }
     }else{
       $this->render('pages/employe/modifierTypeDePlat');
@@ -63,7 +68,13 @@ class TypeDePlatController extends Controller
 
   public function supprimerTypeDePlat()
   {
-    $id = $_GET['type_id'];
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
+    $id = $_POST['type_id'];
     try{
       $this->typeDePlatService->supprimeTypeDePlat($id);
       $_SESSION['succes'] = 'Type de plat supprimé';
