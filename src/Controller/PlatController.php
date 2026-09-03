@@ -4,15 +4,18 @@ namespace App\Controller;
 
 use App\Service\PlatService;
 use App\Factory\ContainerId;
+use App\Service\UploadService;
 use Exception;
 
 class PlatController extends Controller
 {
   private PlatService $platService;
+  private UploadService $uploadService;
   
   public function __construct() {
     parent::__construct();
     $this->platService = ContainerId::getPlatService();
+    $this->uploadService = ContainerId::getUploadService();
   }
 
   public function creerPlat()
@@ -29,7 +32,8 @@ class PlatController extends Controller
         'type_id' => $_POST['type_id'],
       ];
       if (key_exists('image_plat', $_FILES) && $_FILES['image_plat']['error'] === UPLOAD_ERR_OK) {
-        $data['image_plat'] = $this->uploadImage($_FILES['image_plat'], "plat");
+        $extension = $this->uploadService->validerImage($_FILES['image_plat']);
+        $data['image_plat'] = $this->uploadImage($_FILES['image_plat'], "plat", $extension);
       }
       $allergeneId = $_POST['allergene'];
       $this->nettoyerDonnees($data);
@@ -88,7 +92,8 @@ class PlatController extends Controller
         //'libelle' => $_POST['libelle'] ?? null,
       ];
       if (key_exists('image_plat', $_FILES) && $_FILES['image_plat']['error'] === UPLOAD_ERR_OK) {
-        $data['image_plat'] = $this->uploadImage($_FILES['image_plat'], "plat");
+        $extension = $this->uploadService->validerImage($_FILES['image_plat']);
+        $data['image_plat'] = $this->uploadImage($_FILES['image_plat'], "plat", $extension);
       }
       $allergeneId = $_POST['allergene'];
       //var_dump($allergeneId);

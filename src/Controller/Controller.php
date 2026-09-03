@@ -7,18 +7,19 @@ use Exception;
 
 class Controller
 {
-  protected $token;
+  protected string $token;
 
   public function __construct() {
     session_set_cookie_params([
       'httponly' => true,
-      'secure' => false,
+      'secure' => false, // passer a true HTTPS
       'samesite' => 'Lax',
     ]);
     session_start();
     // Je genere le token dans le constructeur
     $this->token = $this->genererToken();
   }
+  
   protected function render(string $path, array $params=[]): void
   {
     $filePath = APP_ROOT."/templates/$path.php";
@@ -34,7 +35,7 @@ class Controller
     }
   }
 
-  protected function genererToken()
+  protected function genererToken() :string
   {
     // Si je n'ai pas de csrf token dans ma session j'en genere un
     if(empty($_SESSION['csrf_token'])){
@@ -45,7 +46,7 @@ class Controller
   }
 
   // Je hash et verifie que le token que je recois est identique a celui que j'ai attribuée
-  protected function verifCsrfToken(?string $token)
+  protected function verifCsrfToken(?string $token) : bool
   {
     if (empty($_SESSION['csrf_token']) || empty($token)) {
       return false;
@@ -55,10 +56,10 @@ class Controller
 
   // Je verifie que la requette post provient bien d'un de mes formulaires
   // Je redirige vers l'acceuil en cas de token invalide
-  protected function checkCsrfToken()
+  protected function checkCsrfToken(): void
   {
     if(!$this->verifCsrfToken($_POST['csrfToken'] ?? null)){
-      $_SESSION['erreur'] = "Token invalide";
+      $_SESSION['erreur'] = "Token CSRF invalide";
       header('location: /');
       exit;
     }
@@ -88,10 +89,12 @@ class Controller
     return $dataNettoye;
 } */
 
-  protected function uploadImage(array $file, string $folder)
+  protected function uploadImage(array $file, string $folder, string $extension): string
   {
-    $nomTmpImage = $file ['tmp_name'];
-    $image = "/upload/".$folder."/".$file['name'];
+    $nomTmpImage = $file['tmp_name'];
+    // J rennome l'image
+    $nouveauNom = bin2hex(random_bytes(16)) . '.' . $extension;
+    $image = "/upload/".$folder."/".$nouveauNom;
     $succes = move_uploaded_file($nomTmpImage, APP_ROOT."/public/".$image);
 
     if (!$succes) {
@@ -100,6 +103,4 @@ class Controller
 
     return $image;
   }
-
-
 }

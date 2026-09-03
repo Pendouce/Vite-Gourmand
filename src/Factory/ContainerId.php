@@ -34,6 +34,7 @@ use App\Service\PlatService;
 use App\Service\PrestationService;
 use App\Service\TypeDePlatService;
 use App\Service\TypeDePrestaService;
+use App\Service\UploadService;
 use App\Service\UserService;
 
 class ContainerId
@@ -135,5 +136,10 @@ class ContainerId
     return new EquipeService(
       new EquipeRepository(),
     );
+  }
+
+  public static function getUploadService(): UploadService
+  {
+    return new UploadService();
   }
 }

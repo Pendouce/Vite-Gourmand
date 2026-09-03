@@ -4,17 +4,20 @@ namespace App\Controller;
 
 use App\Factory\ContainerId;
 use App\Service\PrestationService;
+use App\Service\UploadService;
 use Exception;
 
 
 class PrestationController extends Controller
 {
   private PrestationService $prestationService;
+  private UploadService $uploadService;
 
   public function __construct()
   {
     parent::__construct();
     $this->prestationService = ContainerId::getPrestationService();
+    $this->uploadService = ContainerId::getUploadService();
   }
 
   public function creerPrestation()
@@ -35,7 +38,8 @@ class PrestationController extends Controller
       ];
 
       if (key_exists('img_presta', $_FILES) && $_FILES['img_presta']['error'] === UPLOAD_ERR_OK) {
-        $data['img_presta'] = $this->uploadImage($_FILES['img_presta'], "prestation");
+        $extension = $this->uploadService->validerImage($_FILES['img_presta']);
+        $data['img_presta'] = $this->uploadImage($_FILES['img_presta'], "prestation", $extension);
       }
 
       $data = $this->nettoyerDonnees($data);
@@ -90,7 +94,8 @@ class PrestationController extends Controller
       ];
 
       if (key_exists('img_presta', $_FILES) && $_FILES['img_presta']['error'] === UPLOAD_ERR_OK) {
-        $data['img_presta'] = $this->uploadImage($_FILES['img_presta'], "prestation");
+        $extension = $this->uploadService->validerImage($_FILES['img_presta']);
+        $data['img_presta'] = $this->uploadImage($_FILES['img_presta'], "prestation", $extension);
       }
 
       $data = $this->nettoyerDonnees($data);

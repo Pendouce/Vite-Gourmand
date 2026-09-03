@@ -4,15 +4,18 @@ namespace App\Controller;
 
 use App\Factory\ContainerId;
 use App\Service\EquipeService;
+use App\Service\UploadService;
 use Exception;
 
 class EquipeController extends Controller
 {
   private EquipeService $equipeService;
+  private UploadService $uploadService;
 
   public function __construct() {
     parent::__construct();
     $this->equipeService = ContainerId::getEquipeService();
+    $this->uploadService = ContainerId::getUploadService();
   }
 
   public function creerMembre()
@@ -28,7 +31,8 @@ class EquipeController extends Controller
       ];
 
       if (key_exists('photo', $_FILES) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-        $data['photo'] = $this->uploadImage($_FILES['photo'], "equipe");
+        $extension = $this->uploadService->validerImage($_FILES['photo']);
+        $data['photo'] = $this->uploadImage($_FILES['photo'], "equipe", $extension);
       }
 
       $data = $this->nettoyerDonnees($data);
@@ -70,7 +74,8 @@ class EquipeController extends Controller
       ];
 
       if (key_exists('photo', $_FILES) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-        $data['photo'] = $this->uploadImage($_FILES['photo'], "equipe");
+        $extension = $this->uploadService->validerImage($_FILES['photo']);
+        $data['photo'] = $this->uploadImage($_FILES['photo'], "equipe", $extension);
       }
 
       $data = $this->nettoyerDonnees($data);

@@ -4,15 +4,18 @@ namespace App\Controller;
 
 use App\Factory\ContainerId;
 use App\Service\InfoVgService;
+use App\Service\UploadService;
 use Exception;
 
 class InfoVgController extends Controller
 {
   private InfoVgService $infoVgService;
+  private UploadService $uploadService;
 
   public function __construct() {
     parent::__construct();
     $this->infoVgService = ContainerId::getInfoVgService();
+    $this->uploadService = ContainerId::getUploadService();
   }
 
   // INFORMATIONS VITE ET GOURMAND
@@ -67,7 +70,8 @@ class InfoVgController extends Controller
       $data['nom_img'] = $_POST['nom_img'] ?? null;
 
       if (key_exists('chemin', $_FILES) && $_FILES['chemin']['error'] === UPLOAD_ERR_OK) {
-        $data['chemin'] = $this->uploadImage($_FILES['chemin'], "imageSite");
+        $extension = $this->uploadService->validerImage($_FILES['chemin']);
+        $data['chemin'] = $this->uploadImage($_FILES['chemin'], "imageSite", $extension);
       }
 
       $data = $this->nettoyerDonnees($data);

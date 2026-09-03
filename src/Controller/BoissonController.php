@@ -4,15 +4,18 @@ namespace App\Controller;
 
 use App\Factory\ContainerId;
 use App\Service\BoissonService;
+use App\Service\UploadService;
 use Exception;
 
 class BoissonController extends Controller
 {
   private BoissonService $boissonService;
+  private UploadService $uploadService;
 
   public function __construct() {
     parent::__construct();
     $this->boissonService = ContainerId::getBoissonService();
+    $this->uploadService = ContainerId::getUploadService();
   }
 
   public function creerBoisson()
@@ -29,7 +32,8 @@ class BoissonController extends Controller
       ];
 
       if (key_exists('photo_boisson', $_FILES) && $_FILES['photo_boisson']['error'] === UPLOAD_ERR_OK) {
-        $data['photo_boisson'] = $this->uploadImage($_FILES['photo_boisson'], "boisson");
+        $extension = $this->uploadService->validerImage($_FILES['photo_boisson']);
+        $data['photo_boisson'] = $this->uploadImage($_FILES['photo_boisson'], "boisson", $extension);
       }
 
       $data = $this->nettoyerDonnees($data);
@@ -79,7 +83,8 @@ class BoissonController extends Controller
       ];
 
       if (key_exists('photo_boisson', $_FILES) && $_FILES['photo_boisson']['error'] === UPLOAD_ERR_OK) {
-        $data['photo_boisson'] = $this->uploadImage($_FILES['photo_boisson'], "boisson");
+        $extension = $this->uploadService->validerImage($_FILES['photo_boisson']);
+        $data['photo_boisson'] = $this->uploadImage($_FILES['photo_boisson'], "boisson", $extension);
       }
 
       $data = $this->nettoyerDonnees($data);
