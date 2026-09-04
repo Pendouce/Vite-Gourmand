@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\AccesRefuseException;
 use App\Exceptions\IdInnexistantException;
 use App\Exceptions\LibelleExistantException;
 use App\Repository\EquipeRepository;
@@ -14,15 +15,16 @@ class EquipeService
     $this->equipeRepository = $equipeRepository;
   }
 
-  public function creerMembre(array $data)
+  public function creerMembre(array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN])) throw new AccesRefuseException();
     $this->verifSiExisteDeja($data['nom'], $data['prenom']);
     $data['actif'] = 1;
   
     return $this->equipeRepository->creerMembre($data);
   }
 
-  public function afficherMembres(int $role)
+  public function afficherMembres(?int $role)
   {
     if($role === ROLE_ADMIN){
       return $this->equipeRepository->trouverTousLesMembres();
@@ -31,8 +33,10 @@ class EquipeService
     }
   }
 
-  public function modifierMembre(array $data)
+  public function modifierMembre(array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN])) throw new AccesRefuseException();
+
     $this->verifSiIdExisteDeja($data['membre_id']);
     if(!empty($data['nom']) && !empty($data['prenom'])){
       $this->verifSiExisteDeja($data['nom'], $data['prenom']);
@@ -50,15 +54,19 @@ class EquipeService
     $this->equipeRepository->modifierMembre($nouvellesDonnees);
   }
 
-  public function modifierStatutMembre(int $membreId, int $statut)
+  public function modifierStatutMembre(int $membreId, int $statut, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN])) throw new AccesRefuseException();
+
     $this->verifSiIdExisteDeja($membreId);
 
     return $this->equipeRepository->modifierStatutMembre($membreId, $statut);
   }
 
-  public function supprimerMembre(int $membreId)
+  public function supprimerMembre(int $membreId, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN])) throw new AccesRefuseException();
+
     $this->verifSiIdExisteDeja($membreId);
 
     return $this->equipeRepository->supprimerMembre($membreId);

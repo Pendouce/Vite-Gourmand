@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\AccesRefuseException;
 use App\Repository\InformationVgRepository;
 
 class InfoVgService
@@ -17,8 +18,10 @@ class InfoVgService
     return $this->infoRepository->trouverInfosVg();
   }
 
-  public function modifierInfosVg(array $data)
+  public function modifierInfosVg(array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     $infos = $this->infoRepository->trouverInfosVg();
 
     $anciennesDonnees = $infos->deshydrate();
@@ -35,8 +38,10 @@ class InfoVgService
     return $this->infoRepository->trouverImagesSite();
   }
 
-  public function modifierImageSite(array $data)
+  public function modifierImageSite(array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+    
     $image = $this->infoRepository->trouverImageSiteParId($data['id']);
 
     $anciennesDonnees = $image->deshydrate();

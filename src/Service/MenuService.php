@@ -2,13 +2,14 @@
 
 namespace App\Service;
 
+use App\Entity\Menu;
+use App\Exceptions\AccesRefuseException;
 use App\Exceptions\LibelleExistantException;
 use App\Repository\EvenementRepository;
 use App\Repository\MenuRepository;
 use App\Repository\PlatRepository;
 use App\Repository\RegimeRepository;
 use App\Repository\ThemeRepository;
-use App\Entity\Menu;
 
 
 class MenuService
@@ -32,8 +33,9 @@ class MenuService
     $this->calculStockService = $calculStockService;
   }
 
-  public function creerMenu(array $data)
+  public function creerMenu(array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     $this->menuExistant($data['titre']);
 
     return $this->menuRepository->creerMenu($data);
@@ -142,8 +144,10 @@ class MenuService
     return $menus;
   }
 
-  public function modifierMenu(int $menuId, array $data)
+  public function modifierMenu(int $menuId, array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     if(!empty($data['titre'])){
       $this->menuExistant($data['titre']);
     }
@@ -156,8 +160,6 @@ class MenuService
     $nouvellesDonnees = array_merge($anciennesDonnees, $data);
     $nouvellesDonnees['menu_id'] = $menuId;
 
-    //var_dump($anciennesDonnees);
-
     unset($nouvellesDonnees['id']);
     unset($nouvellesDonnees['plat']);
     unset($nouvellesDonnees['allergene']);
@@ -165,8 +167,6 @@ class MenuService
     unset($nouvellesDonnees['evenement']);
     unset($nouvellesDonnees['regime']);
     unset($nouvellesDonnees['theme']);
-
-    //var_dump($nouvellesDonnees);
 
     $this->menuRepository->modifierMenu($nouvellesDonnees);
   }
@@ -184,6 +184,7 @@ class MenuService
       fn($menuId, $id) => $repo->supprimerPlatDuMenu($menuId, $id),
       );
   }
+
   public function modifierEvenementsDuMenu(int $menuId, array $evenementIds)
   {
     $repo = $this->evenementRepository;
@@ -228,13 +229,17 @@ class MenuService
     );
   }
 
-  public function modifierStatusMenu(int $menuId, int $status)
+  public function modifierStatusMenu(int $menuId, int $status, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     $this->menuRepository->modifierStatusMenu($menuId, $status);
   }
 
-  public function supprimerMenu(int $menuId)
+  public function supprimerMenu(int $menuId, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     $this->platRepository->supprimerMenu($menuId);
     $this->evenementRepository->supprimerMenu($menuId);
     $this->regimeRepository->supprimerMenu($menuId);

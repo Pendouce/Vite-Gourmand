@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\AccesRefuseException;
 use App\Exceptions\IdInnexistantException;
 use App\Exceptions\LibelleExistantException;
 use App\Exceptions\RattacheActifException;
@@ -16,8 +17,9 @@ class TypeDePlatService
     $this->typeDePlatRepository = $typeDePlatRepository;
   }
 
-  public function creerTypeDePlat(string $libelle)
+  public function creerTypeDePlat(string $libelle, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     $this->existeEnBase($libelle);
 
     $data =['libelle' => $libelle];
@@ -30,8 +32,9 @@ class TypeDePlatService
     return $this->typeDePlatRepository->trouverTypeDePlat();
   }
 
-  public function modifieTypeDePlat(string $libelle, int $id)
+  public function modifieTypeDePlat(string $libelle, int $id, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     $this->existeEnBase($libelle);
 
     $this->existePasEnBase($id);
@@ -42,8 +45,9 @@ class TypeDePlatService
     return $this->typeDePlatRepository->modifierTypeDePlat($data);
   }
 
-  public function supprimeTypeDePlat(int $id)
+  public function supprimeTypeDePlat(int $id, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     $this->existePasEnBase($id);
     if($this->typeDePlatRepository->estRattacheAUnPlatActif($id)){
       throw new RattacheActifException("plat", "un plat actif");

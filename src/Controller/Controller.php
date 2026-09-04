@@ -35,6 +35,15 @@ class Controller
     }
   }
 
+  protected function accesPage(array $rolesAutorises)
+  {
+    if(!isset($_SESSION['role_id']) || !in_array($_SESSION['role_id'], $rolesAutorises)){
+      $_SESSION['erreur'] = "Vous n'avez pas acces a cette page";
+      header('location: /');
+      exit;
+    }
+  }
+
   protected function genererToken() :string
   {
     // Si je n'ai pas de csrf token dans ma session j'en genere un

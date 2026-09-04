@@ -54,14 +54,16 @@ class AvisController extends Controller
 
   public function modifierStatutAvis()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
   
       $publier = htmlspecialchars($_POST['publie']);
       $avisId = (int)$_POST['id'];
+      $role = $_SESSION['role_id'];
       
       try{
-        $this->avisService->modifierStatusPublie($avisId, $publier);
+        $this->avisService->modifierStatusPublie($avisId, $publier, $role);
 
         if($publier == 1){
           $_SESSION['succes'] = 'Avis accepté';

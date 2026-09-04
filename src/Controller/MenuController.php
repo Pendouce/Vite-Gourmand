@@ -16,6 +16,8 @@ class MenuController extends Controller
 
   public function creerMenu()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
       $this->checkCsrfToken();
     
@@ -31,13 +33,15 @@ class MenuController extends Controller
       //$data['stock_dispo'] = $_GET['stock_dispo'];
       $data = $this->nettoyerDonnees($data);
 
+      $role = $_SESSION['role_id'];
+
       try{
         $platId = $_POST['plat'];
         //$allergeneId = $_POST['allergene'];
         $evenementId = $_POST['evenement'];
         $themeId = $_POST['theme'];
         $regimeId = $_POST['regime'];
-        $menuCreer = $this->menuService->creerMenu($data);
+        $menuCreer = $this->menuService->creerMenu($data, $role);
         $menuId = $menuCreer->getMenuId();
         //var_dump($menuId);
         $this->menuService->ajouterPlatAuMenu($menuId, $platId);
@@ -103,6 +107,8 @@ class MenuController extends Controller
 
   public function modifierMenu()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
     
@@ -116,6 +122,8 @@ class MenuController extends Controller
 
       $data = $this->nettoyerDonnees($data);
 
+      $role = $_SESSION['role_id'];
+
       try{
         $menuId = (int) $_POST['id'];
         $platId = $_POST['plat'] ?? [];
@@ -123,13 +131,13 @@ class MenuController extends Controller
         $evenementId = $_POST['evenement'] ?? [];
         $themeId = $_POST['theme'] ?? [];
         $regimeId = $_POST['regime'] ?? [];
-        //var_dump($menuId);
+        
+        $this->menuService->modifierMenu($menuId, $data, $role);
         $this->menuService->modifierPlatsDuMenu($menuId, $platId);
         //$this->menuService->ajouterAllergeneAuplat($platId, $allergeneId);
         $this->menuService->modifierEvenementsDuMenu($menuId, $evenementId);
         $this->menuService->modifierThemesDuMenu($menuId, $themeId);
         $this->menuService->modifierRegimesDuMenu($menuId, $regimeId);
-        $this->menuService->modifierMenu($menuId, $data);
 
         $_SESSION['succes'] = "Menu modifié";
         header('location: /detailMenu?id='.$menuId);
@@ -147,6 +155,8 @@ class MenuController extends Controller
 
   public function modifierStatusMenu()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -155,9 +165,10 @@ class MenuController extends Controller
     
     $status = (int) $_POST['menu_actif'];
     $menuId = (int) $_POST['id'];
+    $role = $_SESSION['role_id'];
 
     try{
-      $this->menuService->modifierStatusMenu($menuId, $status);
+      $this->menuService->modifierStatusMenu($menuId, $status, $role);
       $_SESSION['succes'] = "Status modifié";
       header('location: /detailMenu?id='.$menuId);
       exit;
@@ -170,6 +181,8 @@ class MenuController extends Controller
 
   public function supprimerMenu()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -177,9 +190,10 @@ class MenuController extends Controller
     $this->checkCsrfToken();
     
     $menuId = (int) $_POST['id'];
+    $role = $_SESSION['role_id'];
 
     try{
-      $this->menuService->supprimermenu($menuId);
+      $this->menuService->supprimermenu($menuId, $role);
       $_SESSION['succes'] = "Le menu a bien ete supprimé";
       header('location: /menu');
       exit;

@@ -22,7 +22,7 @@ class PrestationController extends Controller
 
   public function creerPrestation()
   {
-    // GERER L'IMAGE
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
@@ -43,11 +43,10 @@ class PrestationController extends Controller
       }
 
       $data = $this->nettoyerDonnees($data);
-      //$data['contenu_presta'] = $_POST['contenu_presta'];
+      $role = $_SESSION['role_id'];
 
       try{
-        //var_dump($data);
-        $this->prestationService->creerPrestation($data);
+        $this->prestationService->creerPrestation($data, $role);
 
         $_SESSION['succes'] = "Prestation ajouté";
         header('location: /prestations');
@@ -80,6 +79,7 @@ class PrestationController extends Controller
 
   public function modifierPrestation()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
 
@@ -101,8 +101,10 @@ class PrestationController extends Controller
       $data = $this->nettoyerDonnees($data);
 
       $prestaId = (int) $_POST['id'];
+      $role = $_SESSION['role_id'];
+
       try{
-        $this->prestationService->modifierPrestation($prestaId, $data);
+        $this->prestationService->modifierPrestation($prestaId, $data, $role);
 
         $_SESSION['succes'] = "Prestation modifé";
         header('location: /prestations');
@@ -121,6 +123,7 @@ class PrestationController extends Controller
 
   public function modifierStatusPrestation()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -129,9 +132,10 @@ class PrestationController extends Controller
 
     $prestaId = (int) $_POST['id'];
     $status = $_POST['prestation_actif'];
+    $role = $_SESSION['role_id'];
 
     try{
-        $this->prestationService->modifierStatusPrestation($prestaId, $status);
+        $this->prestationService->modifierStatusPrestation($prestaId, $status, $role);
 
         $_SESSION['succes'] = "Status modifé";
         header('location: /detailPrestation?id='.$prestaId);
@@ -146,6 +150,7 @@ class PrestationController extends Controller
 
   public function supprimerPrestation()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -153,9 +158,10 @@ class PrestationController extends Controller
     $this->checkCsrfToken();
 
     $prestaId = (int) $_POST['id'];
+    $role = $_SESSION['role_id'];
 
     try{
-        $this->prestationService->supprimerPrestation($prestaId);
+        $this->prestationService->supprimerPrestation($prestaId, $role);
 
         $_SESSION['succes'] = "Prestation supprimeée";
         header('location: /prestations');

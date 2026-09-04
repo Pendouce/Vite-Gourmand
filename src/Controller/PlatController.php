@@ -20,6 +20,8 @@ class PlatController extends Controller
 
   public function creerPlat()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
 
@@ -37,9 +39,10 @@ class PlatController extends Controller
       }
       $allergeneId = $_POST['allergene'];
       $this->nettoyerDonnees($data);
+      $role = $_SESSION['role_id'];
 
       try{
-        $platCreer = $this->platService->creerPlat($data);
+        $platCreer = $this->platService->creerPlat($data, $role);
         $platId = $platCreer->getPlatId();
         $this->platService->ajouterAllergeneAuplat($platId, $allergeneId);
         $_SESSION['succes'] = "Plat ajouté";
@@ -59,26 +62,40 @@ class PlatController extends Controller
 
   public function afficherPlat()
   {
-    $plats = $this->platService->afficherPlats();
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
+    $role = $_SESSION['role_id'];
+    $plats = $this->platService->afficherPlats($role);
+
     $this->render('pages/employe/plat', ['plats' => $plats]);
   }
 
   public function afficherPlatParType()
   {
-    $plats = $this->platService->afficherPlats();
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
+    $role = $_SESSION['role_id'];
+
+    $plats = $this->platService->afficherPlats($role);
     $this->render('pages/employe/plat', ['plats' => $plats]);
   }
 
   public function afficherDetailPlat()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     $platId = $_GET['id'];
+    $role = $_SESSION['role_id'];
+
     //var_dump($platId);
-    $plat = $this->platService->afficherParId($platId);
+    $plat = $this->platService->afficherParId($platId, $role);
     $this->render('pages/employe/detailPlat', ['plat' => $plat]);
   }
 
   public function modifierPlat()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
   
@@ -100,9 +117,10 @@ class PlatController extends Controller
       $data = $this->nettoyerDonnees($data);
       try{
         $platId = $_POST['id'];
+        $role = $_SESSION['role_id'];
 
-        $this->platService->modifierPlat($platId, $data);
-        $this->platService->modifierAllergenesDuPlat($platId, $allergeneId);
+        $this->platService->modifierPlat($platId, $data, $role);
+        $this->platService->modifierAllergenesDuPlat($platId, $allergeneId, $role);
 
         $_SESSION['succes'] = "Plat modifié";
         header('location: /detailPlat?id='.$platId);
@@ -120,18 +138,21 @@ class PlatController extends Controller
 
   public function modifierStatusPlat()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
     }
     $this->checkCsrfToken();
 
-    $status = (int) $_POST['plat_actif'];
+    $statut = (int) $_POST['plat_actif'];
     $platId = $_POST['id'];
+    $role = $_SESSION['role_id'];
 
     try{
-      $this->platService->modifierStatusPlat($platId, $status);
-      $_SESSION['succes'] = "Status modifié";
+      $this->platService->modifierStatusPlat($platId, $statut, $role);
+      $_SESSION['succes'] = "Statut modifié";
       header('location: /detailPlat?id='.$platId);
       exit;
     }catch(Exception $e){
@@ -143,6 +164,8 @@ class PlatController extends Controller
 
   public function modifierStockPlat()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -151,9 +174,10 @@ class PlatController extends Controller
 
     $stock = (int) $_POST['stock_plat'];
     $platId = $_POST['id'];
+    $role = $_SESSION['role_id'];
 
     try{
-      $this->platService->modifierStockPlat($platId, $stock);
+      $this->platService->modifierStockPlat($platId, $stock, $role);
       $_SESSION['succes'] = "Stock modifié";
       header('location: /detailPlat?id='.$platId);
       exit;
@@ -166,6 +190,8 @@ class PlatController extends Controller
 
   public function supprimerPlat()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -173,8 +199,10 @@ class PlatController extends Controller
     $this->checkCsrfToken();
 
     $platId = $_POST['id'];
+    $role = $_SESSION['role_id'];
+
     try{
-      $this->platService->supprimerPlat($platId);
+      $this->platService->supprimerPlat($platId, $role);
       $_SESSION['succes'] = "Le plat a bien ete supprimé";
       header('location: /plats');
       exit;

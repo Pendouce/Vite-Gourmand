@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\AccesRefuseException;
 use App\Repository\BoissonRepository;
 use App\Repository\CommandeBoissonRepository;
 use App\Repository\CommandeMenuRepository;
@@ -56,8 +57,9 @@ class CommandeService
   }
 
   // CREATION DE LA COMMANDE
-  public function creerCommande(array $data, array $dataMenu, array $dataPresta, array $dataBoisson, float $prixTotalPresta, array $dataUser)
+  public function creerCommande(array $data, array $dataMenu, array $dataPresta, array $dataBoisson, float $prixTotalPresta, array $dataUser, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR])) throw new AccesRefuseException();
     $user = $this->userRepository->trouveUtilisateurById($data['user_id']);
     if($dataUser['nom'] !== $user->getNom()||
         $dataUser['prenom'] !== $user->getPrenom() ||
@@ -139,30 +141,38 @@ class CommandeService
   }
 
   // AFFICHAGE COMMANDE
-  public function afficherCommandes()
+  public function afficherCommandes(int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+    
     $commande = $this->commandeRepository->trouverCommande();
     
     return $this->ajouterElementCommande($commande);
   }
 
-  public function afficherCommandesUser(int $userId)
+  public function afficherCommandesUser(int $userId, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR])) throw new AccesRefuseException();
+
     $commande = $this->commandeRepository->trouverCommandeUser($userId);
     
     return $this->ajouterElementCommande($commande);
   }
 
-  public function afficherDetailsCommande(int $idCommande)
+  public function afficherDetailsCommande(int $idCommande, int $userId, int $role)
   {
-    $commandeId = $this->commandeRepository->trouverCommandeParId($idCommande);
-    $commande = $this->ajouterElementCommande([$commandeId]);
+    $commande = $this->commandeRepository->trouverCommandeParId($idCommande);
 
-    return $commande[0];
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE]) && $commande->getUserId() !== $userId) throw new AccesRefuseException();
+
+    $commandeElement = $this->ajouterElementCommande([$commande]);
+
+    return $commandeElement[0];
   }
 
-  public function afficherCommandesFiltre(array $commandesFiltre)
+  public function afficherCommandesFiltre(array $commandesFiltre, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     $commandes = $this->commandeRepository->trouverCommandeFiltre($commandesFiltre);
     $this->ajouterElementCommande($commandes);
 
@@ -184,6 +194,8 @@ class CommandeService
     // MODIFICATION DE LA COMMANDE
   public function modifierCommande(int $commandeId, int $roleId, array $dataCommande, array $dataMenu, array $dataPresta, array $dataBoisson, float $prixTotalPresta, ?string $motif = null)
   {
+    if(!in_array($roleId, [ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR])) throw new AccesRefuseException();
+
     $this->modificationNonPermise($commandeId);
 
     // Modification de données de la commande
@@ -376,7 +388,14 @@ class CommandeService
     }
   }
 
-  public function modifierStatusCommande(int $commandeId, int $status)
+  public function modifierStatusCommande(int $commandeId, int $status, int $role)
+  {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
+    $this->changerStatutCommande($commandeId, $status);
+  }
+
+  private function changerStatutCommande(int $commandeId, int $status)
   {
     $this->commandeRepository->modifierStatusCommande($commandeId, $status);
     $this->actionModifStatus($commandeId);
@@ -444,9 +463,9 @@ class CommandeService
         $this->mailService->envoyer($user->getEmail(), $objet, $html);
         sleep(10);
         if($necessiteRetour === false){
-          $this->modifierStatusCommande($commandeId, STATUT_TERMINEE);
+          $this->changerStatutCommande($commandeId, STATUT_TERMINEE);
         }else{
-          $this->modifierStatusCommande($commandeId, STATUT_ATTEND_RETOUR);
+          $this->changerStatutCommande($commandeId, STATUT_ATTEND_RETOUR);
         }
       break;
 
@@ -498,9 +517,11 @@ class CommandeService
   // ANNULATION DE LA COMMANDE
   public function annulerCommande(int $commandeId, int $roleId, int $userId, ?string $motif = null)
   {
+    if(!in_array($roleId, [ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR])) throw new AccesRefuseException();
+
     $this->modificationNonPermise($commandeId);
     $status = STATUT_ANNULEE;
-    $this->modifierStatusCommande($commandeId, $status);
+    $this->modifierStatusCommande($commandeId, $status, $roleId);
 
     $this->restaurerStockBoisson($commandeId);
     $this->restaurerStockMenu($commandeId);

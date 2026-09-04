@@ -27,6 +27,8 @@ class InfoVgController extends Controller
 
   public function modifierInfosVg()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+    
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
     
@@ -40,8 +42,10 @@ class InfoVgController extends Controller
 
       $data = $this->nettoyerDonnees($data);
 
+      $role = $_SESSION['role_id'];
+
       try{
-        $this->infoVgService->modifierInfosVg($data);
+        $this->infoVgService->modifierInfosVg($data, $role);
          $_SESSION['succes'] = "Informations modifiées";
         header('location: /');
         exit;
@@ -64,6 +68,8 @@ class InfoVgController extends Controller
 
   public function modifierImageSite()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
     
@@ -75,10 +81,12 @@ class InfoVgController extends Controller
       }
 
       $data = $this->nettoyerDonnees($data);
+      
+      $data['id'] = $_POST['id'];
+      $role = $_SESSION['role_id'];
 
       try{
-        $data['id'] = $_POST['id'];
-        $this->infoVgService->modifierImageSite($data);
+        $this->infoVgService->modifierImageSite($data, $role);
          $_SESSION['succes'] = "Image modifié";
         header('location: /imagesSite');
         exit;

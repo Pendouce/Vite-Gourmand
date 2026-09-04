@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\AccesRefuseException;
 use App\Exceptions\IdInnexistantException;
 use App\Exceptions\LibelleExistantException;
 use App\Repository\BoissonRepository;
@@ -16,8 +17,10 @@ class BoissonService
     $this->calculStockService = $calculStockService;
   }
 
-  public function creerBoisson(array $data)
+  public function creerBoisson(array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+    
     $this->existeEnBase($data['nom_boisson']);
 
     return $this->boissonRepository->creerBoisson($data);
@@ -33,8 +36,10 @@ class BoissonService
     return $this->boissonRepository->trouverBoissonParId($id);
   }
 
-    public function modifierBoisson(int $id, array $data)
+    public function modifierBoisson(int $id, array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     if(!empty($data['nom_boisson'])){
       $this->existeEnBase($data['nom_boisson']);
     }
@@ -53,18 +58,24 @@ class BoissonService
     $this->boissonRepository->modifierBoisson($nouvelleDonnees);
   }
 
-  public function modifierStatusBoisson(int $boissonId, int $status)
+  public function modifierStatusBoisson(int $boissonId, int $status, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     $this->boissonRepository->modifierStatusBoisson($boissonId, $status);
   }
 
-  public function modifierStockBoisson(int $boissonId, int $stock)
+  public function modifierStockBoisson(int $boissonId, int $stock, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     $this->boissonRepository->modifierStockBoisson($boissonId, $stock);
   }
 
-  public function supprimerBoisson(int $boissonId)
+  public function supprimerBoisson(int $boissonId, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     if(!$this->boissonRepository->trouverBoissonParId($boissonId)){
       throw new IdInnexistantException($boissonId);
 

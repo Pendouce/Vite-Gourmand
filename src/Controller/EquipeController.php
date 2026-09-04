@@ -20,6 +20,8 @@ class EquipeController extends Controller
 
   public function creerMembre()
   {
+    $this->accesPage([ROLE_ADMIN]);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
     
@@ -34,11 +36,12 @@ class EquipeController extends Controller
         $extension = $this->uploadService->validerImage($_FILES['photo']);
         $data['photo'] = $this->uploadImage($_FILES['photo'], "equipe", $extension);
       }
-
       $data = $this->nettoyerDonnees($data);
 
+      $role = $_SESSION['role_id'];
+
       try{
-        $this->equipeService->creerMembre($data);
+        $this->equipeService->creerMembre($data, $role);
          $_SESSION['succes'] = "Nouveau membre de l'équipe ajouté";
         header('location: /afficherMembres');
         exit;
@@ -54,7 +57,7 @@ class EquipeController extends Controller
 
   public function afficherMembres()
   {
-    $role = $_SESSION['role_id'];
+    $role = $_SESSION['role_id'] ?? null;
     $membres = $this->equipeService->afficherMembres($role);
 
     $this->render('pages/equipe', ['membres' => $membres]);
@@ -62,6 +65,8 @@ class EquipeController extends Controller
 
   public function modifierMembre()
   {
+    $this->accesPage([ROLE_ADMIN]);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST')
     {
       $this->checkCsrfToken();
@@ -77,12 +82,13 @@ class EquipeController extends Controller
         $extension = $this->uploadService->validerImage($_FILES['photo']);
         $data['photo'] = $this->uploadImage($_FILES['photo'], "equipe", $extension);
       }
-
       $data = $this->nettoyerDonnees($data);
 
       $data['membre_id'] = (int)$_POST['id'];
+      $role = $_SESSION['role_id'];
+
       try{
-        $this->equipeService->modifierMembre($data);
+        $this->equipeService->modifierMembre($data, $role);
 
         $_SESSION['succes'] = "Membre modifié";
         header('location: /afficherMembres');
@@ -98,15 +104,18 @@ class EquipeController extends Controller
 
   public function modifierStatutMembre()
   {
+    $this->accesPage([ROLE_ADMIN]);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST')
     {
       $this->checkCsrfToken();
     
       $statut = (int)$_POST['actif'];
       $membreId = (int)$_POST['id'];
+      $role = $_SESSION['role_id'];
 
       try{
-        $this->equipeService->modifierStatutMembre($membreId, $statut);
+        $this->equipeService->modifierStatutMembre($membreId, $statut, $role);
         if($statut == 0){
           $_SESSION['succes'] = "Membre masqué";
         }else{
@@ -125,6 +134,8 @@ class EquipeController extends Controller
 
   public function supprimerMembre()
   {
+    $this->accesPage([ROLE_ADMIN]);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -132,9 +143,10 @@ class EquipeController extends Controller
     $this->checkCsrfToken();
     
     $membreId = (int)$_POST['id'];
+    $role = $_SESSION['role_id'];
 
     try{
-      $this->equipeService->supprimerMembre($membreId);
+      $this->equipeService->supprimerMembre($membreId, $role);
       $_SESSION['succes'] = "Membre supprimé";
       header('location: /afficherMembres');
       exit;

@@ -2,9 +2,10 @@
 
 namespace App\Service;
 
+use App\Exceptions\AccesRefuseException;
 use App\Exceptions\LibelleExistantException;
-use App\Repository\PlatRepository;
 use App\Repository\AllergeneRepository;
+use App\Repository\PlatRepository;
 
 class PlatService
 {
@@ -17,8 +18,10 @@ class PlatService
     $this->allergeneRepository = $AllergeneRepository;
   }
 
-  public function creerPlat(array $data)
+  public function creerPlat(array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     if($this->platRepository->trouverPlatByNom($data['titre'])){
       throw new LibelleExistantException($data['titre']);
     }
@@ -33,19 +36,19 @@ class PlatService
     }
   }
 
-  public function afficherPlats()
+  public function afficherPlats(int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     // Je recupere tous les plats
     $plats = $this->platRepository->trouverPlat();
-
-    $this->ajouterAllergenes($plats);
 
     // Je retourne plat qui contient maintenant ses allergenes
      return $this->ajouterAllergenes($plats);
   }
 
-  public function afficherParId(int $platId)
+  public function afficherParId(int $platId, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     $plat = $this->platRepository->trouverPlatParId($platId);
     
     if ($plat === false) {
@@ -58,15 +61,19 @@ class PlatService
      return $plat;
   }
 
-  public function afficherPlatsParType(int $typeId)
+  public function afficherPlatsParType(int $typeId, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     $plats = $this->platRepository->trouverPlatParType($typeId);
 
     return $this->ajouterAllergenes($plats);
   }
 
-  public function modifierAllergenesDuPlat(int $platId, array $allergeneId)
+  public function modifierAllergenesDuPlat(int $platId, array $allergeneId, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     $nvxAllergenes = $allergeneId;
     // Je recupere les allergene du plat
     $anciensAllergenes = $this->allergeneRepository->trouverAllergenesDuPlat($platId);
@@ -88,38 +95,44 @@ class PlatService
     }
   }
 
-  public function modifierPlat(int $platId, array $data)
+  public function modifierPlat(int $platId, array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     if(!empty($data['titre'])){
       $this->verifNom($data['titre']);
     }
 
-    $platActuel = $this->afficherParId($platId);
+    $platActuel = $this->platRepository->trouverPlatParId($platId);
     $donneesActuel = $platActuel->deshydrate();
-    //var_dump($donneesActuel);
 
     $data = array_filter($data, fn($value) => $value !== null);
     $nouvellesDonnees = array_merge($donneesActuel, $data);
     $nouvellesDonnees['plat_id'] = $platId;
     unset($nouvellesDonnees['allergenes']);
     unset($nouvellesDonnees['libelle']);
-    //var_dump($nouvellesDonnees);
 
     $this->platRepository->modifierPlat($nouvellesDonnees);
   }
 
-  public function modifierStatusPlat(int $platId, int $status)
+  public function modifierStatusPlat(int $platId, int $status, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     $this->platRepository->modifierStatusPlat($platId, $status);
   }
 
-  public function modifierStockPlat(int $platId, int $stock)
+  public function modifierStockPlat(int $platId, int $stock, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     $this->platRepository->modifierStockPlat($platId, $stock);
   }
 
-  public function supprimerPlat(int $platId)
+  public function supprimerPlat(int $platId, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     $this->allergeneRepository->supprimerPlat($platId);
     $this->platRepository->supprimerPlat($platId);
   }
@@ -133,13 +146,13 @@ class PlatService
 
   public function ajouterAllergenes(array $plats)
   {
-        // Je boucle pour mettre dans la propriete allergene de l'entity plats les allergenes liés a leurs plats
-      foreach($plats as $plat){
-        $platId = $plat->getPlatId();
-        $allergene = $this->allergeneRepository->trouverAllergenesDuPlat($platId);
-        $plat->setAllergenes($allergene);
-      }
-      return $plats;
+      // Je boucle pour mettre dans la propriete allergene de l'entity plats les allergenes liés a leurs plats
+    foreach($plats as $plat){
+      $platId = $plat->getPlatId();
+      $allergene = $this->allergeneRepository->trouverAllergenesDuPlat($platId);
+      $plat->setAllergenes($allergene);
+    }
+    return $plats;
   }
 
 

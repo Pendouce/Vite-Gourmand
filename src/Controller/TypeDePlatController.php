@@ -17,12 +17,15 @@ class TypeDePlatController extends Controller
 
   public function creerTypeDePlat()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
 
       $libelle = htmlspecialchars($_POST['libelle']);
+      $role = $_SESSION['role_id'];
+
       try{
-        $this->typeDePlatService->creerTypeDePlat($libelle);
+        $this->typeDePlatService->creerTypeDePlat($libelle, $role);
         $_SESSION['succes'] = "Type de plat ajouté";
         header('location: /plats');
         exit;
@@ -44,14 +47,16 @@ class TypeDePlatController extends Controller
 
   public function modifierTypeDePlat()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
 
       $libelle = htmlspecialchars($_POST['libelle']);
       $id = $_POST['type_id'];
+      $role = $_SESSION['role_id'];
 
       try{
-        $this->typeDePlatService->modifieTypeDePlat($libelle, $id);
+        $this->typeDePlatService->modifieTypeDePlat($libelle, $id, $role);
         $_SESSION['succes'] = 'Type de plat modifié';
         header('location: /plats');
         exit;
@@ -68,6 +73,7 @@ class TypeDePlatController extends Controller
 
   public function supprimerTypeDePlat()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -75,8 +81,10 @@ class TypeDePlatController extends Controller
     $this->checkCsrfToken();
 
     $id = $_POST['type_id'];
+    $role = $_SESSION['role_id'];
+
     try{
-      $this->typeDePlatService->supprimeTypeDePlat($id);
+      $this->typeDePlatService->supprimeTypeDePlat($id, $role);
       $_SESSION['succes'] = 'Type de plat supprimé';
       header('location: /plats');
       exit;
@@ -86,7 +94,6 @@ class TypeDePlatController extends Controller
       header('location: /plats');
       exit;
     }
-    //$this->render('pages/employe/supprimerTypeDePlat');
   }
 
 }

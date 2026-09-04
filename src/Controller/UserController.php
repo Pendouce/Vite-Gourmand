@@ -74,6 +74,7 @@ class UserController extends Controller
 
   public function inscriptionEmploye()
   {
+    $this->accesPage([ROLE_ADMIN]);
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $this->checkCsrfToken();
         $data = [
@@ -88,11 +89,12 @@ class UserController extends Controller
         $data = $this->nettoyerDonnees($data);
 
         try {
+          $role = $_SESSION['role_id'];
          // Verification email
           if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
             throw new EmailException();
           }
-          $this->userService->creationCompteEmploye($data['email'], $data);
+          $this->userService->creationCompteEmploye($data['email'], $data, $role);
 
           $_SESSION['succes'] = 'Inscription reussi !';
 
@@ -150,6 +152,7 @@ class UserController extends Controller
   
   public function afficheInfosEmploye()
   {
+    $this->accesPage([ROLE_ADMIN]);
     $id = $_GET['id'];
     $infoEmploye = $this->userService->afficheInfo($id);
     $this->render('pages/admin/detailEmploye', ['infoEmploye' => $infoEmploye]);
@@ -157,6 +160,7 @@ class UserController extends Controller
 
   public function afficheEmploye()
   {
+    $this->accesPage([ROLE_ADMIN]);
     $listeEmploye = $this->userService->afficheEmploye();
     $this->render('pages/admin/gestionEmployes', ['listeEmploye' => $listeEmploye]);
   }
@@ -279,7 +283,9 @@ class UserController extends Controller
       if($role === ROLE_UTILISATEUR){
         $this->userService->supprimeCompte($id);
         $this->deconnexion();
-      }
+      }else{
+          $this->render('page/mesInfos');
+        }
     }catch(Exception $e){
       $_SESSION['erreur'] = $e->getMessage();
       header('location: /mesInfos');
@@ -289,6 +295,7 @@ class UserController extends Controller
 
   public function supprimerCompteEmploye()
   {
+    $this->accesPage([ROLE_ADMIN]);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;

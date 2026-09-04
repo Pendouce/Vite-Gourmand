@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\AccesRefuseException;
 use App\Exceptions\EmailExistantException;
 use App\Exceptions\EmailMdpException;
 use App\Exceptions\MotDepasseException;
@@ -10,10 +11,6 @@ use App\Repository\UserRepository;
 
 class UserService
 {
-  const ROLE_UTILISATEUR = 1;
-  const ROLE_EMPLOYE = 2;
-  const ROLE_ADMIN = 3;
-
   private UserRepository $userRepository;
   private MailService $mailService;
 
@@ -44,7 +41,7 @@ class UserService
   // Methode creation d'un compte utilisateur
   public function inscrirUtilisateur(string $email, string $mdp, array $data)
   {
-    $compteUtilisateur = $this->creationCompte($email, $mdp, $data, self::ROLE_UTILISATEUR);
+    $compteUtilisateur = $this->creationCompte($email, $mdp, $data,ROLE_UTILISATEUR);
   
     //Envoye du mail de confirmation
     $html = $this->mailService->recupererHtml('inscriptionMail', ['prenom' => $data['prenom']]);
@@ -55,10 +52,11 @@ class UserService
   }
 
   // Methode creation d'un compte employe
-  public function creationCompteEmploye(string $email, array $data)
+  public function creationCompteEmploye(string $email, array $data, int $role)
   {
+    if($role !== ROLE_ADMIN) throw new AccesRefuseException();
     $mdp = $this->genererMdpAleatoire();
-    $compteUtilisateur = $this->creationCompte($email, $mdp, $data, self::ROLE_EMPLOYE);
+    $compteUtilisateur = $this->creationCompte($email, $mdp, $data,ROLE_EMPLOYE);
     
     // Envoie mail avec nouveau mdp
     $html = $this->mailService->recupererHtml('inscriptionEmployeMail', ['prenom' => $data['prenom'], 'mdp' => $mdp]);
@@ -95,7 +93,7 @@ class UserService
 
   public function afficheEmploye()
   {
-    return $this->userRepository->trouveEmployeByRole(self::ROLE_EMPLOYE);
+    return $this->userRepository->trouveEmployeByRole(ROLE_EMPLOYE);
   }
 
   // Modifier les infos perso

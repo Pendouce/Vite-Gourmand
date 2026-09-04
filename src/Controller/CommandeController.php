@@ -18,6 +18,8 @@ class CommandeController extends Controller
 
   public function creerCommande()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR]);
+
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
       $this->checkCsrfToken();
 
@@ -69,9 +71,11 @@ class CommandeController extends Controller
       $dataPrestas = $this->nettoyerDonnees($dataPrestas);
       $dataBoissons = $this->nettoyerDonnees($dataBoissons);
 
+      $role = $_SESSION['role_id'];
+
       try{
         $dataCommande['user_id'] = (int) $_SESSION['user_id'];
-        $commande = $this->commandeService->creerCommande($dataCommande, $dataMenus, $dataPrestas, $dataBoissons, $prixTotalPresta, $dataUser);
+        $commande = $this->commandeService->creerCommande($dataCommande, $dataMenus, $dataPrestas, $dataBoissons, $prixTotalPresta, $dataUser, $role);
 
         $commandeId = $commande->getCommandeId();
         $this->commandeService->ajouterMenuCommande($commandeId, $dataMenus);
@@ -91,25 +95,40 @@ class CommandeController extends Controller
     }
 
     public function afficherCommandesEmploye(){
-      $commandes = $this->commandeService->afficherCommandes();
+      $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
+      $role = $_SESSION['role_id'];
+
+      $commandes = $this->commandeService->afficherCommandes($role);
       $this->render('pages/employe/commandes', ['commandes' => $commandes]);
     }
 
     public function afficherCommandesUser(){
+      $this->accesPage([ROLE_UTILISATEUR]);
+
       $userId = $_SESSION['user_id'];
-      $commandes = $this->commandeService->afficherCommandesUser($userId);
+      $role = $_SESSION['role_id'];
+
+      $commandes = $this->commandeService->afficherCommandesUser($userId, $role);
       
       $this->render('pages/client/mesCommandes', ['commandes' => $commandes]);
     }
 
     public function afficherDetailsCommande(){
-      $commandeId = $_GET['id'];
-      $commande = $this->commandeService->afficherDetailsCommande($commandeId);
+      $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR]);
+
+      $commandeId = (int)$_GET['id'];
+      $userId = $_SESSION['user_id'];
+      $role = $_SESSION['role_id'];
+
+      $commande = $this->commandeService->afficherDetailsCommande($commandeId, $userId, $role);
       $this->render('pages/detailCommande', ['commande' => $commande]);
     }
 
     public function afficherCommandeFiltre()
     {
+      $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
       $commandesFiltre = [];
 
       if(!empty($_GET['menu'])){
@@ -132,13 +151,16 @@ class CommandeController extends Controller
         $commandesFiltre['nb_commande'] = $_GET['nb_commande'];
       }
 
-      $commandes = $this->commandeService->afficherCommandesFiltre($commandesFiltre);
+      $role = $_SESSION['role_id'];
+
+      $commandes = $this->commandeService->afficherCommandesFiltre($commandesFiltre, $role);
       $status = $this->commandeService->afficherStatusCommandes();
       $this->render('pages/employe/commandesFiltre' , ['commandes' => $commandes, 'status' => $status]);
     }
 
     public function modifierCommande()
     {
+      $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR]);
       if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
 
@@ -211,6 +233,8 @@ class CommandeController extends Controller
 
     public function modifierStatusCommande()
     {
+      $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
       if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         header('location: /');
         exit;
@@ -219,9 +243,10 @@ class CommandeController extends Controller
 
       $commandeId = (int) $_POST['id'];
       $status = (int)$_POST['status_id'];
+      $role = $_SESSION['role_id'];
 
       try{
-        $this->commandeService->modifierStatusCommande($commandeId, $status);
+        $this->commandeService->modifierStatusCommande($commandeId, $status, $role);
         $_SESSION['succes'] = 'Status modifié';
         header('location: /commandes');
         exit;
@@ -234,6 +259,7 @@ class CommandeController extends Controller
     
     public function annulerCommandeUser()
     {
+      $this->accesPage([ROLE_UTILISATEUR]);
       if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         header('location: /');
         exit;
@@ -257,6 +283,7 @@ class CommandeController extends Controller
 
     public function annulerCommandeEmploye()
     {
+      $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
       if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         header('location: /');
         exit;

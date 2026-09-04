@@ -2,9 +2,9 @@
 
 namespace App\Service;
 
+use App\Exceptions\AccesRefuseException;
 use App\Exceptions\IdInnexistantException;
 use App\Exceptions\LibelleExistantException;
-use App\Exceptions\RattacheActifException;
 use App\Repository\TypeDePrestaRepository;
 
 class TypeDePrestaService
@@ -16,8 +16,9 @@ class TypeDePrestaService
     $this->typeDePrestaRepository = $typeDePrestaRepository;
   }
 
-  public function creerTypeDePresta(string $libelle)
+  public function creerTypeDePresta(string $libelle, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     $this->typeDePrestaExistante($libelle);
     $data['libelle'] = $libelle;
     $this->typeDePrestaRepository->creerTypeDePresta($data);
@@ -28,14 +29,16 @@ class TypeDePrestaService
     return $this->typeDePrestaRepository->trouverTypeDePresta();
   }
 
-  public function modifierTypeDePresta(array $data)
+  public function modifierTypeDePresta(array $data, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     $this->typeDePrestaExistante($data['libelle']);
     $this->typeDePrestaRepository->modifierTypeDePresta($data);
   }
 
-  public function supprimerTypeDePresta(int $id)
+  public function supprimerTypeDePresta(int $id, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     if (!$this->typeDePrestaRepository->trouverTypeDePrestaParId($id)){
       throw new IdInnexistantException('Type de prestaion');
     }

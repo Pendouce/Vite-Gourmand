@@ -18,8 +18,10 @@ class BoissonController extends Controller
     $this->uploadService = ContainerId::getUploadService();
   }
 
-  public function creerBoisson()
+  public function creerBoisson(): void
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
   
@@ -35,11 +37,12 @@ class BoissonController extends Controller
         $extension = $this->uploadService->validerImage($_FILES['photo_boisson']);
         $data['photo_boisson'] = $this->uploadImage($_FILES['photo_boisson'], "boisson", $extension);
       }
-
       $data = $this->nettoyerDonnees($data);
 
+      $role = $_SESSION['role_id'];
+
       try{
-        $this->boissonService->creerBoisson($data);
+        $this->boissonService->creerBoisson($data, $role);
         $_SESSION['succes'] = 'Boisson ajoutée';
         header('location: /boisson');
         exit;
@@ -54,14 +57,14 @@ class BoissonController extends Controller
     }
   }
 
-  public function afficherBoisson()
+  public function afficherBoisson(): void
   {
     $boissons = $this->boissonService->afficherBoisson();
 
     $this->render('pages/employe/boisson', ['boissons' => $boissons]);
   }
 
-  public function afficherBoissonParId()
+  public function afficherBoissonParId(): void
   {
     $boissonId = (int) $_GET['id'];
     $boisson = $this->boissonService->afficherBoissonParId($boissonId);
@@ -69,8 +72,10 @@ class BoissonController extends Controller
     $this->render('pages/employe/detailBoisson', ['boisson' => $boisson]);
   }
 
-  public function modifierBoisson()
+  public function modifierBoisson(): void
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
   
@@ -91,8 +96,9 @@ class BoissonController extends Controller
 
       try{
         $boissonId = (int) $_POST['id'];
+        $role = $_SESSION['role_id'];
         
-        $this->boissonService->modifierBoisson($boissonId, $data);
+        $this->boissonService->modifierBoisson($boissonId, $data, $role);
         $_SESSION['succes'] = 'Boisson Modifiée';
         header('location: /detailBoisson?id='.$boissonId);
         exit;
@@ -107,8 +113,10 @@ class BoissonController extends Controller
     }
   }
 
-  public function modifierStatusBoisson()
+  public function modifierStatusBoisson(): void
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -117,9 +125,10 @@ class BoissonController extends Controller
   
     $status = (int)$_POST['boisson_actif'];
     $boissonId = (int)$_POST['id'];
+    $role = $_SESSION['role_id'];
 
     try{
-      $this->boissonService->modifierStatusBoisson($boissonId, $status);
+      $this->boissonService->modifierStatusBoisson($boissonId, $status, $role);
       $_SESSION['succes'] = 'Status modifié';
       header('location: /detailBoisson?id='.$boissonId);
       exit;
@@ -130,8 +139,10 @@ class BoissonController extends Controller
     }
   }
 
-  public function modifierStockBoisson()
+  public function modifierStockBoisson(): void
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -140,9 +151,10 @@ class BoissonController extends Controller
   
     $stock = (int)$_POST['stock_boisson'];
     $boissonId = $_POST['id'];
+    $role = $_SESSION['role_id'];
 
     try{
-      $this->boissonService->modifierStockBoisson($boissonId, $stock);
+      $this->boissonService->modifierStockBoisson($boissonId, $stock, $role);
       $_SESSION['succes'] = 'Stock modifié';
       header('location: /detailBoisson?id='.$boissonId);
       exit;
@@ -153,8 +165,10 @@ class BoissonController extends Controller
     }
   }
 
-  public function supprimerBoisson()
+  public function supprimerBoisson(): void
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         header('location: /');
         exit;
@@ -162,8 +176,10 @@ class BoissonController extends Controller
       $this->checkCsrfToken();
   
     $boissonId = $_POST['id'];
+    $role = $_SESSION['role_id'];
+
     try{
-        $this->boissonService->supprimerBoisson($boissonId);
+        $this->boissonService->supprimerBoisson($boissonId, $role);
         $_SESSION['succes'] = 'Boisson supprimée';
         header('location: /boisson');
         exit;

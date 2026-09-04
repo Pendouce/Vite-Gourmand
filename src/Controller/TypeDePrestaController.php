@@ -18,12 +18,14 @@ class TypeDePrestaController extends Controller
 
   public function creerTypeDePresta()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
 
       $libelle = htmlspecialchars($_POST['libelle']);
+      $role = $_SESSION['role_id'];
       try{
-        $this->typeDePrestaService->creerTypeDePresta($libelle);
+        $this->typeDePrestaService->creerTypeDePresta($libelle, $role);
         $_SESSION['succes'] = "Type de prestation ajouté";
         header('location: /prestations');
         exit;
@@ -45,6 +47,8 @@ class TypeDePrestaController extends Controller
 
   public function modifierTypeDePresta()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
       $libelle = htmlspecialchars($_POST['libelle']);
@@ -54,9 +58,10 @@ class TypeDePrestaController extends Controller
         'libelle' => $libelle,
         'type_presta_id' => $id
       ];
+      $role = $_SESSION['role_id'];
 
       try{
-        $this->typeDePrestaService->modifierTypeDePresta($data);
+        $this->typeDePrestaService->modifierTypeDePresta($data, $role);
         $_SESSION['succes'] = "Type de prestation modifié";
         header('location: /prestations');
         exit;
@@ -72,6 +77,7 @@ class TypeDePrestaController extends Controller
 
   public function supprimerTypeDePresta()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       header('location: /');
       exit;
@@ -79,8 +85,9 @@ class TypeDePrestaController extends Controller
     $this->checkCsrfToken();
 
     $id = (int) $_POST['id'];
+    $role = $_SESSION['role_id'];
     try{
-        $this->typeDePrestaService->supprimerTypeDePresta($id);
+        $this->typeDePrestaService->supprimerTypeDePresta($id, $role);
         $_SESSION['succes'] = "Type de prestation supprimé";
         header('location: /prestations');
         exit;

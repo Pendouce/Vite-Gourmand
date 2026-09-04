@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Exceptions\AccesRefuseException;
 use App\Exceptions\IdInnexistantException;
 use App\Repository\AvisRepository;
 use App\Repository\CommandeRepository;
@@ -68,8 +69,10 @@ class AvisService
     }
   }
 
-  public function modifierStatusPublie(int $avisId, int $publie)
+  public function modifierStatusPublie(int $avisId, int $publie, int $role)
   {
+    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+
     if(!$this->avisRepository->trouverAvisParId($avisId)){
       throw new IdInnexistantException($avisId);
     }
