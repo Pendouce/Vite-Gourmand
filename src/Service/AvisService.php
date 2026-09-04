@@ -25,16 +25,19 @@ class AvisService
 
     // Je verifie si un avis n'existe pas deja sur la commande
     $commande = $this->commandeRepository->trouverCommandeParNb($nbCommande);
+
+    // Je verifie que le numero de commande existe
+    if(!$commande){
+      throw new Exception('Commande Introuvable');
+    }
+    
     $data['commande_id'] = $commande->getCommandeId();
 
     if($this->avisRepository->trouverAvisParCommande($data['commande_id'])){
       throw new Exception('Vous avez deja laissez un avis pour cette commande');
     }
 
-    // Je verifie que le numero de commande existe
-    if(!$commande){
-      throw new Exception('Commande Introuvable');
-    }
+    
 
     // Je verifie que la commande appartient bien a l'utilisateur
     if($userId !== $commande->getUserId()){
