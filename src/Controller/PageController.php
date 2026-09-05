@@ -10,7 +10,7 @@ class PageController extends Controller{
 
   public function acceuil(): void
   {
-    $this->render("pages/acceuil");
+    $this->render("pages/acceuil", ['titre' => 'acceuil']);
   }
 
 }

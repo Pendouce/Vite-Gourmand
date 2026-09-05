@@ -1,5 +1,5 @@
   </body>
-  <footer class="bg-border p-8 text-texte text-xl">
+  <footer class="bg-fond-nav p-8 text-texte text-xl">
 
     <?php /** @var object $infos */ ?>
     <div class="w-full flex items-center gap-8">

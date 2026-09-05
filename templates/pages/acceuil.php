@@ -1,4 +1,7 @@
 <?php require_once(APP_ROOT.'/templates/layouts/header.php');?>
+<?php require_once(APP_ROOT.'/templates/layouts/pageBanner.php');?>
+
+
 
   <div class="p-8 space-y-8">
 
@@ -7,9 +10,9 @@
     <h2 class="font-h2 text-xl mb-4">Couleurs</h2>
     <div class="flex gap-4">
       <div class="bg-primary text-fond-carte p-4 rounded">primary</div>
-      <div class="bg-fond-carte text-texte border border-bordure p-4 rounded">fond-carte</div>
-      <div class="bg-fond-section text-texte p-4 rounded">fond-section</div>
-      <div class="bg-border border-2 border-bordure text-texte p-4 rounded">bordure</div>
+      <div class="bg-fond-carte text-texte border border-primary/50 p-4 rounded">fond-carte</div>
+      <div class="bg-fond-banniere text-texte p-4 rounded">fond-banniere</div>
+      <div class="bg-fond-nav border-2 border-fond-nav text-texte p-4 rounded">fond-nav</div>
     </div>
   </section>
 
