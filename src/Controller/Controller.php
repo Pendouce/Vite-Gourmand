@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Exceptions\PageInexistanteException;
+use App\Factory\ContainerId;
+use App\Service\InfoVgService;
 use Exception;
 
 class Controller
@@ -30,6 +32,11 @@ class Controller
       // J'injecte automatiquement le token CSRF dans toutes les vues
       // Pour ne pas avoir à le passer manuellement dans chaque contrôleurs
       $params['csrfToken'] = $this->token;
+
+      // J'injecte automatiquement les infos du site (footer) dans toutes les vues
+      $infoSiteService = ContainerId::getInfoVgService();
+      $params['infos'] = $infoSiteService->afficherInfosVg();
+
       extract($params);
       require_once $filePath;
     }

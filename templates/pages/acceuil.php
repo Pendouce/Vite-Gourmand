@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="asset/css/style.css">
-  <title>Document</title>
-</head>
-<body>
-  <h1>Acceuil</h1>
+<?php require_once(APP_ROOT.'/templates/layouts/header.php');?>
 
   <div class="p-8 space-y-8">
 
@@ -18,7 +9,7 @@
       <div class="bg-primary text-fond-carte p-4 rounded">primary</div>
       <div class="bg-fond-carte text-texte border border-bordure p-4 rounded">fond-carte</div>
       <div class="bg-fond-section text-texte p-4 rounded">fond-section</div>
-      <div class="bg-fond-carte border-2 border-bordure text-texte p-4 rounded">bordure</div>
+      <div class="bg-border border-2 border-bordure text-texte p-4 rounded">bordure</div>
     </div>
   </section>
 
@@ -27,6 +18,7 @@
     <h1 class="font-h1 text-3xl text-texte">Titre H1 - Playfair Display</h1>
     <h2 class="font-h2 text-2xl text-texte">Titre H2 - Lora</h2>
     <p class="font-body text-texte">Texte courant en Literata, pour vérifier la lisibilité du corps de texte sur plusieurs lignes.</p>
+    <p class="font-logo text-texte">VITE & GOURMAND</p>
   </section>
 
   <!-- Graisses -->
@@ -39,8 +31,4 @@
 
 </div>
 
-
-
-
-</body>
-</html>
+<?php require_once(APP_ROOT.'/templates/layouts/footer.php');?>
