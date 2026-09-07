@@ -21,7 +21,7 @@
     <h1 class="font-h1 text-3xl text-texte">Titre H1 - Playfair Display</h1>
     <h2 class="font-h2 text-2xl text-texte">Titre H2 - Lora</h2>
     <p class="font-body text-texte">Texte courant en Literata, pour vérifier la lisibilité du corps de texte sur plusieurs lignes.</p>
-    <p class="font-logo text-texte">VITE & GOURMAND</p>
+    <p class="font-logo text-texte">Vite & Gourmand</p>
   </section>
 
   <!-- Graisses -->

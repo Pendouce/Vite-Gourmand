@@ -37,6 +37,14 @@ class Controller
       $infoSiteService = ContainerId::getInfoVgService();
       $params['infos'] = $infoSiteService->afficherInfosVg();
 
+      // J'injecte automatiquement les label de la navbar dans toutes les vues
+      $role = $_SESSION['role_id'] ?? 0;
+      $navService = ContainerId::getNavService();
+      $params['navRole'] = $navService->lienNav($role);
+
+      $estConnecte = isset($_SESSION['role_id']);
+      $params['navConnexion'] = $navService->connexionNav($estConnecte);
+
       extract($params);
       require_once $filePath;
     }

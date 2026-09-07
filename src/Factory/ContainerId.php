@@ -30,6 +30,7 @@ use App\Service\EquipeService;
 use App\Service\InfoVgService;
 use App\Service\MailService;
 use App\Service\MenuService;
+use App\Service\NavService;
 use App\Service\PlatService;
 use App\Service\PrestationService;
 use App\Service\TypeDePlatService;
@@ -141,5 +142,10 @@ class ContainerId
   public static function getUploadService(): UploadService
   {
     return new UploadService();
+  }
+
+  public static function getNavService(): NavService
+  {
+    return new NavService();
   }
 }

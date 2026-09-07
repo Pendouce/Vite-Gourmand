@@ -7,8 +7,9 @@
     "build": "tailwindcss -i ./public/asset/css/input.css -o ./public/asset/css/style.css --minify"
   },
   "devDependencies": {
-    "tailwindcss": "^4.1.0",
-    "@tailwindcss/cli": "^4.1.0"
+    "@tailwindcss/cli": "^4.1.0",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tailwindcss": "^4.1.0"
   },
   "allowScripts": {
     "@parcel/watcher@2.5.1": true
