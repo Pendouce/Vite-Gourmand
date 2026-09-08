@@ -19,8 +19,40 @@
   --font-logo: "Cinzel Decorative", serif;
 }
 
+/* @utility form-desk {
+  @apply mx-auto; w-full max-w-lg;
+} */
+
+@layer base {
+  body {
+    @apply font-body text-texte bg-[url(/asset/images/smooth-white-plaster-wall.jpg)];
+  }
+}
+
 @layer components {
+  .contenue-page {
+    @apply mx-auto max-w-7xl px-4 md:px-8;
+  }
+
   .btn {
-    @apply flex items-center py-2 px-4 rounded rounded-2xl bg-primary text-center text-texte hover:bg-primary/80;
+    @apply bg-primary text-texte hover:bg-primary/80 flex items-center rounded rounded-2xl px-4 py-2 text-center;
+  }
+  .cart-form {
+    @apply border-primary/50 bg-fond-banniere/50 m-10 mx-auto flex max-w-xl flex-col items-center justify-center rounded-3xl border py-6 sm:px-6 sm:py-20;
+  }
+
+  .font-label {
+    @apply text-lg font-medium;
+  }
+  .btn-form {
+    @apply bg-primary text-fond-carte hover:bg-primary/80 flex items-center rounded rounded-3xl px-10 py-3 text-center;
+  }
+
+  .grand-input {
+    @apply border-primary/50 m-4 rounded-3xl border bg-transparent px-6 py-2 lg:w-full;
+  }
+
+  .erreur {
+    @apply rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-2 text-center text-red-700;
   }
 }

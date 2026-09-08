@@ -1,5 +1,5 @@
 <?php /** @var string $titre */ ?>
-<div class="bg-fond-banniere py-7 lg:py-10">
+<div class="bg-fond-banniere mb-10 py-7 lg:py-10">
   <div class="flex w-full justify-center items-center relative">
     <div>
       <img class="h-25 w-35 lg:h-30 lg:w-50 object-cover absolute inset-0 m-auto opacity-50" src="/asset/images/logo.png" alt="logo vite et gourmand">

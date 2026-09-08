@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="asset/css/style.css?v1">
+  <link rel="stylesheet" href="asset/css/style.css">
   <title>Document</title>
 </head>
-<body class="bg-[url(/asset/images/smooth-white-plaster-wall.jpg)]">
+<body>
   <header class="bg-fond-nav p-4 flex items-center mb-6 lg:justify-between relative sticky top-0 z-50">
     <!-- Burger mobile -->
      <div class="flex-1 flex lg:hidden items-center">
@@ -33,10 +33,8 @@
 
     <!-- Liens nav descktop -->
     <nav class="flex-1 flex order-3 items-center justify-end gap-6 lg:flex-none lg:order-0 lg:justify-start">
-    <!-- <nav class="hidden lg:flex items-center gap-6"> -->
       <div id="navLiens" class="hidden lg:block absolute lg:static top-full left-0 w-full">
         <ul class="flex flex-col gap-4 px-12 py-6 bg-fond-nav divide-y divide-texte/20 lg:flex-row lg:items-center lg:gap-8 lg:py-0 lg:divide-none">
-        <!-- <ul class="flex flex-col gap-4 lg:flex-row lg:gap-8 px-12 "> -->
           <?php foreach($navRole as $label):?>
             <li class="py-2"><a href="<?= $label['url'] ?>"><?= $label['label'] ?></a></li>
           <?php endforeach; ?>

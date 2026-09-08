@@ -68,7 +68,7 @@ class UserController extends Controller
       $this->render('pages/client/inscription', ['erreur' => $message]);
       }
     }else {
-      $this->render('pages/client/inscription');
+      $this->render('pages/client/inscription', ['titre' => 'inscription']);
     }
   }
 
@@ -106,7 +106,7 @@ class UserController extends Controller
           $this->render('pages/admin/inscriptionEmploye', ['erreur' => $message]);
         }
       }else{
-        $this->render('pages/admin/inscriptionEmploye');
+        $this->render('pages/admin/inscriptionEmploye', ['titre' => 'inscription employe']);
       }
   }
 
@@ -136,10 +136,10 @@ class UserController extends Controller
 
       }catch(Exception $e){
         $message = $e->getMessage();
-        $this->render('pages/auth/connexion', ['erreur' => $message]);
+        $this->render('pages/auth/connexion', ['erreur' => $message, 'titre' => 'connexion']);
       }
     } else{
-      $this->render('pages/auth/connexion');
+      $this->render('pages/auth/connexion', ['titre' => 'connexion']);
     }
   }
 
@@ -147,7 +147,7 @@ class UserController extends Controller
   {
     $id = $_SESSION['user_id'];
     $infoUtilisateur = $this->userService->afficheInfo($id);
-    $this->render('pages/client/mesInfos', ['infoUtilisateur' => $infoUtilisateur]);
+    $this->render('pages/client/mesInfos', ['infoUtilisateur' => $infoUtilisateur,'titre' => 'mes infos']);
   }
   
   public function afficheInfosEmploye()
@@ -155,14 +155,14 @@ class UserController extends Controller
     $this->accesPage([ROLE_ADMIN]);
     $id = $_GET['id'];
     $infoEmploye = $this->userService->afficheInfo($id);
-    $this->render('pages/admin/detailEmploye', ['infoEmploye' => $infoEmploye]);
+    $this->render('pages/admin/detailEmploye', ['infoEmploye' => $infoEmploye, 'titre' => 'info employe']);
   }
 
   public function afficheEmploye()
   {
     $this->accesPage([ROLE_ADMIN]);
     $listeEmploye = $this->userService->afficheEmploye();
-    $this->render('pages/admin/gestionEmployes', ['listeEmploye' => $listeEmploye]);
+    $this->render('pages/admin/gestionEmployes', ['listeEmploye' => $listeEmploye, 'titre' => 'gestion employe']);
   }
 
   public function modifierInfos()
@@ -220,7 +220,7 @@ class UserController extends Controller
         exit;
       }
     }else{
-      $this->render('pages/auth/modificationMdp');
+      $this->render('pages/auth/modificationMdp', ['titre' => 'modification du mot de passe']);
     }
   }
 
