@@ -202,7 +202,7 @@ class UserController extends Controller
 
   public function reinitialiserMdp()
   {
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
       $data = [
         'email' => $_POST['email'],
@@ -216,12 +216,12 @@ class UserController extends Controller
         exit;
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
-        header('location: /reinitilisationMdp');
+        header('location: /motDePasseOublie');
         exit;
       }
 
     }else{
-      $this->render('pages/auth/reinitilisationMdp');
+      $this->render('pages/auth/reinitilisationMdp', ['titre' => 'reinisialisation du mot de passe']);
     }
   }
     

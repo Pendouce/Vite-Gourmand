@@ -1,21 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reinitialisation Mdp</title>
-</head>
-<body>
-    <?php if (isset($_SESSION['erreur'])): ?>
-    <p class="erreur"><?= $_SESSION['erreur'] ?></p>
-    <?php unset($_SESSION['erreur']); ?>
-  <?php endif; ?>
+<?php require_once(APP_ROOT.'/templates/layouts/header.php');?>
+<?php require_once(APP_ROOT.'/templates/layouts/pageBanner.php');?>
 
-  <?php if (isset($_SESSION['succes'])): ?>
-    <p class="succes">
-        <?= $_SESSION['succes'] ?>
-    </p>
-    <?php unset($_SESSION['succes']); ?>
-  <?php endif; ?>
-</body>
-</html>
+<div class="contenue-page ">
+
+  <div class="cart-form">
+
+    <div class="w-lg pb-10 mb-6">
+      <?php if(isset($erreur)): ?>
+        <p class="erreur"><?= $erreur ?></p>
+      <?php endif; ?>
+    </div>
+
+    <form class="grid grid-cols-2 md:p-4 gap-6 " action="/motDePasseOublie" method="post">
+      <?php /** @var string $csrfToken */ ?>
+      <input type="hidden" name="csrfToken" value="<?= $csrfToken ?>">
+
+      <div class="flex flex-col col-span-2">
+        <label class="font-label" for="email">Email</label>
+        <input id="email" class="grand-input" type="email" name="email" required>
+      </div>
+
+      <div class="flex justify-center col-span-2">
+        <button class="btn-form m-4" type="submit">Reinitialiser</button>
+      </div>
+    </form>
+
+  </div>
+  
+  <?php require_once(APP_ROOT.'/templates/layouts/footer.php');?>
+
+
+  TQKRk(AOMjdCcHbv

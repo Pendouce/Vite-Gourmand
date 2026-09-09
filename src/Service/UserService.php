@@ -53,6 +53,7 @@ class UserService
     //Envoye du mail de confirmation
     $html = $this->mailService->recupererHtml('inscriptionMail', ['prenom' => $data['prenom']]);
     $objet = 'Bienvenue chez vite et Gourmand';
+    file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
     //$this->mailService->envoyer($data['email'], $objet, $html);
 
     return $compteUtilisateur;
@@ -73,6 +74,7 @@ class UserService
     // Envoie mail avec nouveau mdp
     $html = $this->mailService->recupererHtml('inscriptionEmployeMail', ['prenom' => $data['prenom'], 'mdp' => $mdp]);
     $objet = 'Identifiant Employe';
+    file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
     //$this->mailService->envoyer($data['email'], $objet, $html);
     var_dump($mdp);
       return $compteUtilisateur;
@@ -145,7 +147,8 @@ class UserService
     // Envoie mail avec nouveau mdp
     $html = $this->mailService->recupererHtml('reinitialisationMdpMail', ['prenom' => $data['prenom'], 'nouveauMdp' => $genereMdp]);
     $objet = 'Reinitialisation de mot de passe';
-    $this->mailService->envoyer($data['email'], $objet, $html);
+    file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+    //$this->mailService->envoyer($data['email'], $objet, $html);
   }
 
   // Modifier le mdp
