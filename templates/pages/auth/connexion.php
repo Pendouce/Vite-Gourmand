@@ -3,7 +3,7 @@
 
 <div class="contenue-page ">
 
-  <div class="cart-form">
+  <div class="cart-form max-w-xl">
 
     <div class="w-md pb-10 mb-6">
       <?php if(isset($erreur)): ?>

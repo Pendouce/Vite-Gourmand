@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Exceptions\AccesRefuseException;
+use App\Exceptions\EmailException;
 use App\Exceptions\EmailExistantException;
 use App\Exceptions\EmailMdpException;
 use App\Exceptions\MotDepasseException;
@@ -21,16 +22,25 @@ class UserService
   } 
 
   // Methode globale creation de compte
-  private function creationCompte(string $email, string $mdp, array $data, int $role)
+  private function creationCompte(array $data, int $role)
   {
-    $verifEmail = $this->userRepository->trouveUtilisateurByEmail($email);
+    // Verification email
+    $this->verifEmail($data['email']);
+
+    $verifEmail = $this->userRepository->trouveUtilisateurByEmail($data['email']);
     if($verifEmail !== false){
       throw new EmailExistantException();
     }
 
-    $mdpHash = $this->hashMotDePasse($mdp);
-
-    $data['mot_de_passe'] = $mdpHash;
+    // Si data contient mdp pck pas de mdp dans la creation employé
+    if(isset($data['mot_de_passe'])){
+      $this->verifMdp($data['mot_de_passe'], $data['mdpConfirm']);
+      $mdpHash = $this->hashMotDePasse($data['mot_de_passe']);
+      $data['mot_de_passe'] = $mdpHash;
+      unset($data['mdpConfirm']);
+    }
+    // Verification mdp === mdpConfirm
+   
     $data['role_id'] = $role;
 
     $nvlUtilisateur = $this->userRepository->creeUtilisateur($data);
@@ -39,9 +49,9 @@ class UserService
   }
   
   // Methode creation d'un compte utilisateur
-  public function inscrirUtilisateur(string $email, string $mdp, array $data)
+  public function inscrirUtilisateur(array $data)
   {
-    $compteUtilisateur = $this->creationCompte($email, $mdp, $data,ROLE_UTILISATEUR);
+    $compteUtilisateur = $this->creationCompte($data, ROLE_UTILISATEUR);
   
     //Envoye du mail de confirmation
     $html = $this->mailService->recupererHtml('inscriptionMail', ['prenom' => $data['prenom']]);
@@ -52,11 +62,16 @@ class UserService
   }
 
   // Methode creation d'un compte employe
-  public function creationCompteEmploye(string $email, array $data, int $role)
+  public function creationCompteEmploye(array $data, int $role)
   {
     if($role !== ROLE_ADMIN) throw new AccesRefuseException();
+    // Verification email
+    $this->verifEmail($data['email']);
+
+    // Generation mdp
     $mdp = $this->genererMdpAleatoire();
-    $compteUtilisateur = $this->creationCompte($email, $mdp, $data,ROLE_EMPLOYE);
+
+    $compteUtilisateur = $this->creationCompte($data, ROLE_EMPLOYE);
     
     // Envoie mail avec nouveau mdp
     $html = $this->mailService->recupererHtml('inscriptionEmployeMail', ['prenom' => $data['prenom'], 'mdp' => $mdp]);
@@ -73,6 +88,9 @@ class UserService
     if($verifEmail === false){
       throw new EmailMdpException();
     }
+     // Verification email
+    $this->verifEmail($email);
+
     $verifMdp = password_verify($mdp, $verifEmail->getMotDePasse());
     if(!$verifMdp){
       throw new EmailMdpException();
@@ -101,6 +119,7 @@ class UserService
   {
     $infoActuel = $this->afficheInfo($data['id']);
     $donneesActuel = $infoActuel->deshydrate();
+    if($data['email'])$this->verifEmail($data['email']);
     // Parcourt chaques valeur du tableau et ne garde que celles qui ne sont pas null
     $data = array_filter($data, fn($value) => $value !== null);
     $nouvellesDonnees = array_merge($donneesActuel, $data);
@@ -111,12 +130,13 @@ class UserService
   }
 
   // Reinitialiser le mdp
-  public function reinitialiseMdp( array $data)
+  public function reinitialiseMdp(array $data)
   {
     $verifEmail = $this->userRepository->trouveUtilisateurByEmail($data['email']);
     if(!$verifEmail){
       throw new UtilisateurIntrouvableException();
     }
+    $this->verifEmail($data['email']);
 
     $genereMdp = $this->genererMdpAleatoire();
     $nouveauMdp = $this->hashMotDePasse($genereMdp);
@@ -138,13 +158,19 @@ class UserService
     if(!$utilisateur){
       throw new UtilisateurIntrouvableException();
     }
+
     $verifMdp = password_verify($ancienMdp, $utilisateur->getMotDePasse());
     if(!$verifMdp){
       throw new MotDepasseException();
     }
+    $this->verifMdp($data['mot_de_passe'], $data['mdpConfirm']);
+
     $nouveauMdp = $this->hashMotDePasse($nouveauMdp);
     $data['mot_de_passe'] = $nouveauMdp;
     unset($data['ancienMdp']);
+    unset($data['mdpConfirm']);
+
+    $this->userRepository->modifieMdp($data);
     return $data;
   }
 
@@ -155,6 +181,27 @@ class UserService
     $compte = $this->userRepository->supprimeUtilisateur($id);
 
     return $compte;
+  }
+
+  private function verifEmail(string $email)
+  {
+    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+      throw new EmailException();
+    }
+  }
+
+  private function verifMdp(string $mdp, string $mdpConfirm){
+    $regex = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
+
+    // preg_match effectue une recherche de correspondance avec une expression rationnelle standard
+    if(!preg_match($regex, $mdp)){
+      throw new MotDepasseException('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&)');
+    }
+
+      // Verification mdp === mdpConfirm
+      if($mdp !== $mdpConfirm){
+        throw new MotDepasseException('Le mot de passes et le mot de passe de confirmation doivent êtres identique');
+      }
   }
 
   // Generer un mdp aleatoir initialemment pour la creation de compte employe

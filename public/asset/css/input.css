@@ -38,7 +38,7 @@
     @apply bg-primary text-texte hover:bg-primary/80 flex items-center rounded rounded-2xl px-4 py-2 text-center;
   }
   .cart-form {
-    @apply border-primary/50 bg-fond-banniere/50 m-10 mx-auto flex max-w-xl flex-col items-center justify-center rounded-3xl border py-6 sm:px-6 sm:py-20;
+    @apply border-primary/50 bg-fond-banniere/50 m-10 mx-auto flex max-w-2xl flex-col items-center justify-center rounded-3xl border px-4 py-6 sm:px-6 sm:pt-6 sm:pb-10;
   }
 
   .font-label {

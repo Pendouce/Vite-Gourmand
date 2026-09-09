@@ -30,6 +30,8 @@
 
     <?php /** @var array $navRole */ ?>
     <?php /** @var array $navConnexion */ ?>
+    <?php /** @var array $estConnecte */ ?>
+    <?php /** @var string $csrfToken */ ?>
 
     <!-- Liens nav descktop -->
     <nav class="flex-1 flex order-3 items-center justify-end gap-6 lg:flex-none lg:order-0 lg:justify-start">
@@ -42,9 +44,20 @@
       </div>
       
       <!-- Bouton connexion -->
-      <div>
+      <!-- <div>
         <a class="btn" href="<?= $navConnexion['url'] ?>"> <?= $navConnexion['label'] ?></a>
+      </div> -->
+      <div>
+        <?php if($estConnecte): ?>
+          <form action="<?= $navConnexion['url'] ?>" method="post">
+            <input type="hidden" name="csrfToken" value="<?= $csrfToken ?>">
+            <button type="submit" class="btn"><?= $navConnexion['label'] ?></button>
+          </form>
+        <?php else: ?>
+          <a class="btn" href="<?= $navConnexion['url'] ?>"><?= $navConnexion['label'] ?></a>
+        <?php endif; ?>
       </div>
+
     </nav>
   </header>
   <main>
