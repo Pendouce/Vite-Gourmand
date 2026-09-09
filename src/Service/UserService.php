@@ -32,14 +32,8 @@ class UserService
       throw new EmailExistantException();
     }
 
-    // Si data contient mdp pck pas de mdp dans la creation employé
-    if(isset($data['mot_de_passe'])){
-      $this->verifMdp($data['mot_de_passe'], $data['mdpConfirm']);
-      $mdpHash = $this->hashMotDePasse($data['mot_de_passe']);
-      $data['mot_de_passe'] = $mdpHash;
-      unset($data['mdpConfirm']);
-    }
-    // Verification mdp === mdpConfirm
+    $mdpHash = $this->hashMotDePasse($data['mot_de_passe']);
+    $data['mot_de_passe'] = $mdpHash;
    
     $data['role_id'] = $role;
 
@@ -51,12 +45,15 @@ class UserService
   // Methode creation d'un compte utilisateur
   public function inscrirUtilisateur(array $data)
   {
+      $this->verifMdp($data['mot_de_passe'], $data['mdpConfirm']);
+      unset($data['mdpConfirm']);
+
     $compteUtilisateur = $this->creationCompte($data, ROLE_UTILISATEUR);
   
     //Envoye du mail de confirmation
     $html = $this->mailService->recupererHtml('inscriptionMail', ['prenom' => $data['prenom']]);
     $objet = 'Bienvenue chez vite et Gourmand';
-    $this->mailService->envoyer($data['email'], $objet, $html);
+    //$this->mailService->envoyer($data['email'], $objet, $html);
 
     return $compteUtilisateur;
   }
@@ -65,19 +62,19 @@ class UserService
   public function creationCompteEmploye(array $data, int $role)
   {
     if($role !== ROLE_ADMIN) throw new AccesRefuseException();
-    // Verification email
-    $this->verifEmail($data['email']);
 
     // Generation mdp
     $mdp = $this->genererMdpAleatoire();
+    $data['mot_de_passe'] = $mdp;
+    var_dump($data);
 
     $compteUtilisateur = $this->creationCompte($data, ROLE_EMPLOYE);
     
     // Envoie mail avec nouveau mdp
     $html = $this->mailService->recupererHtml('inscriptionEmployeMail', ['prenom' => $data['prenom'], 'mdp' => $mdp]);
     $objet = 'Identifiant Employe';
-    $this->mailService->envoyer($data['email'], $objet, $html);
-
+    //$this->mailService->envoyer($data['email'], $objet, $html);
+    var_dump($mdp);
       return $compteUtilisateur;
   }
 

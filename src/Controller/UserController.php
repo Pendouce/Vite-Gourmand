@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Exceptions\EmailException;
 use App\Factory\ContainerId;
 use App\Service\UserService;
 use Exception;
