@@ -122,7 +122,7 @@ class UserController extends Controller
   {
     $id = $_SESSION['user_id'];
     $infoUtilisateur = $this->userService->afficheInfo($id);
-    $this->render('pages/client/mesInfos', ['infoUtilisateur' => $infoUtilisateur,'titre' => 'mes infos']);
+    $this->render('pages/mesInfos', ['infoUtilisateur' => $infoUtilisateur,'titre' => 'mes infos']);
   }
   
   public function afficheInfosEmploye()
@@ -167,8 +167,7 @@ class UserController extends Controller
       exit;
 
     }catch(Exception $e){
-      $message = $e->getMessage();
-      $_SESSION['erreur'] = $message;
+      $_SESSION['erreur'] = $e->getMessage();
       header('location: /mesInfos');
       exit;
     }

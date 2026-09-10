@@ -6,8 +6,9 @@
   <div class="cart-form">
 
     <div class="w-lg pb-10 mb-6">
-      <?php if(isset($erreur)): ?>
-        <p class="erreur"><?= $erreur ?></p>
+      <?php if(isset($_SESSION['erreur'])): ?>
+        <p class="erreur"><?= $_SESSION['erreur'] ?></p>
+        <?php unset($_SESSION['erreur']); ?>
       <?php endif; ?>
     </div>
 
@@ -28,6 +29,3 @@
   </div>
   
   <?php require_once(APP_ROOT.'/templates/layouts/footer.php');?>
-
-
-  TQKRk(AOMjdCcHbv

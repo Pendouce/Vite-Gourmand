@@ -5,7 +5,7 @@
       <img class="h-25 w-35 lg:h-30 lg:w-50 object-cover absolute inset-0 m-auto opacity-50" src="/asset/images/logo.png" alt="logo vite et gourmand">
     </div>
     <div>
-      <h1 class="relative z-10 font-h1 font-extrabold text-texte text-3xl lg:text-4xl"><?= strtoupper($titre) ?></h1>
+      <h1 class="relative z-10 font-h1 font-extrabold text-texte text-center text-3xl lg:text-4xl"><?= strtoupper($titre) ?></h1>
     </div>
   </div>
 </div>
