@@ -76,7 +76,7 @@ class UserService
     $objet = 'Identifiant Employe';
     file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
     //$this->mailService->envoyer($data['email'], $objet, $html);
-    var_dump($mdp);
+
       return $compteUtilisateur;
   }
 

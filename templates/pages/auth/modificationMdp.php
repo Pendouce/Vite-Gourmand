@@ -3,7 +3,7 @@
 
 <div class="contenue-page ">
 
-<div class="border border-primary/50 bg-primary/70 text-fond-carte rounded-2xl p-4 w-40 text-xl font-medium">
+<div class="border border-primary/50 bg-primary/70 text-fond-carte rounded-2xl p-4 text-lg font-medium w-fit">
 
   <a class="flex gap-2 items-center" href="/mesInfos">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
