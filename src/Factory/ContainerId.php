@@ -148,4 +148,9 @@ class ContainerId
   {
     return new NavService();
   }
+  
+  public static function getMailService(): MailService
+  {
+    return new MailService();
+  }
 }

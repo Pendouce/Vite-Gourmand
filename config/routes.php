@@ -2,6 +2,7 @@
 
 return[
     "/" => ["controller" => "App\Controller\PageController", "action" => "acceuil"],
+    "/contact/" => ["controller" => "App\Controller\PageController", "action" => "contact"],
     "/inscription/" => ["controller" => "App\Controller\UserController", "action" => "inscription"],
     "/inscriptionEmploye/" => ["controller" => "App\Controller\UserController", "action" => "inscriptionEmploye"],
     "/connexion/" => ["controller" => "App\Controller\UserController", "action" => "connexion"],
