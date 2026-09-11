@@ -41,7 +41,7 @@ class AvisController extends Controller
       exit;
     }
     }else{
-      $this->render('pages/client/avis');
+      $this->render('pages/client/avis', ['titre' => 'avis']);
     }
   }
 
