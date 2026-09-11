@@ -1,6 +1,26 @@
 <?php require_once(APP_ROOT.'/templates/layouts/header.php');?>
 <?php require_once(APP_ROOT.'/templates/layouts/pageBanner.php');?>
 
+  <div id="modalContainer" class="fixed inset-0 flex justify-center items-center bg-black/50 hidden">
+    <div id="modal" class="flex flex-col text-center justify-center items-center gap-6 bg-fond-carte w-xl h-1/3 p-6 rounded-2xl">
+      <h2 class="font-h2 text-primary text-xl">Souhaitez vous vraiment supprimer le compte de <span id="nomEmploye"></span> ?</h2>
+      <p>Une fois supprimé cet employe n'aura plus d'accès</p>
+      <div class="flex justify-center gap-8">
+        <div>
+          <button id="btnAnnuler" class="btn bg-texte text-fond-carte" type="button">Annuler</button>
+        </div>
+        <div>
+          <form action="/supprimerCompteEmploye" method="post">
+            <?php /** @var string $csrfToken */ ?>
+            <input type="hidden" name="csrfToken" value="<?= $csrfToken ?>">
+            <input type="hidden" name="id" id="idEmploye">
+            <button id="btnConfirmSuppression" class="btn" type="submit">Supprimer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="contenue-page pb-6">
     <div class="w-full pb-10 mb-6">
         <?php if (isset($_SESSION['erreur'])): ?>
@@ -35,11 +55,9 @@
         </div>
 
         <div>
-          <form action="/supprimerCompteEmploye" method="post" class="inline">
-            <input type="hidden" name="csrfToken" value="<?= $csrfToken ?>">
-            <input type="hidden" name="id" value="<?= $employe->getUserId() ?>">
-            <button type="submit" class="btn-form bg-texte/90">Supprimer</button>
-          </form>
+            <button type="button" class="btnSupprimerCmptEmploye btn-form bg-texte/90"
+             data-nom="<?= $employe->getPrenom() ?>" data-id="<?= $employe->getUserId() ?>"
+             >Supprimer</button>
         </div>
       </div>
     </div>
