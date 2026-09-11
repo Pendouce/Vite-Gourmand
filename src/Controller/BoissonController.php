@@ -61,7 +61,7 @@ class BoissonController extends Controller
   {
     $boissons = $this->boissonService->afficherBoisson();
 
-    $this->render('pages/employe/boisson', ['boissons' => $boissons]);
+    $this->render('pages/employe/boisson', ['boissons' => $boissons, 'titre' => 'boissons']);
   }
 
   public function afficherBoissonParId(): void

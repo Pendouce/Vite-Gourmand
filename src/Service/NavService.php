@@ -47,4 +47,31 @@ class NavService
   {
     return $estConnecte? ['label' => 'Déconnexion', 'url' => '/deconnexion'] : ['label' => 'Connexion', 'url' => '/connexion'];
   }
+
+  // Methode pour l'affichage des liens de la carte
+  public function lienCarte(int $role, string $page): array
+  {
+    $carteRole = match ($role) {
+      ROLE_ADMIN, ROLE_EMPLOYE =>[
+        ['label' => 'Menus', 'url' => '/menu'],
+        ['label' => 'Plats', 'url' => '/plats'],
+        ['label' => 'Boisson', 'url' => '/boisson'],
+      ],
+      default =>[
+        ['label' => 'Menus', 'url' => '/menu'],
+        ['label' => 'Boisson', 'url' => '/boisson'],
+      ],
+    };
+
+    // J'ajoute classeActive => active a $carteRole
+    // & : $carte pointe vers le vrai élément du tableau, donc le modifier modifie carteRole
+    foreach($carteRole as &$carte){
+      $carte['classeActive'] = $carte['url'] === $page ? 'active' : "";
+    }
+
+    // Je détruit la référence pour éviter d'écraser le dernier élément plus tard
+    unset($carte);
+
+    return $carteRole;
+  }
 }

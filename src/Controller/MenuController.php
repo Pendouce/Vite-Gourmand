@@ -60,14 +60,14 @@ class MenuController extends Controller
       }
 
     }else{
-      $this->render('pages/employe/creerMenu');
+      $this->render('pages/employe/creerMenu', ['titre' => 'creer un menu']);
     }
   }
 
   public function afficherMenus()
   {
     $menus = $this->menuService->afficherMenus();
-    $this->render('pages/employe/menu', ['menus' => $menus]);
+    $this->render('pages/employe/menu', ['menus' => $menus, 'titre' => 'menus']);
   }
 
   public function afficherDetailMenu()

@@ -52,6 +52,10 @@
     @apply bg-primary text-fond-carte hover:bg-primary/80 flex items-center rounded rounded-3xl px-10 py-3 text-center;
   }
 
+  .btn-form-dark {
+    @apply bg-texte/90 text-fond-carte hover:bg-primary/80 flex items-center rounded rounded-3xl px-10 py-3 text-center;
+  }
+
   .grand-input {
     @apply border-primary/50 m-4 rounded-3xl border bg-transparent px-6 py-2 lg:w-full;
   }
@@ -61,5 +65,9 @@
   }
   .succes {
     @apply rounded-2xl border border-green-500/40 bg-green-500/10 px-4 py-2 text-center text-green-700;
+  }
+
+  .active {
+    @apply bg-primary;
   }
 }

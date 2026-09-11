@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Exceptions\PageInexistanteException;
 use App\Factory\ContainerId;
-use App\Service\InfoVgService;
 use Exception;
 
 class Controller
@@ -39,8 +38,10 @@ class Controller
 
       // J'injecte automatiquement les label de la navbar dans toutes les vues
       $role = $_SESSION['role_id'] ?? 0;
+      $page = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
       $navService = ContainerId::getNavService();
       $params['navRole'] = $navService->lienNav($role);
+      $params['carteRole'] = $navService->lienCarte($role, $page);
 
       $estConnecte = isset($_SESSION['role_id']);
       $params['navConnexion'] = $navService->connexionNav($estConnecte);
