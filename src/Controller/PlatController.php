@@ -66,19 +66,21 @@ class PlatController extends Controller
 
     $role = $_SESSION['role_id'];
     $plats = $this->platService->afficherPlats($role);
+    $platsParType = $this->platService->afficherPlatsParType($role);
 
-    $this->render('pages/employe/plat', ['plats' => $plats, 'titre' => 'plats']);
+    $this->render('pages/employe/plat', ['plats' => $plats, 'platsParType' => $platsParType, 'titre' => 'plats']);
   }
 
-  public function afficherPlatParType()
+ /*  public function afficherPlatParType()
   {
     $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
 
     $role = $_SESSION['role_id'];
 
-    $plats = $this->platService->afficherPlats($role);
-    $this->render('pages/employe/plat', ['plats' => $plats]);
-  }
+    $platsParType = $this->platService->afficherPlatsParType($role);
+
+    $this->render('pages/employe/plat', ['platsParType' => $platsParType, 'titre' => 'plats']);
+  } */
 
   public function afficherDetailPlat()
   {

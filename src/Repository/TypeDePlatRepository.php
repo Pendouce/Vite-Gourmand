@@ -29,7 +29,14 @@ class TypeDePlatRepository extends Repository
     $statement = $this->pdo->prepare($sql);
     $statement->execute();
 
-    return $statement->fetchAll(PDO::FETCH_ASSOC);
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabTypeDePlats = [];
+
+    foreach($data as $type){
+      $tabTypeDePlats[] = TypeDePlat::creerEtHydrate($type);
+    }
+
+    return $tabTypeDePlats;
   }
 
   public function trouverTypeDePlatByNom(string $libelle)

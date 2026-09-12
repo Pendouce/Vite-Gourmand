@@ -45,6 +45,10 @@
     @apply border-primary/50 bg-fond-banniere/50 m-10 mx-auto flex max-w-2xl flex-col items-center justify-center rounded-3xl border px-4 py-6 sm:px-8 sm:pt-6 sm:pb-10;
   }
 
+  .cart-plat {
+    @apply border-primary/50 bg-fond-carte m-10 mx-auto flex max-w-sm flex-col items-center justify-center rounded-3xl border px-4 py-6 sm:px-8 sm:pt-6 sm:pb-10 md:w-md;
+  }
+
   .font-label {
     @apply text-lg font-medium;
   }

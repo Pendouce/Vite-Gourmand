@@ -62,14 +62,13 @@ class PlatRepository extends Repository
     return $tabPlat;
   }
 
-  public function trouverPlatParType(int $typeId)
+  public function trouverPlatParType()
   {
     $sql = 'SELECT * FROM plat
     INNER JOIN type_de_plat ON plat.type_id = type_de_plat.type_id
-    WHERE plat.type_id = :type_id';
+    ORDER BY type_de_plat.type_id';
 
     $statement = $this->pdo->prepare($sql);
-    $statement->bindValue(':type_id', $typeId, PDO::PARAM_INT);
     $statement->execute();
 
     $data = $statement->fetchAll(PDO::FETCH_ASSOC);

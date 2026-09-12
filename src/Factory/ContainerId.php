@@ -66,7 +66,9 @@ class ContainerId
   {
     return new PlatService(
       new PlatRepository(),
-      new AllergeneRepository()
+      new AllergeneRepository(),
+      new TypeDePlatRepository(),
+      self::getTypeDePlatService()
     );
   }
 

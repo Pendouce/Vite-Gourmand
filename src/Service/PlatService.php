@@ -6,16 +6,22 @@ use App\Exceptions\AccesRefuseException;
 use App\Exceptions\LibelleExistantException;
 use App\Repository\AllergeneRepository;
 use App\Repository\PlatRepository;
+use App\Repository\TypeDePlatRepository;
+use App\Service\TypeDePlatService;
 
 class PlatService
 {
   private PlatRepository $platRepository;
   private AllergeneRepository $allergeneRepository;
+  private TypeDePlatRepository $typeDePlatRepository;
+  private TypeDePlatService $typeDePlatService;
 
-  public function __construct(PlatRepository $platRepository, AllergeneRepository $AllergeneRepository)
+  public function __construct(PlatRepository $platRepository, AllergeneRepository $AllergeneRepository, TypeDePlatRepository $typeDePlatRepository, TypeDePlatService $typeDePlatService)
   {
     $this->platRepository = $platRepository;
     $this->allergeneRepository = $AllergeneRepository;
+    $this->typeDePlatRepository = $typeDePlatRepository;
+    $this->typeDePlatService = $typeDePlatService;
   }
 
   public function creerPlat(array $data, int $role)
@@ -61,13 +67,19 @@ class PlatService
      return $plat;
   }
 
-  public function afficherPlatsParType(int $typeId, int $role)
+  public function afficherPlatsParType(int $role): array
   {
-    if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+    if (!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
-    $plats = $this->platRepository->trouverPlatParType($typeId);
+    $plats = $this->platRepository->trouverPlatParType();
+    $platsAvecAllergenes = $this->ajouterAllergenes($plats);
 
-    return $this->ajouterAllergenes($plats);
+    $platParType = [];
+    foreach ($platsAvecAllergenes as $plat) {
+      $platParType[$plat->getLibelle()][] = $plat;
+    }
+
+    return $platParType;
   }
 
   public function modifierAllergenesDuPlat(int $platId, array $allergeneId, int $role)
