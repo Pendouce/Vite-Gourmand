@@ -154,6 +154,28 @@ class PlatController extends Controller
 
     try{
       $this->platService->modifierStatusPlat($platId, $statut, $role);
+      // Envoie du json pour pouvoir comuniquer avec js
+      echo json_encode(['succes' => true, 'message' => 'Statut modifié', 'statut' => $statut]);
+    }catch(Exception $e){
+      echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
+    }
+  }
+  /* public function modifierStatusPlat()
+  {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      header('location: /');
+      exit;
+    }
+    $this->checkCsrfToken();
+
+    $statut = (int) $_POST['plat_actif'];
+    $platId = $_POST['id'];
+    $role = $_SESSION['role_id'];
+
+    try{
+      $this->platService->modifierStatusPlat($platId, $statut, $role);
       $_SESSION['succes'] = "Statut modifié";
       header('location: /detailPlat?id='.$platId);
       exit;
@@ -162,7 +184,7 @@ class PlatController extends Controller
       header('location: /detailPlat?id='.$platId);
       exit;
     }
-  }
+  } */
 
   public function modifierStockPlat()
   {
