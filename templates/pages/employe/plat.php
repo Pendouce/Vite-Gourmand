@@ -33,7 +33,7 @@
     <div class="md:grid md:grid-cols-2 lg:grid lg:grid-cols-3">
       <?php foreach ($plats as $plat): ?>
         <div class="cart-plat flex justify-center items-center gap-4 col-span-1">
-          <div id="blockRetour" class="w-full mb-6"></div>
+          <div class="blockRetour w-full mb-6"></div>
             <h3 class="text-xl font-medium lg:text-2xl text-center"><?= htmlspecialchars($plat->getTitre()) ?></h3>
             <img
               src="<?= htmlspecialchars($plat->getImagePlat()) ?>"

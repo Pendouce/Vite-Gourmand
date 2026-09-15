@@ -1,12 +1,13 @@
 const csrfToken = document.getElementById("csrfToken");
 const toggleInputPlat = document.querySelectorAll(".togglePlatInput");
-const divBlockRetourMessage = document.getElementById("blockRetour");
 
 function gererToggle(toggleInputNom, statutNom, route) {
   toggleInputNom.forEach((toggleInput) => {
     toggleInput.addEventListener("change", async () => {
       const id = toggleInput.dataset.id;
       const csrf = csrfToken.value;
+      // Je recupere les enfants de carte plat ayant pour classe blockRetour
+      const divBlockRetourMessage = toggleInput.closest(".cart-plat").querySelector(".blockRetour");
       // Je convertie le boolen en nombre
       const statut = +toggleInput.checked;
       // Equivalent de form en html
