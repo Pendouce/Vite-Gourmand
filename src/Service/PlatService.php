@@ -82,6 +82,11 @@ class PlatService
     return $platParType;
   }
 
+  public function afficherAllergenes()
+  {
+    return $this->allergeneRepository->trouverAllergenes();
+  }
+
   public function modifierAllergenesDuPlat(int $platId, array $allergeneId, int $role)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();

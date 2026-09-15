@@ -89,6 +89,13 @@ class UploadService
       default => throw new Exception('Type non supporté'),
     };
 
+    // Je redimensionne l'image si elle dépasse 3000px (largeur ou hauteur)
+    // pour éviter un dépassement de memory_limit
+    $dimensionMax = 3000;
+    if (imagesx($image) > $dimensionMax || imagesy($image) > $dimensionMax) {
+      $image = imagescale($image, $dimensionMax);
+    }
+
     // Je remplace le tmp_name recu du front par le mien ($image) qui est nettoye
     match($typeMime) {
       'image/jpeg' => imagejpeg($image, $file['tmp_name']),

@@ -54,7 +54,7 @@
               <a class="btn-detail mt-4" href="/detailPlat?id=<?= $plat->getPlatId() ?>">Details</a>
               <label class="pl-8">
                 Actif
-                <input class="peer appearance-none" type="checkbox" name="plat_actif" data-id="<?= $plat->getPlatId() ?>" <?= $plat->isPlatActif() == 1 ? 'checked' : '' ?>>
+                <input class="peer appearance-none togglePlatInput" type="checkbox" name="plat_actif" data-id="<?= $plat->getPlatId() ?>" <?= $plat->isPlatActif() == 1 ? 'checked' : '' ?>>
                 <span class="toggle"></span>
               </label>
             </div>

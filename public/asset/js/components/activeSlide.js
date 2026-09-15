@@ -1,5 +1,5 @@
 const csrfToken = document.getElementById("csrfToken");
-const toggleInputPlat = document.querySelectorAll("input[name=plat_actif]");
+const toggleInputPlat = document.querySelectorAll(".togglePlatInput");
 const divBlockRetourMessage = document.getElementById("blockRetour");
 
 function gererToggle(toggleInputNom, statutNom, route) {

@@ -1,7 +1,19 @@
 <?php require_once(APP_ROOT.'/templates/layouts/header.php');?>
 <?php require_once(APP_ROOT.'/templates/layouts/pageBanner.php');?>
 
+<div class="w-full pb-10 mb-6">
+      <?php if (isset($_SESSION['succes'])): ?>
+        <p class="succes">
+            <?= $_SESSION['succes'] ?>
+        </p>
+        <?php unset($_SESSION['succes']); ?>
+      <?php endif; ?>
 
+      <?php if(isset($_SESSION['erreur'])): ?>
+        <p class="erreur"><?= $_SESSION['erreur'] ?></p>
+        <?php unset($_SESSION['erreur']); ?>
+      <?php endif; ?>
+    </div>
 
   <div class="p-8 space-y-8">
 

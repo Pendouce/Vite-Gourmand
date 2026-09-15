@@ -39,7 +39,7 @@
   }
 
   .btn-detail {
-    @apply border-primary text-primary hover:bg-grey-600 flex items-center rounded rounded-3xl border px-4 py-2 text-center md:px-6;
+    @apply border-primary text-primary flex items-center rounded rounded-3xl border px-4 py-2 text-center hover:bg-gray-300 md:px-6;
   }
 
   .btn-lien {
@@ -53,6 +53,11 @@
   .btn-form-dark {
     @apply bg-texte/90 text-fond-carte hover:bg-primary/80 flex items-center rounded rounded-3xl px-10 py-3 text-center;
   }
+
+  .btn-retour-page {
+    @apply border-primary/50 bg-primary/70 text-fond-carte w-fit rounded-2xl border p-4 text-lg font-medium;
+  }
+
   .cart-form {
     @apply border-primary/50 bg-fond-banniere/50 m-10 mx-auto flex max-w-2xl flex-col items-center justify-center rounded-3xl border px-4 py-6 sm:px-8 sm:pt-6 sm:pb-10;
   }
@@ -81,5 +86,8 @@
   }
   .toggle {
     @apply peer-checked:bg-primary relative flex h-7 w-13 items-center rounded-full bg-gray-300 p-0.5 transition-colors duration-100 peer-checked:transition-all after:absolute after:h-6 after:w-6 after:rounded-full after:bg-white peer-checked:after:left-3/6;
+  }
+  .cart-check {
+    @apply border-primary has-checked:bg-primary hover:bg-primary flex w-fit items-center rounded-xl border px-2 py-1;
   }
 }

@@ -4,17 +4,20 @@ namespace App\Controller;
 
 use App\Service\PlatService;
 use App\Factory\ContainerId;
+use App\Service\TypeDePlatService;
 use App\Service\UploadService;
 use Exception;
 
 class PlatController extends Controller
 {
   private PlatService $platService;
+  private TypeDePlatService $typeDePlatService;
   private UploadService $uploadService;
   
   public function __construct() {
     parent::__construct();
     $this->platService = ContainerId::getPlatService();
+    $this->typeDePlatService = ContainerId::getTypeDePlatService();
     $this->uploadService = ContainerId::getUploadService();
   }
 
@@ -30,18 +33,23 @@ class PlatController extends Controller
         'description_plat' => $_POST['description_plat'],
         'prix_personne' => $_POST['prix_personne'],
         'stock_plat' => $_POST['stock_plat'],
-        'plat_actif' => $_POST['plat_actif'],
+        // Si checkbox non cochée valeur de plat_actif = 0
+        'plat_actif' => isset($_POST['plat_actif']) ? 1 : 0,
         'type_id' => $_POST['type_id'],
       ];
+
+      try{
       if (key_exists('image_plat', $_FILES) && $_FILES['image_plat']['error'] === UPLOAD_ERR_OK) {
         $extension = $this->uploadService->validerImage($_FILES['image_plat']);
         $data['image_plat'] = $this->uploadImage($_FILES['image_plat'], "plat", $extension);
       }
       $allergeneId = $_POST['allergene'];
+      $data = $this->nettoyerDonnees($data);
+      $allergeneId = $this->nettoyerDonnees($allergeneId);
+      
       $this->nettoyerDonnees($data);
       $role = $_SESSION['role_id'];
 
-      try{
         $platCreer = $this->platService->creerPlat($data, $role);
         $platId = $platCreer->getPlatId();
         $this->platService->ajouterAllergeneAuplat($platId, $allergeneId);
@@ -56,7 +64,9 @@ class PlatController extends Controller
       }
 
     }else{
-      $this->render('pages/employe/creerPlat');
+      $typeDePlat = $this->typeDePlatService->afficheTypeDePlat();
+      $allergenes = $this->platService->afficherAllergenes();
+      $this->render('pages/employe/creerPlat', ['typeDePlat' => $typeDePlat, 'allergenes' => $allergenes, 'titre' => 'creer un plat']);
     }
   }
 

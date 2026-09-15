@@ -4,12 +4,17 @@ RUN docker-php-ext-install pdo_mysql
 
 RUN apk add --no-cache ${PHPIZE_DEPS}
 
+RUN apk add --no-cache libjpeg-turbo-dev libpng-dev libwebp-dev freetype-dev \
+    && docker-php-ext-configure gd --with-jpeg --with-freetype --with-webp \
+    && docker-php-ext-install gd
+
 RUN pecl install mongodb && docker-php-ext-enable mongodb
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN echo "upload_max_filesize = 10M" > /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "post_max_size = 10M" >> /usr/local/etc/php/conf.d/uploads.ini
+    && echo "post_max_size = 10M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini
 
 
 WORKDIR /var/www/html
