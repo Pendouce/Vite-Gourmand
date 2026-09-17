@@ -52,8 +52,9 @@
             </div>
             <div class="flex justify-between items-center gap-8">
               <a class="btn-detail mt-4" href="/detailPlat?id=<?= $plat->getPlatId() ?>">Details</a>
-              <label class="pl-8">
-                Actif
+              <label>Statut: </label>
+                <label class="pl-8">
+                  <span class="toggleLabelText"><?= $plat->isPlatActif() == 1 ? 'Actif' : 'Inactif' ?></span>
                 <input class="peer appearance-none togglePlatInput" type="checkbox" name="plat_actif" data-id="<?= $plat->getPlatId() ?>" <?= $plat->isPlatActif() == 1 ? 'checked' : '' ?>>
                 <span class="toggle"></span>
               </label>

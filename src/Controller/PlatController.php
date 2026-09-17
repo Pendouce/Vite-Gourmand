@@ -101,7 +101,7 @@ class PlatController extends Controller
 
     //var_dump($platId);
     $plat = $this->platService->afficherParId($platId, $role);
-    $this->render('pages/employe/detailPlat', ['plat' => $plat]);
+    $this->render('pages/employe/detailPlat', ['plat' => $plat, 'titre' => 'details plat']);
   }
 
   public function modifierPlat()

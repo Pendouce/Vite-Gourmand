@@ -7,7 +7,10 @@ function gererToggle(toggleInputNom, statutNom, route) {
       const id = toggleInput.dataset.id;
       const csrf = csrfToken.value;
       // Je recupere les enfants de carte plat ayant pour classe blockRetour
-      const divBlockRetourMessage = toggleInput.closest(".cart-plat").querySelector(".blockRetour");
+      const divBlockRetourMessage = toggleInput.closest(".contenue-page").querySelector(".blockRetour");
+      const labelText = toggleInput.closest("label").querySelector(".toggleLabelText");
+      labelText.textContent = toggleInput.checked ? "Actif" : "Inactif";
+
       // Je convertie le boolen en nombre
       const statut = +toggleInput.checked;
       // Equivalent de form en html

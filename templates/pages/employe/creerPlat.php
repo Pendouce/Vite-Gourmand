@@ -69,11 +69,14 @@
           <?php endforeach; ?>
         </select>
       </div>
-      <div class="col-span-1 flex justify-between items-center gap-8">
-          <label class="pl-8">
-            Actif
-            <input class="peer appearance-none" type="checkbox" name="plat_actif" value="1">
-            <span class="toggle m-4"></span>
+      <div class="col-span-1 flex flex-col justify-between items-center ">
+          <label>Statut: </label>
+          <label class=" flex flex-row-reverse gap-2">
+            <span class="toggleLabelText"></span>
+            <input class="peer appearance-none toggleLabelText" type="checkbox" name="plat_actif" value="1">
+            <span class="toggle"></span>
+            <span class="hidden peer-checked:inline">Actif</span>
+            <span class="peer-checked:hidden">Inactif</span>
           </label>
       </div>
       <div class="col-span-2 flex flex-col">
@@ -86,7 +89,9 @@
           <?php endforeach; ?>
         </div>
       </div>
-      <button class="btn-form" type="submit">Creer</button>
+      <div class="col-span-2 flex items-center justify-center p-4">
+        <button class="btn-form" type="submit">Creer</button>
+      </div>
   </form>
   </div>
 </div>
