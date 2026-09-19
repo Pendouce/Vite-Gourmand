@@ -149,6 +149,7 @@ class PlatController extends Controller
     }else{
       $platId = $_GET['id'];
       $role = $_SESSION['role_id'];
+
       $plat = $this->platService->afficherParId($platId, $role);
       $typeDePlat = $this->typeDePlatService->afficheTypeDePlat();
       $allergenes = $this->platService->afficherAllergenes();
@@ -223,13 +224,9 @@ class PlatController extends Controller
 
     try{
       $this->platService->modifierStockPlat($platId, $stock, $role);
-      $_SESSION['succes'] = "Stock modifié";
-      header('location: /detailPlat?id='.$platId);
-      exit;
+      echo json_encode(['succes' => true, 'message' => 'Stock modifié', 'stock' => $stock]);
     }catch(Exception $e){
-      $_SESSION['erreur'] = $e->getMessage();
-      header('location: /detailPlat?id='.$platId);
-      exit;
+      echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
     }
   }
 
