@@ -41,7 +41,13 @@ class PlatRepository extends Repository
     $statement->bindValue(':titre', $titre, PDO::PARAM_STR);
     $statement->execute();
 
-    return $statement->fetch(PDO::FETCH_ASSOC);
+    $plat = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if ($plat === false) {
+      return false;
+    }
+
+    return Plat::creerEtHydrate($plat);
   }
 
   public function trouverPlat()

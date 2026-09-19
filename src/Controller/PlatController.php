@@ -134,6 +134,9 @@ class PlatController extends Controller
         $this->platService->modifierPlat($platId, $data, $role);
         $this->platService->modifierAllergenesDuPlat($platId, $allergeneId, $role);
 
+        $plat = $this->platService->afficherParId($platId, $role);
+        $allergenes = $this->platService->afficherAllergenes();
+
         $_SESSION['succes'] = "Plat modifié";
         header('location: /detailPlat?id='.$platId);
         exit;
@@ -144,7 +147,15 @@ class PlatController extends Controller
       }
 
     }else{
-      $this->render('pages/employe/modifierPlat');
+      $platId = $_GET['id'];
+      $role = $_SESSION['role_id'];
+      $plat = $this->platService->afficherParId($platId, $role);
+      $typeDePlat = $this->typeDePlatService->afficheTypeDePlat();
+      $allergenes = $this->platService->afficherAllergenes();
+      // Je recupere les ids (uniquement les ids) des allergenes du plat et les stock dans $allergenesDuPlatIds
+      $allergenesDuPlatIds = array_map(fn($a) => $a->getAllergeneId(), $plat->getAllergenes());
+
+      $this->render('pages/employe/modifierPlat', ['typeDePlat' => $typeDePlat, 'plat' => $plat, 'allergenes' => $allergenes, 'allergenesDuPlatIds' => $allergenesDuPlatIds, 'titre' => 'modifier plat']);
     }
   }
 

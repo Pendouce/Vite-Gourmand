@@ -117,7 +117,7 @@ class PlatService
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
     if(!empty($data['titre'])){
-      $this->verifNom($data['titre']);
+      $this->verifNom($data['titre'], $platId);
     }
 
     $platActuel = $this->platRepository->trouverPlatParId($platId);
@@ -154,9 +154,11 @@ class PlatService
     $this->platRepository->supprimerPlat($platId);
   }
 
-  private function verifNom(string $nom)
+  private function verifNom(string $nom, int $id)
   {
-    if($this->platRepository->trouverPlatByNom($nom)){
+    $plat = $this->platRepository->trouverPlatByNom($nom);
+
+    if($plat && $plat->getPlatId() !== $id){
       throw new LibelleExistantException($nom);
     }
   }
