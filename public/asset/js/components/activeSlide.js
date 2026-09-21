@@ -6,8 +6,10 @@ function gererToggle(toggleInputNom, statutNom, route) {
     toggleInput.addEventListener("change", async () => {
       const id = toggleInput.dataset.id;
       const csrf = csrfToken.value;
-      // Je recupere les enfants de carte plat ayant pour classe blockRetour
-      const divBlockRetourMessage = toggleInput.closest(".contenue-page").querySelector(".blockRetour");
+      // Je recupere les enfants de carte plat ou contenue page (si pas carte plat) ayant pour classe blockRetour
+      const conteneur = toggleInput.closest(".cart-plat") ?? toggleInput.closest(".contenue-page");
+      const divBlockRetourMessage = conteneur.querySelector(".blockRetour");
+      //const divBlockRetourMessage = toggleInput.closest(".contenue-page").querySelector(".blockRetour");
       const labelText = toggleInput.closest("label").querySelector(".toggleLabelText");
       labelText.textContent = toggleInput.checked ? "Actif" : "Inactif";
 

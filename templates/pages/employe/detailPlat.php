@@ -81,8 +81,14 @@
         <span class="toggle"></span>
       </label>
     </div>
-    <div class="p-6">
-      <a class="btn-form" href="/modifierPlat?id=<?= $plat->getPlatId() ?>">Modifier</a>
+    <div class="flex p-4 gap-8 ">
+
+      <div>
+        <a class="btn-form" href="/modifierPlat?id=<?= $plat->getPlatId() ?>">Modifier</a>
+      </div>
+      <div>
+        <a class="btn-form bg-texte" href="/supprimerPlat?id=<?= $plat->getPlatId() ?>">Supprimer</a>
+      </div>
     </div>
 </div>
 

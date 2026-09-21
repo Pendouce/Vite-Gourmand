@@ -57,14 +57,11 @@ class TypeDePlatController extends Controller
 
       try{
         $this->typeDePlatService->modifieTypeDePlat($libelle, $id, $role);
-        $_SESSION['succes'] = 'Type de plat modifié';
-        header('location: /plats');
-        exit;
 
+        echo json_encode(['succes' => true, 'message' => 'Type de plat modifié', 'libelle' => $libelle]);
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
-        header('location: /modifierTypeDePlat');
-        exit;
+        echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
       }
     }else{
       $this->render('pages/employe/modifierTypeDePlat');

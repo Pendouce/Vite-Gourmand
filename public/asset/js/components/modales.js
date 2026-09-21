@@ -3,6 +3,8 @@ const btnSupprimerCmpt = document.getElementById("btnSupprimerCmpt");
 const btnAnnuler = document.getElementById("btnAnnuler");
 const btnSupprimerCmptEmploye = document.querySelectorAll(".btnSupprimerCmptEmploye");
 
+const btnGererTypePlat = document.getElementById("btnGererTypePlat");
+
 const fermerModal = () => {
   modalContainer.classList.add("hidden");
 };
@@ -32,6 +34,12 @@ if (btnSupprimerCmptEmploye) {
       document.getElementById("idEmploye").value = id;
       ouvrirModal();
     });
+  });
+}
+
+if (btnGererTypePlat) {
+  btnGererTypePlat.addEventListener("click", () => {
+    ouvrirModal();
   });
 }
 
