@@ -57,6 +57,7 @@ class BoissonController extends Controller
     }
   }
 
+
   public function afficherBoisson(): void
   {
     $boissons = $this->boissonService->afficherBoisson();
@@ -123,19 +124,16 @@ class BoissonController extends Controller
     }
     $this->checkCsrfToken();
   
-    $status = (int)$_POST['boisson_actif'];
+    $statut = (int)$_POST['boisson_actif'];
     $boissonId = (int)$_POST['id'];
     $role = $_SESSION['role_id'];
 
     try{
-      $this->boissonService->modifierStatusBoisson($boissonId, $status, $role);
-      $_SESSION['succes'] = 'Status modifié';
-      header('location: /detailBoisson?id='.$boissonId);
-      exit;
+      $this->boissonService->modifierStatusBoisson($boissonId, $statut, $role);
+      echo json_encode(['succes' => true, 'message' => 'Status modifié', 'statut' => $statut]);
+
     }catch(Exception $e){
-      $_SESSION['erreur'] = $e->getMessage();
-      header('location: /detailBoisson?id='.$boissonId);
-      exit;
+      echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
     }
   }
 
