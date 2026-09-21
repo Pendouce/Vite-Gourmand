@@ -40,15 +40,15 @@
               src="<?= htmlspecialchars($boisson->getPhotoBoisson()) ?>"
               alt="photo <?= htmlspecialchars($boisson->getNomBoisson()) ?>"
               class="w-40 h-40 object-cover">
-              <p class="truncate w-full text-center"><?= htmlspecialchars($boisson->getDescriptionBoisson()) ?></p>
-              <p class="font-semibold text-lg"><?= htmlspecialchars($boisson->getPrixBoisson()) ?> €</p>
+            <p class="truncate w-full text-center"><?= htmlspecialchars($boisson->getDescriptionBoisson()) ?></p>
+            <p class="font-semibold text-lg"><?= htmlspecialchars($boisson->getPrixBoisson()) ?> €</p>
               
-              <p>Stock : <?= htmlspecialchars($boisson->getStockBoisson()) ?></p>
-              <?php if($boisson->isAlcool() === 1): ?>
-                <p class="text-center">Avec alcool</p>
-              <?php elseif($boisson->isAlcool() !== 1): ?>
-                <p class="text-center">Sans alcool</p>
-              <?php endif; ?>
+            <p>Stock : <?= htmlspecialchars($boisson->getStockBoisson()) ?></p>
+            <?php if($boisson->isAlcool() == 1): ?>
+              <p class="text-center">Avec alcool</p>
+            <?php else: ?>
+              <p class="text-center">Sans alcool</p>
+            <?php endif; ?>
 
             <div class="flex justify-between items-center gap-8">
               <a class="btn-detail mt-4" href="/detailBoisson?id=<?= $boisson->getBoissonId() ?>">Details</a>

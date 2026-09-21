@@ -54,7 +54,7 @@ class BoissonController extends Controller
       }
 
     }else{
-      $this->render('pages/employe/creerBoisson');
+      $this->render('pages/employe/creerBoisson', ['titre' => 'creer boisson']);
     }
   }
 
