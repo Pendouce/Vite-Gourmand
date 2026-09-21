@@ -11,8 +11,8 @@ class BoissonRepository extends Repository
 
   public function creerBoisson(array $data)
   {
-    $sql = 'INSERT INTO boisson (nom_boisson, photo_boisson, prix_boisson, alcool, stock_boisson, boisson_actif) 
-    VALUES(:nom_boisson, :photo_boisson, :prix_boisson, :alcool, :stock_boisson, :boisson_actif)';
+    $sql = 'INSERT INTO boisson (nom_boisson, photo_boisson, prix_boisson, alcool, stock_boisson, boisson_actif, description_boisson) 
+    VALUES(:nom_boisson, :photo_boisson, :prix_boisson, :alcool, :stock_boisson, :boisson_actif, :description_boisson)';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
@@ -78,6 +78,7 @@ class BoissonRepository extends Repository
     alcool = :alcool,
     stock_boisson = :stock_boisson,
     boisson_actif = :boisson_actif
+    description_boisson = :description_boisson
     WHERE boisson_id = :boisson_id';
 
     $statement = $this->pdo->prepare($sql);

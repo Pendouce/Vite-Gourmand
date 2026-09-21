@@ -116,6 +116,7 @@ CREATE TABLE boisson(
   stock_boisson INT
 );
 ALTER TABLE boisson ADD COLUMN boisson_actif BOOL;
+ALTER TABLE boisson ADD COLUMN description_boisson TEXT NOT NULL;
 
 CREATE TABLE commande_boisson(
   commande_id INT,

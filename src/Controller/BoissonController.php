@@ -31,6 +31,7 @@ class BoissonController extends Controller
         'alcool' => $_POST['alcool'],
         'stock_boisson' => (int) $_POST['stock_boisson'],
         'boisson_actif' => $_POST['boisson_actif'],
+        'description_boisson' => $_POST['description_boisson'],
       ];
 
       if (key_exists('photo_boisson', $_FILES) && $_FILES['photo_boisson']['error'] === UPLOAD_ERR_OK) {
@@ -86,6 +87,7 @@ class BoissonController extends Controller
         'alcool' => $_POST['alcool'] ?? null,
         'stock_boisson' => $_POST['stock_boisson'] ?? null,
         'boisson_actif' => $_POST['boisson_actif'] ?? null,
+        'description_boisson' => $_POST['description_boisson'] ?? null,
       ];
 
       if (key_exists('photo_boisson', $_FILES) && $_FILES['photo_boisson']['error'] === UPLOAD_ERR_OK) {

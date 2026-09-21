@@ -40,6 +40,7 @@
               src="<?= htmlspecialchars($boisson->getPhotoBoisson()) ?>"
               alt="photo <?= htmlspecialchars($boisson->getNomBoisson()) ?>"
               class="w-40 h-40 object-cover">
+              <p class="truncate w-full text-center"><?= htmlspecialchars($boisson->getDescriptionBoisson()) ?></p>
               <p class="font-semibold text-lg"><?= htmlspecialchars($boisson->getPrixBoisson()) ?> €</p>
               
               <p>Stock : <?= htmlspecialchars($boisson->getStockBoisson()) ?></p>

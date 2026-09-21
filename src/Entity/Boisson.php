@@ -11,6 +11,8 @@ class Boisson extends Entity
   protected ?bool $alcool = null;
   protected ?int $stockBoisson = null;
   protected ?bool $boissonActif = null;
+  protected ?string $descriptionBoisson = null;
+
 
   /**
    * Get the value of boissonId
@@ -134,6 +136,24 @@ class Boisson extends Entity
   public function setBoissonActif(?bool $boissonActif): self
   {
     $this->boissonActif = $boissonActif;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of descriptionBoisson
+   */
+  public function getDescriptionBoisson(): ?string
+  {
+    return $this->descriptionBoisson;
+  }
+
+  /**
+   * Set the value of descriptionBoisson
+   */
+  public function setDescriptionBoisson(?string $descriptionBoisson): self
+  {
+    $this->descriptionBoisson = $descriptionBoisson;
 
     return $this;
   }

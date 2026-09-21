@@ -60,7 +60,7 @@
   <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
 <?php require_once(APP_ROOT.'/templates/layouts/liensCarte.php');?>
 
-  <div  class="w-full pb-10 mb-6">
+  <div class="w-full pb-10 mb-6">
     <?php if (isset($_SESSION['succes'])): ?>
       <p class="succes">
           <?= $_SESSION['succes'] ?>
@@ -76,7 +76,7 @@
 
   <div class="flex justify-between items-center">
     
-    <div class="">
+    <div>
       <button id="btnGererTypePlat" class="flex justify-center border border-primary/50 bg-primary/80 text-fond-carte rounded-2xl py-2 px-4 md:py-4 md:px-6 text-lg font-medium w-fit" type="button">Gerer type de plat</button>
     </div>
 
