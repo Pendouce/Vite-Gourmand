@@ -1,7 +1,4 @@
-console.log("Hello modif");
-
 const csrfToken = document.getElementById("csrfToken");
-//const input = document.createElement("input");
 
 if (document.getElementById("nbStock")) {
   const btnValideModifStock = document.getElementById("btnValideModifStock");
@@ -9,8 +6,6 @@ if (document.getElementById("nbStock")) {
   const divBtnValideAnnule = document.getElementById("divBtnValideAnnule");
   const btnModifStock = document.getElementById("btnModifStock");
   const nbStock = document.getElementById("nbStock");
-
-  //const csrfToken = document.getElementById("csrfToken");
 
   const input = document.createElement("input");
 
@@ -47,7 +42,6 @@ if (document.getElementById("nbStock")) {
     divBtnValideAnnule,
   });
 }
-/////////////////////////////////////////////////////////
 
 if (document.querySelector(".typeLibelle")) {
   const divTypeDePlat = document.querySelectorAll(".divTypeDePlat");
@@ -112,7 +106,6 @@ if (document.querySelector(".typeLibelle")) {
 
 function valideModif({ input, divBtnValideAnnule, btn, nomId, id, nomChamp, route, contenu, btnModif }) {
   btn.addEventListener("click", async () => {
-    //const id = btnValideModifStock.dataset.id;
     const csrf = csrfToken.value;
     const nouveauContenueInput = input.value;
     const divBlockRetourMessage = btn.closest(".contenue-page").querySelector(".blockRetour");

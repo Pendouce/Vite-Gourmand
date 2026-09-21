@@ -87,7 +87,11 @@
         <a class="btn-form" href="/modifierPlat?id=<?= $plat->getPlatId() ?>">Modifier</a>
       </div>
       <div>
-        <a class="btn-form bg-texte" href="/supprimerPlat?id=<?= $plat->getPlatId() ?>">Supprimer</a>
+        <form action="/supprimerPlat" method="post">
+          <input type="hidden" name="csrfToken" value="<?= $csrfToken ?>">
+          <input type="hidden" name="id" value="<?= $plat->getPlatId() ?>">
+          <button class="btn-form bg-texte" type="submit">Supprimer</button>
+        </form>
       </div>
     </div>
 </div>
