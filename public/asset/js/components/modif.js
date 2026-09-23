@@ -30,17 +30,31 @@ if (document.getElementById("nbStock")) {
     });
   });
 
-  valideModif({
-    btn: btnValideModifStock,
-    nomId: "id",
-    id: btnValideModifStock.dataset.id,
-    nomChamp: "stock_plat",
-    route: "/modifierStockPlat",
-    contenu: nbStock,
-    btnModif: btnModifStock,
-    input,
-    divBtnValideAnnule,
-  });
+  if (btnModifStock.closest(".conteneurDetailBoisson")) {
+    valideModif({
+      btn: btnValideModifStock,
+      nomId: "id",
+      id: btnValideModifStock.dataset.id,
+      nomChamp: "stock_boisson",
+      route: "/modifierStockBoisson",
+      contenu: nbStock,
+      btnModif: btnModifStock,
+      input,
+      divBtnValideAnnule,
+    });
+  } else {
+    valideModif({
+      btn: btnValideModifStock,
+      nomId: "id",
+      id: btnValideModifStock.dataset.id,
+      nomChamp: "stock_plat",
+      route: "/modifierStockPlat",
+      contenu: nbStock,
+      btnModif: btnModifStock,
+      input,
+      divBtnValideAnnule,
+    });
+  }
 }
 
 if (document.querySelector(".typeLibelle")) {

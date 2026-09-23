@@ -71,7 +71,7 @@ class BoissonController extends Controller
     $boissonId = (int) $_GET['id'];
     $boisson = $this->boissonService->afficherBoissonParId($boissonId);
 
-    $this->render('pages/employe/detailBoisson', ['boisson' => $boisson]);
+    $this->render('pages/employe/detailBoisson', ['boisson' => $boisson, 'titre' => 'detail boisson']);
   }
 
   public function modifierBoisson(): void
@@ -156,12 +156,9 @@ class BoissonController extends Controller
     try{
       $this->boissonService->modifierStockBoisson($boissonId, $stock, $role);
       $_SESSION['succes'] = 'Stock modifié';
-      header('location: /detailBoisson?id='.$boissonId);
-      exit;
+      echo json_encode(['succes' => true, 'message' => 'Stock modifié', 'stock' => $stock]);
     }catch(Exception $e){
-      $_SESSION['erreur'] = $e->getMessage();
-      header('location: /detailBoisson?id='.$boissonId);
-      exit;
+      echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
     }
   }
 
