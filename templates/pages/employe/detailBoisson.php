@@ -82,7 +82,7 @@
     <div class="flex p-4 gap-8 ">
 
       <div>
-        <a class="btn-form" href="/modifierboisson?id=<?= $boisson->getboissonId() ?>">Modifier</a>
+        <a class="btn-form" href="/modifierBoisson?id=<?= $boisson->getboissonId() ?>">Modifier</a>
       </div>
       <div>
         <form action="/supprimerBoisson" method="post">

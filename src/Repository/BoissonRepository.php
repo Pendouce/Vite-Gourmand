@@ -24,7 +24,7 @@ class BoissonRepository extends Repository
 
   //Read
 
-  public function trouverBoissonParNom(string$nomBoisson)
+  public function trouverBoissonParNom(string $nomBoisson)
   {
     $sql = 'SELECT * FROM boisson WHERE nom_boisson = :nom_boisson';
 
@@ -32,7 +32,13 @@ class BoissonRepository extends Repository
     $statement->bindValue(':nom_boisson', $nomBoisson, PDO::PARAM_STR);
     $statement->execute();
 
-    return $statement->fetch(PDO::FETCH_ASSOC);
+    $boisson = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if ($boisson === false) {
+      return false;
+    }
+
+    return Boisson::creerEtHydrate($boisson);
   }
 
   public function trouverBoisson()
@@ -77,7 +83,7 @@ class BoissonRepository extends Repository
     prix_boisson = :prix_boisson,
     alcool = :alcool,
     stock_boisson = :stock_boisson,
-    boisson_actif = :boisson_actif
+    boisson_actif = :boisson_actif,
     description_boisson = :description_boisson
     WHERE boisson_id = :boisson_id';
 

@@ -36,12 +36,12 @@ class BoissonService
     return $this->boissonRepository->trouverBoissonParId($id);
   }
 
-    public function modifierBoisson(int $id, array $data, int $role)
+  public function modifierBoisson(int $id, array $data, int $role)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
     if(!empty($data['nom_boisson'])){
-      $this->existeEnBase($data['nom_boisson']);
+      $this->existeEnBase($data['nom_boisson'], $id);
     }
 
     $boisson = $this->afficherBoissonParId($id);
@@ -117,9 +117,10 @@ class BoissonService
     $this->boissonRepository->modifierStockBoisson($boissonId, $nouveauStock);
   }
 
-  private function existeEnBase(string $nom)
+  private function existeEnBase(string $nom, ?int $id = null)
   {
-    if($this->boissonRepository->trouverBoissonParNom($nom)){
+    $boisson = $this->boissonRepository->trouverBoissonParNom($nom);
+    if($boisson && $boisson->getBoissonId() !== $id){
       throw new LibelleExistantException($nom);
     }
   }

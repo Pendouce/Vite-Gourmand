@@ -30,7 +30,7 @@ class BoissonController extends Controller
         'prix_boisson' => $_POST['prix_boisson'],
         'alcool' => $_POST['alcool'],
         'stock_boisson' => (int) $_POST['stock_boisson'],
-        'boisson_actif' => $_POST['boisson_actif'],
+        'boisson_actif' => isset($_POST['boisson_actif']) ? 1 : 0,
         'description_boisson' => $_POST['description_boisson'],
       ];
 
@@ -112,7 +112,9 @@ class BoissonController extends Controller
       }
 
     }else{
-      $this->render('pages/employe/modifierBoisson');
+      $boissonId = (int) $_GET['id'];
+      $boisson = $this->boissonService->afficherBoissonParId($boissonId);
+      $this->render('pages/employe/modifierBoisson', ['boisson' => $boisson, 'titre' => 'modifier boisson']);
     }
   }
 
