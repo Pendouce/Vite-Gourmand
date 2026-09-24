@@ -3,6 +3,7 @@
 <?php require_once(APP_ROOT.'/templates/layouts/pageBanner.php');?>
 
 <?php /** @var array $boissons */?>
+<?php /** @var object $role */?>
 <?php /** @var string $csrfToken */ ?>
 
 
@@ -23,13 +24,15 @@
       <p class="erreur"><?= $_SESSION['erreur'] ?></p>
       <?php unset($_SESSION['erreur']); ?>
     <?php endif; ?>
-    </div>
-
-  <div class="flex justify-end items-center">
-    <div class="flex justify-end border border-primary/50 bg-primary/80 text-fond-carte rounded-2xl py-2 px-4 md:py-4 md:px-6 text-lg font-medium  w-fit">
-      <a href="/creerBoisson">Nouvelle boisson</a>
-    </div>
   </div>
+
+  <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
+    <div class="flex justify-end items-center">
+      <div class="flex justify-end border border-primary/50 bg-primary/80 text-fond-carte rounded-2xl py-2 px-4 md:py-4 md:px-6 text-lg font-medium  w-fit">
+        <a href="/creerBoisson">Nouvelle boisson</a>
+      </div>
+    </div>
+  <?php endif; ?>
 
     <div class="md:grid md:grid-cols-2 lg:grid lg:grid-cols-3">
       <?php foreach ($boissons as $boisson): ?>
@@ -52,12 +55,14 @@
 
             <div class="flex justify-between items-center gap-8">
               <a class="btn-detail mt-4" href="/detailBoisson?id=<?= $boisson->getBoissonId() ?>">Details</a>
+              <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
               <label class="pl-6">Statut: </label>
                 <label>
                   <span class="toggleLabelText"><?= $boisson->isBoissonActif() == 1 ? 'Actif' : 'Inactif' ?></span>
                 <input class="peer appearance-none toggleBoissonInput" type="checkbox" name="boisson_actif" data-id="<?= $boisson->getBoissonId() ?>" <?= $boisson->isBoissonActif() == 1 ? 'checked' : '' ?>>
                 <span class="toggle"></span>
               </label>
+              <?php endif; ?>
             </div>
         </div>
       <?php endforeach; ?>
