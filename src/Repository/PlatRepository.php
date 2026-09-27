@@ -109,8 +109,9 @@ class PlatRepository extends Repository
    public function trouverPlatDuMenu(int $menuId)
   {
     //$sql = 'SELECT menu_plat.menu_id, menu_plat.plat_id FROM menu_plat 
-    $sql = 'SELECT plat.* FROM menu_plat 
+    $sql = 'SELECT plat.*, type_de_plat.libelle FROM menu_plat 
     INNER JOIN plat ON menu_plat.plat_id = plat.plat_id
+    INNER JOIN type_de_plat ON plat.type_id = type_de_plat.type_id
     WHERE menu_id = :menu_id';
 
     $statement = $this->pdo->prepare($sql);

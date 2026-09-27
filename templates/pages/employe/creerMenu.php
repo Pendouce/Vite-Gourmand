@@ -88,7 +88,7 @@
         <label>Evenements</label>
         <div class="flex flex-wrap gap-3 pt-4">
           <?php foreach($evenements as $evenement): ?>
-            <label class="cart-check has-checked:bg-primary/50" for="evenement-<?= $evenement->getEvenementId() ?>"><?= $evenement->getLibelle() ?>
+            <label class="cart-check has-checked:bg-primary/50" for="evenement-<?= $evenement->getEvenementId() ?>"><?= htmlspecialchars($evenement->getLibelle()) ?>
               <input class=" appearance-none" type="checkbox" name="evenement[]" id="evenement-<?= $evenement->getEvenementId() ?>" value="<?= $evenement->getEvenementId() ?>">
             </label>
           <?php endforeach; ?>

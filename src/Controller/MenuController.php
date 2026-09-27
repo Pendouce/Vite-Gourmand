@@ -94,7 +94,7 @@ class MenuController extends Controller
     $role = $_SESSION['role_id'] ?? null;
     $menu = $this->menuService->afficherMenuParId($menuId);
 
-    $this->render('pages/employe/detailMenu', ['menu' => $menu,'role' => $role,]);
+    $this->render('pages/employe/detailMenu', ['menu' => $menu,'role' => $role, 'titre' => 'detail menu']);
   }
 
   public function afficherMenuFiltre()
