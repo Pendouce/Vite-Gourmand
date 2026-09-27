@@ -1,6 +1,7 @@
 const csrfToken = document.getElementById("csrfToken");
 const toggleInputPlat = document.querySelectorAll(".togglePlatInput");
 const toggleInputBoisson = document.querySelectorAll(".toggleBoissonInput");
+const toggleInputMenu = document.querySelectorAll(".toggleMenuInput");
 
 function gererToggle(toggleInputNom, statutNom, route) {
   toggleInputNom.forEach((toggleInput) => {
@@ -8,7 +9,8 @@ function gererToggle(toggleInputNom, statutNom, route) {
       const id = toggleInput.dataset.id;
       const csrf = csrfToken.value;
       // Je recupere les enfants de carte plat ou contenue page (si pas carte plat) ayant pour classe blockRetour
-      const conteneur = toggleInput.closest(".cart-plat") ?? toggleInput.closest(".contenue-page");
+      const conteneur =
+        toggleInput.closest(".cart-plat") ?? toggleInput.closest(".cart-menu") ?? toggleInput.closest(".contenue-page");
       const divBlockRetourMessage = conteneur.querySelector(".blockRetour");
       //const divBlockRetourMessage = toggleInput.closest(".contenue-page").querySelector(".blockRetour");
       const labelText = toggleInput.closest("label").querySelector(".toggleLabelText");
@@ -55,6 +57,7 @@ function gererToggle(toggleInputNom, statutNom, route) {
 
 gererToggle(toggleInputPlat, "plat_actif", "/modifierStatusPlat");
 gererToggle(toggleInputBoisson, "boisson_actif", "/modifierStatusBoisson");
+gererToggle(toggleInputMenu, "menu_actif", "/modifierStatusMenu");
 
 /* toggleInputPlat.forEach((toggleInput) => {
   toggleInput.addEventListener("change", async () => {

@@ -28,7 +28,7 @@
 
   <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
     <div class="flex justify-end items-center">
-      <div class="flex justify-end border border-primary/50 bg-primary/80 text-fond-carte rounded-2xl py-2 px-4 md:py-4 md:px-6 text-lg font-medium  w-fit">
+      <div class="flex justify-end border border-primary/50 bg-primary/80 text-fond-carte rounded-2xl py-2 px-4 md:py-4 md:px-6 text-lg font-medium w-fit">
         <a href="/creerBoisson">Nouvelle boisson</a>
       </div>
     </div>

@@ -66,15 +66,19 @@ class MenuController extends Controller
 
   public function afficherMenus()
   {
+    $role = $_SESSION['role_id'] ?? null;
     $menus = $this->menuService->afficherMenus();
-    $this->render('pages/employe/menu', ['menus' => $menus, 'titre' => 'menus']);
+
+    $this->render('pages/employe/menu', ['menus' => $menus, 'role' => $role, 'titre' => 'menus']);
   }
 
   public function afficherDetailMenu()
   {
     $menuId = $_GET['id'];
+    $role = $_SESSION['role_id'] ?? null;
     $menu = $this->menuService->afficherMenuParId($menuId);
-    $this->render('pages/employe/detailMenu', ['menu' => $menu]);
+
+    $this->render('pages/employe/detailMenu', ['menu' => $menu,'role' => $role,]);
   }
 
   public function afficherMenuFiltre()
@@ -163,19 +167,15 @@ class MenuController extends Controller
     }
     $this->checkCsrfToken();
     
-    $status = (int) $_POST['menu_actif'];
+    $statut = (int) $_POST['menu_actif'];
     $menuId = (int) $_POST['id'];
     $role = $_SESSION['role_id'];
 
     try{
-      $this->menuService->modifierStatusMenu($menuId, $status, $role);
-      $_SESSION['succes'] = "Status modifié";
-      header('location: /detailMenu?id='.$menuId);
-      exit;
+      $this->menuService->modifierStatusMenu($menuId, $statut, $role);
+      echo json_encode(['succes' => true, 'message' => "Status modifié", 'statut' => $statut]);
     }catch(Exception $e){
-      $_SESSION['erreur'] = $e->getMessage();
-      header('location: /detailMenu?id='.$menuId);
-      exit;
+      echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
     }
   }
 
