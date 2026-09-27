@@ -10,7 +10,7 @@ use App\Repository\MenuRepository;
 use App\Repository\PlatRepository;
 use App\Repository\RegimeRepository;
 use App\Repository\ThemeRepository;
-
+use Exception;
 
 class MenuService
 {
@@ -33,10 +33,19 @@ class MenuService
     $this->calculStockService = $calculStockService;
   }
 
-  public function creerMenu(array $data, int $role)
+  public function creerMenu(array $data, int $role, array $platsDuMenu)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     $this->menuExistant($data['titre']);
+
+    if(empty($platsDuMenu)){
+      throw new Exception("Veuillez selectionner au moins un plat");
+    }
+
+    $plats = array_map(fn($id) => $this->platRepository->trouverPlatParId($id), $platsDuMenu);
+
+    $stock = array_map(fn($plat) => $plat->getStockPlat(), $plats);
+    $data['stock_dispo'] = min($stock);
 
     return $this->menuRepository->creerMenu($data);
   }
@@ -91,57 +100,27 @@ class MenuService
     return $menu;
   }
 
-/*   public function afficherMenuParEvenement(int $evenementId)
-  {
-    $menus = $this->menuRepository->trouverMenuParEvenement($evenementId);
-
-    $this->ajouterElementsMenu($menus);
-
-    return $menus;
-  }
-
-  public function afficherMenuParThemes(int $themeId)
-  {
-    $menus = $this->menuRepository->trouverMenuParTheme($themeId);
-
-    $this->ajouterElementsMenu($menus);
-
-    return $menus;
-  }
-
-  public function afficherMenuParRegime(int $regimeId)
-  {
-    $menus = $this->menuRepository->trouverMenuParRegime($regimeId);
-
-    $this->ajouterElementsMenu($menus);
-
-    return $menus;
-  }
-
-  public function afficherMenuParPrix(float $prixMax)
-  {
-    $menus = $this->menuRepository->trouverMenuParPrix($prixMax);
-
-    $this->ajouterElementsMenu($menus);
-
-    return $menus;
-  }
-
-  public function afficherMenuParNbPersonneMin(int $nbMin)
-  {
-    $menus = $this->menuRepository->trouverMenuParNbPersonneMin($nbMin);
-
-    $this->ajouterElementsMenu($menus);
-
-    return $menus;
-  } */
-
   public function afficherMenuFiltre(array $menuFiltre)
   {
     $menus = $this->menuRepository->trouverMenuFiltre($menuFiltre);
     $this->ajouterElementsMenu($menus);
 
     return $menus;
+  }
+
+  public function afficherEvenements()
+  {
+    return $this->evenementRepository->trouverEvenement();
+  }
+
+  public function afficherThemes()
+  {
+    return $this->themeRepository->trouverTheme();
+  }
+
+  public function afficherRegimes()
+  {
+    return $this->regimeRepository->trouverRegime();
   }
 
   public function modifierMenu(int $menuId, array $data, int $role)

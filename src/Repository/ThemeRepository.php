@@ -25,7 +25,7 @@ class ThemeRepository extends Repository
     $statement->execute();
 
     $data = $statement->fetchAll(PDO::FETCH_ASSOC);
-    $$tabThemes = [];
+    $tabThemes = [];
 
     foreach($data as $theme){
       $tabThemes[] = Theme::creerEtHydrate($theme);

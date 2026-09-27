@@ -4,14 +4,20 @@ namespace App\Controller;
 
 use App\Factory\ContainerId;
 use App\Service\MenuService;
+use App\Service\PlatService;
+use App\Service\TypeDePlatService;
 use Exception;
 class MenuController extends Controller
 {
   private MenuService $menuService;
+  private PlatService $platService;
+  private TypeDePlatService $typeDePlatService;
 
   public function __construct() {
     parent::__construct();
     $this->menuService = ContainerId::getMenuService();
+    $this->platService = ContainerId::getPlatService();
+    $this->typeDePlatService = ContainerId::getTypeDePlatService();
   }
 
   public function creerMenu()
@@ -27,21 +33,23 @@ class MenuController extends Controller
         'nombre_personne_min' => $_POST['nombre_personne_min'],
         'conditions' => $_POST['conditions'],
         // A gerer dans le service
-        //'stock_dispo' => $_GET['stock_dispo'],
-        //'menu_actif' => $_POST['menu_actif'],
+        'menu_actif' => isset($_POST['menu_actif']) ? 1 : 0,
       ];
       //$data['stock_dispo'] = $_GET['stock_dispo'];
       $data = $this->nettoyerDonnees($data);
 
+      /* var_dump($data);
+      echo "---------------";
+      var_dump($_POST['plat']); */
       $role = $_SESSION['role_id'];
 
       try{
-        $platId = $_POST['plat'];
+        $platId = array_filter($_POST['plat'], fn($id) => $id !== "");
         //$allergeneId = $_POST['allergene'];
         $evenementId = $_POST['evenement'];
         $themeId = $_POST['theme'];
         $regimeId = $_POST['regime'];
-        $menuCreer = $this->menuService->creerMenu($data, $role);
+        $menuCreer = $this->menuService->creerMenu($data, $role, $platId);
         $menuId = $menuCreer->getMenuId();
         //var_dump($menuId);
         $this->menuService->ajouterPlatAuMenu($menuId, $platId);
@@ -55,12 +63,20 @@ class MenuController extends Controller
         exit;
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
-        header('location: /menu');
+        header('location: /creerMenu');
         exit;
       }
 
     }else{
-      $this->render('pages/employe/creerMenu', ['titre' => 'creer un menu']);
+      $role = $_SESSION['role_id'];
+      $platsParType = $this->platService->afficherPlatsParType($role);
+      $typeDePlats = $this->typeDePlatService->afficheTypeDePlat();
+      $plats = $this->platService->afficherPlats($role);
+      $evenements = $this->menuService->afficherEvenements();
+      $themes = $this->menuService->afficherThemes();
+      $regimes = $this->menuService->afficherRegimes();
+
+      $this->render('pages/employe/creerMenu', ['plats' => $plats, 'platsParType' => $platsParType, 'typeDePlats' => $typeDePlats, 'evenements' => $evenements, 'themes' => $themes, 'regimes' => $regimes, 'titre' => 'creer un menu']);
     }
   }
 
