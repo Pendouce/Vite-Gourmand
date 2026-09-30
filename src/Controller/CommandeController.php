@@ -18,6 +18,10 @@ class CommandeController extends Controller
 
   public function creerCommande()
   {
+    if(!isset($_SESSION['role_id'])){
+      header('location: /connexion');
+      exit;
+    }
     $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR]);
 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){

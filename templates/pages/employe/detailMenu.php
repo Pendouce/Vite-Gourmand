@@ -46,11 +46,11 @@
 
   <div class="hidden lg:grid grid-rows-3 grid-cols-3 gap-6 pb-6">
       <!-- Img + infos -->
-      <div class="row-span-3 col-span-1 flex flex-col gap-2">
-        <div class="row-span-2">
-          <img class="object-cover" src="<?= htmlspecialchars($menu->getImageMenu()) ?>" alt="">
+      <div class="row-span-3 col-span-1 flex flex-col gap-4">
+        <div class="relative aspect-square">
+          <img id="imgPlat" class="absolute inset-0 w-full h-full object-cover" src="<?= htmlspecialchars($menu->getImageMenu()) ?>" alt="">
         </div>
-        <div class="row-span-1 border border-primary p-4 flex flex-col justify-center gap-2 rounded-md">
+        <div class="row-span-1 border border-primary p-4 flex flex-col justify-center items-center gap-2 rounded-md mt-auto">
           <div class="flex flex-wrap gap-2">
             <p>Evenements: </p>
             <?php foreach($menu->getEvenement() as $evenement): ?>
@@ -88,7 +88,7 @@
       <!-- Plat -->
      <div class="row-span-3 col-span-2 grid grid-rows-3 gap-6">
       <?php foreach($menu->getPlat() as $plat): ?>
-        <section class="row-span-1 flex flex-col border border-primary p-4 bg-fond-carte/50 gap-4">
+        <section class="divPlat row-span-1 flex flex-col border border-primary p-4 bg-fond-carte/50 gap-4" data-img="<?= htmlspecialchars($plat->getImagePlat()) ?>">
           <h3 class="text-xl text-primary md:text-2xl"><?= htmlspecialchars($plat->getLibelle()) ?></h3>
           <h4 class="text-md md:text-lg font-medium"><?= htmlspecialchars($plat->getTitre()) ?></h4>
           <p><?= htmlspecialchars($plat->getDescriptionPlat()) ?></p>
@@ -170,7 +170,7 @@
 
   <div class="flex justify-center items-center p-6">
     <div class="btn-form-dark">
-      <a href="/commande">Commander</a>
+      <a href="/commandeMenu">Commander</a>
     </div>
   </div>
 
@@ -187,7 +187,7 @@
 
   <div class="flex justify-center p-4 gap-8">
     <div>
-      <a class="btn-form" href="/modifierPlat?id=<?= $menu->getMenuId() ?>">Modifier</a>
+      <a class="btn-form" href="/modifierMenu?id=<?= $menu->getMenuId() ?>">Modifier</a>
     </div>
     <div>
       <form action="/supprimerMenu" method="post">
