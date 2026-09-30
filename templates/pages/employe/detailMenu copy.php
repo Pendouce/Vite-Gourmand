@@ -36,57 +36,57 @@
 
 
   <!-- Titre -->
-    <div class="flex justify-center items-center gap-2 font-font-h2 p-4 mb-8">
+    <div class="flex justify-center items-center font-font-h2 gap-2 p-6 m-6">
       <h2 class=" text-primary text-2xl font-medium md:text-4xl text-center"><?= htmlspecialchars($menu->getTitre()) ?></h2>
       <h2 class="font-medium text-2xl md:text-3xl"><?= htmlspecialchars($menu->getPrixPersonne()) ?>€</h2>
       <h2 class="self-center">/personne</h2>
     </div>
-
-    <!-- Desktop -->
-
-  <div class="hidden lg:grid grid-rows-3 grid-cols-3 gap-6 pb-6">
+  
+  <div class="grid grid-cols-4 grid-rows-3 lg:grid-cols-3 gap-6 pb-6">
+    
+    
       <!-- Img + infos -->
-      <div class="row-span-3 col-span-1 flex flex-col gap-2">
+      <div class="col-span-2 row-span-3 lg:col-span-1 flex flex-col gap-2">
         <div class="row-span-2">
-          <img class="object-cover" src="<?= htmlspecialchars($menu->getImageMenu()) ?>" alt="">
+          <img class="object-cover" src="<?= $menu->getImageMenu() ?>" alt="">
         </div>
         <div class="row-span-1 border border-primary p-4 flex flex-col justify-center gap-2 rounded-md">
           <div class="flex flex-wrap gap-2">
             <p>Evenements: </p>
             <?php foreach($menu->getEvenement() as $evenement): ?>
-              <p><?= htmlspecialchars($evenement->getLibelle()) ?></p>
+              <p><?= $evenement->getLibelle() ?></p>
             <?php endforeach; ?>
           </div>
           
           <div class="flex flex-wrap gap-2">
             <p>Theme: </p>
             <?php foreach($menu->getTheme() as $theme): ?>
-              <p><?= htmlspecialchars($theme->getLibelle()) ?></p>
+              <p><?= $theme->getLibelle() ?></p>
             <?php endforeach; ?>
           </div>
 
           <div class="flex flex-wrap gap-2">
             <p>Regime: </p>
             <?php foreach($menu->getRegime() as $regime): ?>
-              <p><?= htmlspecialchars($regime->getLibelle()) ?></p>
+              <p><?= $regime->getLibelle() ?></p>
             <?php endforeach; ?>
           </div>
           
           <div class="flex flex-wrap gap-2">
-              <p>📆 <?= htmlspecialchars($menu->getConditions()) ?></p>
+              <p>📆 <?= $menu->getConditions() ?></p>
           </div>
 
           <div class="flex flex-wrap">
-              <p>👥 Minimum <?= htmlspecialchars($menu->getNombrePersonneMin()) ?> personnes</p>
+              <p>👥 Minimum <?= $menu->getNombrePersonneMin() ?> personnes</p>
           </div>
 
           <div class="flex flex-wrap">
-              <p><?= htmlspecialchars($menu->getStockDispo()) ?> commandes restantes</p>
+              <p><?= $menu->getStockDispo() ?> commandes restantes</p>
           </div>
         </div>
       </div>
       <!-- Plat -->
-     <div class="row-span-3 col-span-2 grid grid-rows-3 gap-6">
+     <div class="row-span-3 col-span-2 lg:col-span-2 grid grid-rows-3 gap-6">
       <?php foreach($menu->getPlat() as $plat): ?>
         <section class="row-span-1 flex flex-col border border-primary p-4 bg-fond-carte/50 gap-4">
           <h3 class="text-xl text-primary md:text-2xl"><?= htmlspecialchars($plat->getLibelle()) ?></h3>
@@ -97,75 +97,13 @@
      </div>
 
      <!-- Allergene -->
-      <div class="col-span-3 col-start-2 flex flex-wrap gap-2">
+      <div class="col-span-3 col-start-2 lg:col-span-2 lg:col-start-2 flex flex-wrap gap-2">
         <p>⚠️ Allergenes : </p>
         <?php foreach($menu->getAllergene() as $allergene): ?>
-          <p class="border border-primary rounded-sm bg-primary/30 px-2"><?= htmlspecialchars($allergene->getLibelle()) ?></p>
+          <p class="border border-primary rounded-sm bg-primary/30 px-2"><?= $allergene->getLibelle() ?></p>
           <?php endforeach; ?>
       </div>
 
-  </div>
-
-  <!-- Mobile -->
-
-  <div class="lg:hidden grid grid-cols-3 gap-6 pb-6">
-    <!-- Plat / Images -->
-     <div class="col-span-3 grid grid-cols-3 auto-rows-fr  gap-4">
-      <?php foreach($menu->getPlat() as $plat): ?>
-        <div class="col-span-1 row-span-1 relative">
-          <img class="absolute inset-0 w-full h-full object-cover" src="<?= htmlspecialchars($plat->getImagePlat()) ?>" alt="">
-        </div>
-        <section class="col-span-2 flex flex-col border border-primary p-4 bg-fond-carte/50 gap-2">
-          <h3 class="text-xl text-primary"><?= htmlspecialchars($plat->getLibelle()) ?></h3>
-          <h4 class="font-medium"><?= htmlspecialchars($plat->getTitre()) ?></h4>
-          <p><?= htmlspecialchars($plat->getDescriptionPlat()) ?></p>
-        </section>
-      <?php endforeach; ?>
-    </div>
-
-     <!-- Infos -->
-        <div class=" col-span-3 border border-primary p-4 flex flex-col justify-center items-center gap-2 rounded-md">
-            <div class="flex flex-wrap gap-2">
-              <p>Evenements: </p>
-              <?php foreach($menu->getEvenement() as $evenement): ?>
-                <p><?= htmlspecialchars($evenement->getLibelle()) ?></p>
-              <?php endforeach; ?>
-            </div>
-            
-            <div class="flex flex-wrap gap-2">
-              <p>Theme: </p>
-              <?php foreach($menu->getTheme() as $theme): ?>
-                <p><?= htmlspecialchars($theme->getLibelle()) ?></p>
-              <?php endforeach; ?>
-            </div>
-
-            <div class="flex flex-wrap gap-2">
-              <p>Regime: </p>
-              <?php foreach($menu->getRegime() as $regime): ?>
-                <p><?= htmlspecialchars($regime->getLibelle()) ?></p>
-              <?php endforeach; ?>
-            </div>
-            
-            <div class="flex flex-wrap gap-2">
-                <p>📆 <?= htmlspecialchars($menu->getConditions()) ?></p>
-            </div>
-
-            <div class="flex flex-wrap">
-                <p>👥 Minimum <?= htmlspecialchars($menu->getNombrePersonneMin()) ?> personnes</p>
-            </div>
-
-            <div class="flex flex-wrap">
-                <p><?= htmlspecialchars($menu->getStockDispo()) ?> commandes restantes</p>
-            </div>
-          </div>
-
-      <!-- Allergene -->
-        <div class="col-span-3 flex flex-wrap gap-2">
-          <p>⚠️ Allergenes : </p>
-          <?php foreach($menu->getAllergene() as $allergene): ?>
-            <p class="border border-primary rounded-sm bg-primary/30 px-2"><?= htmlspecialchars($allergene->getLibelle()) ?></p>
-            <?php endforeach; ?>
-        </div>
   </div>
 
   <div class="flex justify-center items-center p-6">
