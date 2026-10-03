@@ -67,21 +67,31 @@
         <label for="nombre_personne_min">Minimum de personne</label>
         <input class="grand-input" type="number" name="nombre_personne_min">
       </div>
-      <div class="col-span-1 flex flex-col">
-        <label for="theme[]">Theme</label>
-        <select class="grand-input py-2" name="theme[]">
-          <?php foreach($themes as $type): ?>
-            <option value="<?= $type->getThemeId() ?>"><?= $type->getLibelle() ?></option>
-          <?php endforeach; ?>
-        </select>
-      </div>
-      <div class="col-span-1 flex flex-col">
-        <label for="regime[]">Regime</label>
-        <select class="grand-input py-2" name="regime[]">
-          <?php foreach($regimes as $regime): ?>
-            <option value="<?= $regime->getRegimeId() ?>"><?= $regime->getLibelle() ?></option>
-          <?php endforeach; ?>
-        </select>
+
+      <div class="col-span-2 flex justify-between gap-4 p-4">
+        <fieldset class="p-2">
+          <legend class="pb-5">Thèmes</legend>
+          <div class="flex flex-wrap gap-4">
+            <?php foreach($themes as $theme): ?>
+              <label class="flex items-center gap-2">
+                <input class="size-5 accent-primary" type="checkbox" name="theme[]" value="<?= $theme->getThemeId() ?>">
+                <?= $theme->getLibelle() ?>
+              </label>
+            <?php endforeach; ?>
+          </div>
+        </fieldset>
+
+        <fieldset class="p-2">
+          <legend class="pb-5">Regimes</legend>
+          <div class="flex flex-wrap gap-4">
+            <?php foreach($regimes as $regime): ?>
+              <label class="flex items-center gap-2">
+                <input class="size-5 accent-primary" type="checkbox" name="regime[]" value="<?= $regime->getRegimeId() ?>">
+                <?= $regime->getLibelle() ?>
+              </label>
+            <?php endforeach; ?>
+          </div>
+        </fieldset>
       </div>
 
       <div class="col-span-2 flex flex-col">

@@ -128,7 +128,7 @@ class MenuService
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
     if(!empty($data['titre'])){
-      $this->menuExistant($data['titre']);
+      $this->menuExistant($data['titre'], $menuId);
     }
 
     $ancienMenu = $this->afficherMenuParId($menuId);
@@ -153,9 +153,13 @@ class MenuService
   public function modifierPlatsDuMenu(int $menuId, array $platIds)
   {
     $repo = $this->platRepository;
-    $this->ModifierElementDuMenu(
+
+    $nouveauxPlatIds = array_filter($platIds);
+
+    $this->modifierElementDuMenu(
       $menuId, 
-      $platIds, 
+      $nouveauxPlatIds, 
+      /* $platIds,*/
       $repo, 
       'trouverPlatDuMenu',
       'getPlatId',
@@ -167,7 +171,7 @@ class MenuService
   public function modifierEvenementsDuMenu(int $menuId, array $evenementIds)
   {
     $repo = $this->evenementRepository;
-    $this->ModifierElementDuMenu(
+    $this->modifierElementDuMenu(
       $menuId, 
       $evenementIds, 
       $repo, 
@@ -354,14 +358,16 @@ class MenuService
     return $menus;
   }
 
-  private function menuExistant(string $menu)
+  private function menuExistant(string $nomMenu, ?int $id = null)
   {
-    if($this->menuRepository->trouverMenuParNom($menu)){
-      throw new LibelleExistantException($menu);
+    $menu = $this->menuRepository->trouverMenuParNom($nomMenu);
+
+    if($menu && $menu->getMenuId() !== $id){
+      throw new LibelleExistantException($nomMenu);
     }
   }
 
-  private function ModifierElementDuMenu(int $menuId, array $nouveauxId, object $repo, string $mehodeTrouver, string $getId, callable $ajouter, callable $supprimer)
+  private function modifierElementDuMenu(int $menuId, array $nouveauxId, object $repo, string $mehodeTrouver, string $getId, callable $ajouter, callable $supprimer)
   {
     $nvxElements = $nouveauxId;
     $anciensElement = $repo->$mehodeTrouver($menuId);

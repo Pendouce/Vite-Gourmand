@@ -137,7 +137,7 @@ class MenuController extends Controller
         'prix_personne' => $_POST['prix_personne'] ?? null,
         'nombre_personne_min' => $_POST['nombre_personne_min'] ?? null,
         'conditions' => $_POST['conditions'] ?? null,
-        'menu_actif' => $_POST['menu_actif'] ?? null,
+        'menu_actif' => isset($_POST['menu_actif']) ? 1 : 0,
       ];
 
       $data = $this->nettoyerDonnees($data);
@@ -164,12 +164,29 @@ class MenuController extends Controller
         exit;
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
-        header('location: /modifierMenu');
+        header('location: /modifierMenu?id='.$_GET['id']);
         exit;
       }
 
     }else{
-      $this->render('pages/employe/modifierMenu');
+      $role = $_SESSION['role_id'];
+      $platsParType = $this->platService->afficherPlatsParType($role);
+      $typeDePlats = $this->typeDePlatService->afficheTypeDePlat();
+      $plats = $this->platService->afficherPlats($role);
+      $evenements = $this->menuService->afficherEvenements();
+      $themes = $this->menuService->afficherThemes();
+      $regimes = $this->menuService->afficherRegimes();
+
+      $menu = $this->menuService->afficherMenuParId($_GET['id']);
+      $platsDuMenu = array_map(fn($p)=> $p->getPlatId(), $menu->getPlat());
+      $evenementsDuMenu = array_map(fn($e)=> $e->getEvenementId(), $menu->getEvenement());
+      $regimesDuMenu = array_map(fn($e)=> $e->getRegimeId(), $menu->getRegime());
+      $themesDuMenu = array_map(fn($e)=> $e->getThemeId(), $menu->getTheme());
+
+      $this->render('pages/employe/modifierMenu', ['menu' => $menu, 'plats' => $plats, 'platsDuMenu' => $platsDuMenu, 
+      'regimesDuMenu' => $regimesDuMenu, 'themesDuMenu' => $themesDuMenu, 'platsParType' => $platsParType, 
+      'typeDePlats' => $typeDePlats, 'evenements' => $evenements, 'themes' => $themes, 'regimes' => $regimes, 
+      'evenementsDuMenu' => $evenementsDuMenu, 'titre' => 'Modification du menu']);
     }
   }
 
