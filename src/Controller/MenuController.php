@@ -38,25 +38,28 @@ class MenuController extends Controller
       //$data['stock_dispo'] = $_GET['stock_dispo'];
       $data = $this->nettoyerDonnees($data);
 
-      /* var_dump($data);
-      echo "---------------";
-      var_dump($_POST['plat']); */
       $role = $_SESSION['role_id'];
 
       try{
         $platId = array_filter($_POST['plat'], fn($id) => $id !== "");
         //$allergeneId = $_POST['allergene'];
-        $evenementId = $_POST['evenement'];
-        $themeId = $_POST['theme'];
-        $regimeId = $_POST['regime'];
+        $evenementId = $_POST['evenement'] ?? [];
+        $themeId = $_POST['theme'] ?? [];
+        $regimeId = $_POST['regime'] ?? [];
         $menuCreer = $this->menuService->creerMenu($data, $role, $platId);
         $menuId = $menuCreer->getMenuId();
         //var_dump($menuId);
         $this->menuService->ajouterPlatAuMenu($menuId, $platId);
         //$this->menuService->ajouterAllergeneAuplat($platId, $allergeneId);
-        $this->menuService->ajouterEvenementAuMenu($menuId, $evenementId);
-        $this->menuService->ajouterThemeAuMenu($menuId, $themeId);
-        $this->menuService->ajouterRegimeAuMenu($menuId, $regimeId);
+        if(!empty($evenementId)){
+          $this->menuService->ajouterEvenementAuMenu($menuId, $evenementId);
+        }
+        if(!empty($themeId)){
+          $this->menuService->ajouterThemeAuMenu($menuId, $themeId);
+        }
+        if(!empty($regimeId)){
+          $this->menuService->ajouterRegimeAuMenu($menuId, $regimeId);
+        }
 
         $_SESSION['succes'] = "Menu ajouté";
         header('location: /menu');
@@ -146,18 +149,18 @@ class MenuController extends Controller
 
       try{
         $menuId = (int) $_POST['id'];
-        $platId = $_POST['plat'] ?? [];
+        $platIds = $_POST['plat'] ?? [];
         //$allergeneId = $_POST['allergene'];
-        $evenementId = $_POST['evenement'] ?? [];
-        $themeId = $_POST['theme'] ?? [];
-        $regimeId = $_POST['regime'] ?? [];
+        $evenementIds = $_POST['evenement'] ?? [];
+        $themeIds = $_POST['theme'] ?? [];
+        $regimeIds = $_POST['regime'] ?? [];
         
-        $this->menuService->modifierMenu($menuId, $data, $role);
-        $this->menuService->modifierPlatsDuMenu($menuId, $platId);
+        $this->menuService->modifierMenu($menuId, $data, $platIds, $evenementIds, $themeIds, $regimeIds, $role);
+        /* $this->menuService->modifierPlatsDuMenu($menuId, $platId);
         //$this->menuService->ajouterAllergeneAuplat($platId, $allergeneId);
         $this->menuService->modifierEvenementsDuMenu($menuId, $evenementId);
         $this->menuService->modifierThemesDuMenu($menuId, $themeId);
-        $this->menuService->modifierRegimesDuMenu($menuId, $regimeId);
+        $this->menuService->modifierRegimesDuMenu($menuId, $regimeId); */
 
         $_SESSION['succes'] = "Menu modifié";
         header('location: /detailMenu?id='.$menuId);

@@ -114,9 +114,16 @@
       </div>
       <!-- Images -->
         <div class="grid col-span-1 rounded-r-3xl overflow-hidden">
-          <?php foreach($menu->getPlat() as $plat): ?>
-            <img class="w-full h-64 shrink-0 object-cover" src="<?= $plat->getImagePlat() ?>" alt="">
-          <?php endforeach; ?>
+          <?php if (count($menu->getPlat()) < 3): ?>
+            <?php for($i = 0; $i < 3; $i++): ?>
+              <img class="w-full h-64 shrink-0 object-cover" src="<?= $menu->getImageMenu() ?>" alt="">
+            <?php endfor; ?>
+          <?php else: ?>
+          
+            <?php foreach($menu->getPlat() as $plat): ?>
+              <img class="w-full h-64 shrink-0 object-cover" src="<?= $plat->getImagePlat() ?>" alt="">
+            <?php endforeach; ?>
+          <?php endif; ?>
         </div>
     </div>
   </div>

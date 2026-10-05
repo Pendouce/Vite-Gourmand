@@ -51,26 +51,32 @@
           <img id="imgPlat" class="absolute inset-0 w-full h-full object-cover" src="<?= htmlspecialchars($menu->getImageMenu()) ?>" alt="">
         </div>
         <div class="row-span-1 border border-primary p-4 flex flex-col justify-center items-center gap-2 rounded-md mt-auto">
+          <?php if(!empty($menu->getEvenement())): ?>
           <div class="flex flex-wrap gap-2">
-            <p>Evenements: </p>
-            <?php foreach($menu->getEvenement() as $evenement): ?>
-              <p><?= htmlspecialchars($evenement->getLibelle()) ?></p>
-            <?php endforeach; ?>
-          </div>
+              <p>Evenements: </p>
+              <?php foreach($menu->getEvenement() as $evenement): ?>
+                <p><?= $evenement->getLibelle() ?></p>
+              <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
           
-          <div class="flex flex-wrap gap-2">
-            <p>Theme: </p>
-            <?php foreach($menu->getTheme() as $theme): ?>
-              <p><?= htmlspecialchars($theme->getLibelle()) ?></p>
-            <?php endforeach; ?>
-          </div>
+          <?php if(!empty($menu->getTheme()) && $menu->getTheme() === ""): ?>
+            <div class="flex flex-wrap gap-2">
+              <p>Theme: </p>
+              <?php foreach($menu->getTheme() as $theme): ?>
+                <p><?= $theme->getLibelle() ?></p>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
 
-          <div class="flex flex-wrap gap-2">
-            <p>Regime: </p>
-            <?php foreach($menu->getRegime() as $regime): ?>
-              <p><?= htmlspecialchars($regime->getLibelle()) ?></p>
-            <?php endforeach; ?>
-          </div>
+          <?php if(!empty($menu->getRegime())): ?>
+            <div class="flex flex-wrap gap-2">
+              <p>Regime: </p>
+              <?php foreach($menu->getRegime() as $regime): ?>
+                <p><?= $regime->getLibelle() ?></p>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
           
           <div class="flex flex-wrap gap-2">
               <p>📆 <?= htmlspecialchars($menu->getConditions()) ?></p>
@@ -125,26 +131,32 @@
 
      <!-- Infos -->
         <div class=" col-span-3 border border-primary p-4 flex flex-col justify-center items-center gap-2 rounded-md">
-            <div class="flex flex-wrap gap-2">
+            <?php if(!empty($menu->getEvenement())): ?>
+          <div class="flex flex-wrap gap-2">
               <p>Evenements: </p>
               <?php foreach($menu->getEvenement() as $evenement): ?>
-                <p><?= htmlspecialchars($evenement->getLibelle()) ?></p>
+                <p><?= $evenement->getLibelle() ?></p>
               <?php endforeach; ?>
             </div>
-            
+        <?php endif; ?>
+          
+          <?php if(!empty($menu->getTheme()) && $menu->getTheme() === ""): ?>
             <div class="flex flex-wrap gap-2">
               <p>Theme: </p>
               <?php foreach($menu->getTheme() as $theme): ?>
-                <p><?= htmlspecialchars($theme->getLibelle()) ?></p>
+                <p><?= $theme->getLibelle() ?></p>
               <?php endforeach; ?>
             </div>
+          <?php endif; ?>
 
+          <?php if(!empty($menu->getRegime())): ?>
             <div class="flex flex-wrap gap-2">
               <p>Regime: </p>
               <?php foreach($menu->getRegime() as $regime): ?>
-                <p><?= htmlspecialchars($regime->getLibelle()) ?></p>
+                <p><?= $regime->getLibelle() ?></p>
               <?php endforeach; ?>
             </div>
+          <?php endif; ?>
             
             <div class="flex flex-wrap gap-2">
                 <p>📆 <?= htmlspecialchars($menu->getConditions()) ?></p>

@@ -38,7 +38,7 @@
       <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
       <div class="col-span-2 flex flex-col">
         <label for="titre">Titre</label>
-        <input class="grand-input w-2/3" type="text" name="titre">
+        <input class="grand-input w-2/3" type="text" name="titre" required>
       </div>
       
       <div class="grid grid-cols-2 md:grid-cols-3 col-span-2">
@@ -61,11 +61,11 @@
       </div>
       <div class="flex flex-col">
         <label for="prix_personne">Prix</label>
-        <input class="grand-input" type="text" name="prix_personne">
+        <input class="grand-input" type="number" min="1" step="any" name="prix_personne" required>
       </div>
       <div class="flex flex-col">
         <label for="nombre_personne_min">Minimum de personne</label>
-        <input class="grand-input" type="number" name="nombre_personne_min">
+        <input class="grand-input" type="number" min="1" name="nombre_personne_min" required>
       </div>
 
       <div class="col-span-2 flex justify-between gap-4 p-4">

@@ -88,7 +88,7 @@ class BoissonController extends Controller
         'prix_boisson' => $_POST['prix_boisson'] ?? null,
         'alcool' => $_POST['alcool'] ?? null,
         'stock_boisson' => $_POST['stock_boisson'] ?? null,
-        'boisson_actif' => $_POST['boisson_actif'] ?? null,
+        'boisson_actif' => isset($_POST['boisson_actif']) ? 1 : 0,
         'description_boisson' => $_POST['description_boisson'] ?? null,
       ];
 

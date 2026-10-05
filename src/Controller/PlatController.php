@@ -118,7 +118,7 @@ class PlatController extends Controller
         'prix_personne' => $_POST['prix_personne'] ?? null,
         'stock_plat' => $_POST['stock_plat'] ?? null,
         'type_id' => $_POST['type_id'] ?? null,
-        'plat_actif' => $_POST['plat_actif'] ?? null,
+        'plat_actif' => isset($_POST['plat_actif']) ? 1 : 0,
         //'libelle' => $_POST['libelle'] ?? null,
       ];
       if (key_exists('image_plat', $_FILES) && $_FILES['image_plat']['error'] === UPLOAD_ERR_OK) {

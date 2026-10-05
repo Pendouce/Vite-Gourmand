@@ -69,11 +69,11 @@
       </div>
       <div class="flex flex-col">
         <label for="prix_personne">Prix</label>
-        <input class="grand-input" type="text" name="prix_personne" value="<?= htmlspecialchars($menu->getPrixPersonne()) ?>">
+        <input class="grand-input" type="number" min="1" step="any" name="prix_personne" value="<?= htmlspecialchars($menu->getPrixPersonne()) ?>">
       </div>
       <div class="flex flex-col">
         <label for="nombre_personne_min">Minimum de personne</label>
-        <input class="grand-input" type="number" name="nombre_personne_min" value="<?= htmlspecialchars($menu->getNombrePersonneMin()) ?>">
+        <input class="grand-input" type="number" min="1" name="nombre_personne_min" value="<?= htmlspecialchars($menu->getNombrePersonneMin()) ?>">
       </div>
 
       <div class="col-span-2 flex justify-between gap-4 p-4">

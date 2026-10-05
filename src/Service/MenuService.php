@@ -10,6 +10,7 @@ use App\Repository\MenuRepository;
 use App\Repository\PlatRepository;
 use App\Repository\RegimeRepository;
 use App\Repository\ThemeRepository;
+use App\Service\VerifService;
 use Exception;
 
 class MenuService
@@ -42,10 +43,22 @@ class MenuService
       throw new Exception("Veuillez selectionner au moins un plat");
     }
 
+    if(empty($data['prix_personne'])){
+      throw new Exception("Veuillez fixer un prix");
+    }
+    VerifService::verifNbPositif($data['prix_personne']);
+    
+    if(empty($data['nombre_personne_min'])){
+      throw new Exception("Veuillez fixer un nombre de personne minimum pour la commande");
+    }
+    VerifService::verifNbPositif($data['nombre_personne_min']);
+
     $plats = array_map(fn($id) => $this->platRepository->trouverPlatParId($id), $platsDuMenu);
 
     $stock = array_map(fn($plat) => $plat->getStockPlat(), $plats);
     $data['stock_dispo'] = min($stock);
+
+    $data['titre'] = ucfirst($data['titre']);
 
     return $this->menuRepository->creerMenu($data);
   }
@@ -123,12 +136,22 @@ class MenuService
     return $this->regimeRepository->trouverRegime();
   }
 
-  public function modifierMenu(int $menuId, array $data, int $role)
+  public function modifierMenu(int $menuId, array $data, array $platIds,
+   array $evenementIds, array $themeIds, array $regimeIds, int $role)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
     if(!empty($data['titre'])){
       $this->menuExistant($data['titre'], $menuId);
+      $data['titre'] = ucfirst($data['titre']);
+    }
+
+    if(isset($data['prix_personne'])){
+      VerifService::verifNbPositif($data['prix_personne']);
+    }
+      
+    if(isset($data['nombre_personne_min'])){
+      VerifService::verifNbPositif($data['nombre_personne_min']);
     }
 
     $ancienMenu = $this->afficherMenuParId($menuId);
@@ -147,14 +170,33 @@ class MenuService
     unset($nouvellesDonnees['regime']);
     unset($nouvellesDonnees['theme']);
 
-    $this->menuRepository->modifierMenu($nouvellesDonnees);
+
+    try{
+      $this->menuRepository->beginTransaction();
+
+      $this->modifierPlatsDuMenu($menuId, $platIds);
+      $this->modifierEvenementsDuMenu($menuId, $evenementIds);
+      $this->modifierThemesDuMenu($menuId, $themeIds);
+      $this->modifierRegimesDuMenu($menuId, $regimeIds);
+      $this->menuRepository->modifierMenu($nouvellesDonnees);
+
+      $this->menuRepository->commit();
+    }catch(Exception $e){
+      $this->menuRepository->rollBack();
+      throw new Exception('Erreur lors de la modification du menu : '. $e->getMessage());
+    }
   }
 
   public function modifierPlatsDuMenu(int $menuId, array $platIds)
   {
     $repo = $this->platRepository;
 
+    
     $nouveauxPlatIds = array_filter($platIds);
+    
+    if(empty($nouveauxPlatIds)){
+      throw new Exception("Veuillez selectionner au moins un plat");
+    }
 
     $this->modifierElementDuMenu(
       $menuId, 
@@ -304,6 +346,10 @@ class MenuService
   {
     $plats = $menu->getPlat();
 
+    // Premiere image par defaut
+    $menu->setImageMenu($plats[0]->getImagePlat());
+
+    // Image du plat si plat
     foreach($plats as $plat){
         if($plat->getTypeId() === 2){
           $menu->setImageMenu($plat->getImagePlat());
