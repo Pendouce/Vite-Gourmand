@@ -53,11 +53,11 @@
       </div>
       <div class="flex flex-col">
         <label for="prix_personne">Prix</label>
-        <input class="grand-input" type="text" name="prix_personne" value="<?= htmlspecialchars($boisson->getPrixBoisson()) ?>">
+        <input class="grand-input" type="number" min="1" step="any"  name="prix_personne" value="<?= htmlspecialchars($boisson->getPrixBoisson()) ?>">
       </div>
       <div class="flex flex-col">
         <label for="stock_boisson">Stock</label>
-        <input class="grand-input" type="number" name="stock_boisson" value="<?= htmlspecialchars($boisson->getStockBoisson()) ?>">
+        <input class="grand-input" type="number" min="1" name="stock_boisson" value="<?= htmlspecialchars($boisson->getStockBoisson()) ?>">
       </div>
       <div class="col-span-1 flex flex-col">
 

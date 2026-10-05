@@ -43,9 +43,11 @@ class PlatController extends Controller
         $extension = $this->uploadService->validerImage($_FILES['image_plat']);
         $data['image_plat'] = $this->uploadImage($_FILES['image_plat'], "plat", $extension);
       }
-      $allergeneId = $_POST['allergene'];
+      $allergeneId = $_POST['allergene'] ?? [];
       $data = $this->nettoyerDonnees($data);
-      $allergeneId = $this->nettoyerDonnees($allergeneId);
+      if(isset($allergeneId)){
+        $allergeneId = $this->nettoyerDonnees($allergeneId);
+      }
       
       $this->nettoyerDonnees($data);
       $role = $_SESSION['role_id'];
@@ -59,7 +61,7 @@ class PlatController extends Controller
 
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
-        header('location: /plats');
+        header('location: /creerPlat');
         exit;
       }
 

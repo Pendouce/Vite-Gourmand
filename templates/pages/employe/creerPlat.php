@@ -35,14 +35,14 @@
       <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
       <div class="col-span-2 flex flex-col">
         <label for="titre">Titre</label>
-        <input class="grand-input w-2/3" type="text" name="titre">
+        <input class="grand-input w-2/3" type="text" name="titre" required>
       </div>
 
       <div class="col-span-2">
         <label id="imgPlat" for="image_plat">Image du plat</label>
   
         <label class="grand-input w-2/3 h-60 text-texte/50 flex flex-col items-center justify-center relative" for="image_plat" id="igmLabel">
-          <input class="sr-only lg:not-sr-only" type="file" name="image_plat" id="image_plat">
+          <input class="sr-only lg:not-sr-only" type="file" name="image_plat" id="image_plat" required>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-13">
             <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
           </svg>
@@ -55,17 +55,17 @@
       </div>
       <div class="flex flex-col">
         <label for="prix_personne">Prix</label>
-        <input class="grand-input" type="text" name="prix_personne">
+        <input class="grand-input" type="number" min="1" step="any" name="prix_personne" required>
       </div>
       <div class="flex flex-col">
         <label for="stock_plat">Stock</label>
-        <input class="grand-input" type="number" name="stock_plat">
+        <input class="grand-input" type="number" name="stock_plat" min="1" required>
       </div>
       <div class="col-span-1 flex flex-col">
         <label for="type_id">Type de plat</label>
         <select class="grand-input py-2" name="type_id">
           <?php foreach($typeDePlat as $type): ?>
-            <option value="<?= $type->getTypeId() ?>"><?= $type->getLibelle() ?></option>
+            <option value="<?= $type->getTypeId() ?>"><?= htmlspecialchars($type->getLibelle()) ?></option>
           <?php endforeach; ?>
         </select>
       </div>
@@ -83,7 +83,7 @@
         <label>Allergenes</label>
         <div class="flex flex-wrap gap-3 pt-4">
           <?php foreach($allergenes as $allergene): ?>
-            <label class="cart-check has-checked:bg-primary/50" for="allergene-<?= $allergene->getAllergeneId() ?>"><?= $allergene->getLibelle() ?>
+            <label class="cart-check has-checked:bg-primary/50" for="allergene-<?= $allergene->getAllergeneId() ?>"><?= htmlspecialchars($allergene->getLibelle()) ?>
               <input class=" appearance-none" type="checkbox" name="allergene[]" id="allergene-<?= $allergene->getAllergeneId() ?>" value="<?= $allergene->getAllergeneId() ?>">
             </label>
           <?php endforeach; ?>

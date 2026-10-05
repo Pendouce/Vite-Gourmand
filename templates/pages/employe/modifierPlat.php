@@ -57,11 +57,11 @@
       </div>
       <div class="flex flex-col">
         <label for="prix_personne">Prix</label>
-        <input class="grand-input" type="text" name="prix_personne" value="<?= htmlspecialchars($plat->getPrixPersonne()) ?>">
+        <input class="grand-input" type="number" min="1" step="any"  name="prix_personne" value="<?= htmlspecialchars($plat->getPrixPersonne()) ?>">
       </div>
       <div class="flex flex-col">
         <label for="stock_plat">Stock</label>
-        <input class="grand-input" type="number" name="stock_plat" value="<?= htmlspecialchars($plat->getStockPlat()) ?>">
+        <input class="grand-input" type="number" min="1" name="stock_plat" value="<?= htmlspecialchars($plat->getStockPlat()) ?>">
       </div>
       <div class="col-span-1 flex flex-col">
         <label for="type_id">Type de plat</label>

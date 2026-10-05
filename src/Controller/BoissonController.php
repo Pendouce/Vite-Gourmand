@@ -49,7 +49,7 @@ class BoissonController extends Controller
         exit;
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
-        header('location: /boisson');
+        header('location: /creerBoisson');
         exit;
       }
 

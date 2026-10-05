@@ -6,6 +6,7 @@ use App\Exceptions\AccesRefuseException;
 use App\Exceptions\IdInnexistantException;
 use App\Exceptions\LibelleExistantException;
 use App\Repository\BoissonRepository;
+use Exception;
 
 class BoissonService
 {
@@ -21,7 +22,29 @@ class BoissonService
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     
+    if(empty($data['nom_boisson'])){
+      throw new Exception("Veuillez entrer un titre");
+    }
+    
     $this->existeEnBase($data['nom_boisson']);
+
+
+    if(empty($data['photo_boisson'])){
+      throw new Exception("Veuillez selectioner une image");
+    }
+
+    if(empty($data['prix_boisson'])){
+      throw new Exception("Veuillez fixer un prix");
+    }
+    VerifService::verifNbPositif($data['prix_boisson']);
+    
+    if(empty($data['stock_boisson'])){
+      throw new Exception("Veuillez fixer un nombre de personne minimum pour la commande");
+    }
+    VerifService::verifNbPositif($data['stock_boisson']);
+
+    $data['nom_boisson'] = ucfirst($data['nom_boisson']);
+    $data['description_boisson'] = ucfirst($data['description_boisson']);
 
     return $this->boissonRepository->creerBoisson($data);
   }
@@ -42,6 +65,15 @@ class BoissonService
 
     if(!empty($data['nom_boisson'])){
       $this->existeEnBase($data['nom_boisson'], $id);
+      $data['nom_boisson'] = ucfirst($data['nom_boisson']);
+    }
+
+    if(isset($data['prix_boisson'])){
+      VerifService::verifNbPositif($data['prix_boisson']);
+    }
+      
+    if(isset($data['stock_boisson'])){
+      VerifService::verifNbPositif($data['stock_boisson']);
     }
 
     $boisson = $this->afficherBoissonParId($id);
@@ -49,11 +81,6 @@ class BoissonService
 
     $data = array_filter($data, fn($value) => $value !== null);
     $nouvelleDonnees = array_merge($anciennesDonnes, $data);
-    //unset($nouvelleDonnees['boisson_id']);
-
-    //var_dump($nouvelleDonnees);
-    //var_dump($data['alcool']);
-
 
     $this->boissonRepository->modifierBoisson($nouvelleDonnees);
   }

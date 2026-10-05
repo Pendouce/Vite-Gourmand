@@ -8,6 +8,8 @@ use App\Repository\AllergeneRepository;
 use App\Repository\PlatRepository;
 use App\Repository\TypeDePlatRepository;
 use App\Service\TypeDePlatService;
+use App\Service\VerifService;
+use Exception;
 
 class PlatService
 {
@@ -28,9 +30,30 @@ class PlatService
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
+    if(empty($data['titre'])){
+      throw new Exception("Veuillez entrer un titre");
+    }
+
     if($this->platRepository->trouverPlatByNom($data['titre'])){
       throw new LibelleExistantException($data['titre']);
     }
+
+    if(empty($data['image_plat'])){
+      throw new Exception("Veuillez selectioner une image");
+    }
+
+    if(empty($data['prix_personne'])){
+      throw new Exception("Veuillez fixer un prix");
+    }
+    VerifService::verifNbPositif($data['prix_personne']);
+    
+    if(empty($data['stock_plat'])){
+      throw new Exception("Veuillez fixer un nombre de personne minimum pour la commande");
+    }
+    VerifService::verifNbPositif($data['stock_plat']);
+
+    $data['titre'] = ucfirst($data['titre']);
+    $data['description_plat'] = ucfirst($data['description_plat']);
     
     return $this->platRepository->creerPlat($data);
   }
@@ -118,6 +141,15 @@ class PlatService
 
     if(!empty($data['titre'])){
       $this->verifNom($data['titre'], $platId);
+      $data['titre'] = ucfirst($data['titre']);
+    }
+
+    if(isset($data['prix_personne'])){
+      VerifService::verifNbPositif($data['prix_personne']);
+    }
+      
+    if(isset($data['stock_plat'])){
+      VerifService::verifNbPositif($data['stock_plat']);
     }
 
     $platActuel = $this->platRepository->trouverPlatParId($platId);
