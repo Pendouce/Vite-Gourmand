@@ -82,22 +82,19 @@ class MenuRepository extends Repository
     if(!empty($filtres['evenement_id'])){
       // Ajoute la jointure a la requette
       $sql .= ' INNER JOIN menu_evenement ON menu_evenement.menu_id = menu.menu_id';
-      // Clause WHERE
-      $condtion[] = 'menu_evenement.evenement_id = :evenement_id';
-      // BindValue
-      $params[':evenement_id'] = $filtres['evenement_id'];
+      $this->ajouterFiltreMultiple('menu_evenement.evenement_id', (array) $filtres['evenement_id'], $condtion);
+
     }
 
     if(!empty($filtres['theme_id'])){
       $sql .= ' INNER JOIN menu_theme ON menu_theme.menu_id = menu.menu_id';
-      $condtion[] = 'menu_theme.theme_id = :theme_id';
-      $params[':theme_id'] = $filtres['theme_id'];
+      $this->ajouterFiltreMultiple('menu_theme.theme_id', (array) $filtres['theme_id'], $condtion);
     }
 
     if(!empty($filtres['regime_id'])){
       $sql .= ' INNER JOIN menu_regime ON menu_regime.menu_id = menu.menu_id';
-      $condtion[] = 'menu_regime.regime_id = :regime_id';
-      $params[':regime_id'] = $filtres['regime_id'];
+      $this->ajouterFiltreMultiple('menu_regime.regime_id', (array) $filtres['regime_id'], $condtion);
+
     }
 
     if(!empty($filtres['prix_personne'])){
@@ -125,6 +122,14 @@ class MenuRepository extends Repository
     }
 
     return $tabMenuFiltre;
+  }
+
+  // Je m'assure que je n'envoie que des ints à la bdd
+  // et j'ajoute la condition IN
+  private function ajouterFiltreMultiple(string $colonne, array $ids, array &$conditions): void
+  {
+    $ids = array_map('intval', $ids);
+    $conditions[] = $colonne . ' IN (' . implode(', ', $ids) . ')';
   }
 
   // Trouver tous les menu contenants plat_id

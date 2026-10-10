@@ -7,7 +7,7 @@
   <title>Document</title>
 </head>
 <body>
-  <header class="bg-fond-nav p-4 flex items-center mb-6 lg:justify-between relative sticky top-0 z-50">
+  <header class="bg-fond-nav p-4 h-20 flex items-center mb-6 lg:justify-between sticky top-0 z-50">
     <!-- Burger mobile -->
      <div class="flex-1 flex lg:hidden items-center">
       <button id="btnBurger" type="button" aria-label="Menu" aria-expanded="false">

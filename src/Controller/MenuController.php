@@ -87,8 +87,17 @@ class MenuController extends Controller
   {
     $role = $_SESSION['role_id'] ?? null;
     $menus = $this->menuService->afficherMenus();
+    $evenements = $this->menuService->afficherEvenements();
+    $themes = $this->menuService->afficherThemes();
+    $regimes = $this->menuService->afficherRegimes();
+    
+    $prixMenus = array_map(fn ($e) => $e->getPrixPersonne(), $menus);
+    $prixMin = min($prixMenus);
+    $prixMax = max($prixMenus);
 
-    $this->render('pages/employe/menu', ['menus' => $menus, 'role' => $role, 'titre' => 'menus']);
+    $this->render('pages/employe/menu', ['menus' => $menus, 'evenements' => $evenements, 
+    'themes' => $themes, 'regimes' => $regimes, 'role' => $role, 
+    'prixMin' => $prixMin, 'prixMax' => $prixMax, 'titre' => 'menus']);
   }
 
   public function afficherDetailMenu()
@@ -125,7 +134,10 @@ class MenuController extends Controller
     }
 
     $menus = $this->menuService->afficherMenuFiltre($menuFiltre);
-    $this->render('pages/client/menuFiltre', ['menus' => $menus]);
+    $role = $_SESSION['role_id'] ?? null;
+
+
+    $this->render('pages/client/menuFiltre', ['menus' => $menus, 'role' => $role]);
   }
 
   public function modifierMenu()

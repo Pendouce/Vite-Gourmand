@@ -2,7 +2,12 @@
 <?php require_once(APP_ROOT.'/templates/layouts/pageBanner.php');?>
 
 <?php /** @var array $menus */?>
+<?php /** @var array $evenements */?>
+<?php /** @var array $themes */?>
+<?php /** @var array $regimes */?>
 <?php /** @var int $role */?>
+<?php /** @var float $prixMin */?>
+<?php /** @var float $prixMax */?>
 <?php /** @var string $csrfToken */?>
 
 <div class="contenue-page">
@@ -23,15 +28,121 @@
     <?php endif; ?>
   </div>
 
-  <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
-    <div class="flex justify-end items-center">
-      <div class="flex justify-center border border-primary/50 bg-primary/80 text-fond-carte rounded-2xl py-2 px-4 md:py-4 md:px-6 text-lg font-medium w-fit">
-        <a href="/creerMenu">Creer un menu</a>
+  <!-- Filtre -->
+   <div id="divFiltre" class="side-bar-filter hidden">
+    <div class="flex justify-between items-center">
+      <div>
+        <button id="btnReinitialiser" class="bg-primary text-fond-carte text-sm p-2 rounded-2xl hover:bg-texte/90" type="button">Reinitialiser</button> 
       </div>
+      <h3 class="text-center p-6 font-medium text-xl lg:text-2xl">Filtres</h3>
+      <button id="btnFermerFiltre" type="button" class="py-2 self-start hover:text-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 lg:size-8">
+          <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        </svg>
+      </button>
     </div>
-  <?php endif; ?>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form id="formMenuFiltre" action="/menuFiltre" method="get">
+      <fieldset>
+        <legend class="text-lg lg:text-xl pb-6">Type d’evenement</legend>
+        <div class=" grid grid-cols-3 auto-rows-auto gap-4 pl-4 self-center-center">
+          <?php foreach($evenements as $evenement): ?>
+            <div class="col-span-1 self-center justify-self-start">
+              <label class="flex items-center gap-2">
+              <input class="evenements size-4 accent-primary" type="checkbox" name="evenement_id[]" value="<?= $evenement->getEvenementId() ?>">
+              <?= $evenement->getLibelle() ?>
+              </label>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </fieldset>
+
+      <div class="flex flex-col self-start w-full my-6">
+        <label class="text-lg lg:text-xl py-6">Prix maximum</label>
+            
+
+            <!-- <div class="w-full relative mx-auto flex items-center"> -->
+              <div class="pl-4 w-full relative mx-auto flex items-center justify-center py-2 my-6">
+              <div id="rangeValueDiv" class=" absolute  -top-11 left-1/2 -translate-x-1/2 text-primary text-sm py-2 ">
+                <span id="rangeValue"><?= $prixMin ?></span>
+              </div>
+              <input class="range-slider absolute" id="sliderPrixInput" type="range" min="<?= $prixMin ?>" max="<?= ceil($prixMax )?>" name="prix_personne" value="<?= $prixMin ?>">
+            </div> 
+
+      </div>
+
+      <fieldset>
+        <legend class="text-lg lg:text-xl pb-6">Themes</legend>
+        <div class=" grid grid-cols-2 auto-rows-auto gap-4 pl-4 self-center-center">
+          <?php foreach($themes as $theme): ?>
+            <div class="col-span-1">
+              <label class="flex items-center gap-2">
+                <input class="themes size-4 accent-primary" type="checkbox" name="theme_id[]" value="<?= $theme->getThemeId() ?>">
+                <?= $theme->getLibelle() ?></label>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend class="text-lg lg:text-xl pb-6">Regimes</legend>
+          <div class="flex flex-wrap gap-6 pl-4">
+            <?php foreach($regimes as $regime): ?>
+              <label class="cart-check px-4 has-checked:bg-primary/50 " for="regime-<?= $regime->getRegimeId() ?>"><?= htmlspecialchars($regime->getLibelle()) ?>
+                <input class="regimes justify-self-center appearance-none" type="checkbox" name="regime_id[]" id="regime-<?= $regime->getRegimeId() ?>" value="<?= $regime->getRegimeId() ?>">
+              </label>
+            <?php endforeach; ?>
+          </div>
+      </fieldset>
+
+      <div class="w-1/2 flex flex-col self-start text-center">
+        <label class="text-lg lg:text-xl py-6">Nombre de personne minimum</label>
+        <div class="flex items-center pl-4">
+          <button id="btnMoin" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </button>
+          <input id="nbPersonneMin" name="nombre_personne_min" class="grand-input w-20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" min="1" step="1" type="number" name="nombre_personne_min">
+          <button id="btnPlus" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </form>
+
+   </div>
+
+   <!-- Btn filtre / creation menu -->
+  <div class="flex justify-between items-center">
+    <div class="flex flex-col items-center">
+      <div id="divNbFiltreSelectione" class="self-end hidden">
+        <div class="bg-texte rounded-full w-4 h-4 flex items-center justify-center">
+          <span id="nbFiltreSelectione" class="text-xs text-fond-carte"></span>
+        </div>
+      </div>
+      <button id="btnFiltre" class="hover:text-primary" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-8 lg:size-10">
+          <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
+        </svg>
+      </button>
+    </div>
+
+    <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
+      <div class="flex justify-end items-center">
+        <div class="flex justify-center border border-primary/50 bg-primary/80 text-fond-carte rounded-2xl py-2 px-4 md:py-4 md:px-6 text-lg font-medium w-fit">
+          <a href="/creerMenu">Creer un menu</a>
+        </div>
+      </div>
+    <?php endif; ?>
+
+  </div>
+
+  <!-- Menus -->
+
+  <div id="menuListe" class="grid grid-cols-1 md:grid-cols-2 gap-6">
   <?php foreach($menus as $menu): ?>
   <div class="cart-menu">
     <div class="grid grid-cols-4">
