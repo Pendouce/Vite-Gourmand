@@ -18,8 +18,6 @@ class Prestation extends Entity
 
   protected ?string $libelle = null;
 
-
-
   /**
    * Get the value of prestationId
    */

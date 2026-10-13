@@ -2,6 +2,7 @@ const csrfToken = document.getElementById("csrfToken");
 const toggleInputPlat = document.querySelectorAll(".togglePlatInput");
 const toggleInputBoisson = document.querySelectorAll(".toggleBoissonInput");
 const toggleInputMenu = document.querySelectorAll(".toggleMenuInput");
+const toggleInputPresta = document.querySelectorAll(".togglePrestationInput");
 
 function gererToggle(toggleInputNom, statutNom, route) {
   toggleInputNom.forEach((toggleInput) => {
@@ -58,6 +59,7 @@ function gererToggle(toggleInputNom, statutNom, route) {
 gererToggle(toggleInputPlat, "plat_actif", "/modifierStatusPlat");
 gererToggle(toggleInputBoisson, "boisson_actif", "/modifierStatusBoisson");
 gererToggle(toggleInputMenu, "menu_actif", "/modifierStatusMenu");
+gererToggle(toggleInputPresta, "prestation_actif", "/modifierStatusPrestation");
 
 /* toggleInputPlat.forEach((toggleInput) => {
   toggleInput.addEventListener("change", async () => {

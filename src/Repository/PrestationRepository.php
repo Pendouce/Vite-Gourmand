@@ -61,7 +61,6 @@ class PrestationRepository extends Repository
   }
 
 
-
   public function trouverPrestationParNom(string $nom)
   {
     $sql = 'SELECT * FROM prestation WHERE nom_presta = :nom_presta';
@@ -70,7 +69,31 @@ class PrestationRepository extends Repository
     $statement->bindValue(':nom_presta', $nom, PDO::PARAM_STR);
     $statement->execute();
 
-    return $statement->fetch(PDO::FETCH_ASSOC);
+    $presta = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if ($presta == false) {
+      return false;
+    }
+
+    return Prestation::creerEtHydrate($presta);
+  }
+
+  public function trouverPrestationParType()
+  {
+    $sql = 'SELECT * FROM prestation
+      INNER JOIN type_presta ON prestation.type_presta_id = type_presta.type_presta_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabPresta = [];
+
+    foreach($data as $presta){
+      $tabPresta[] = Prestation::creerEtHydrate($presta);
+    }
+
+    return $tabPresta;
   }
 
   // Update

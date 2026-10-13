@@ -44,6 +44,18 @@ class PrestationService
     return $this->prestationRepository->trouverPrestationParId($id);
   }
 
+  public function afficherPrestationParType()
+  {
+    $prestations = $this->prestationRepository->trouverPrestationParType();
+    $prestaParType = [];
+
+    foreach ($prestations as $presta) {
+      $prestaParType[$presta->getLibelle()][] = $presta;
+    }
+
+    return $prestaParType;
+  }
+
   public function modifierPrestation(int $prestaId, array $data, int $role)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();

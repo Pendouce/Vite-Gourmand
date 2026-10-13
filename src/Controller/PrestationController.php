@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Factory\ContainerId;
 use App\Service\PrestationService;
+use App\Service\TypeDePrestaService;
 use App\Service\UploadService;
 use Exception;
 
@@ -11,12 +12,14 @@ use Exception;
 class PrestationController extends Controller
 {
   private PrestationService $prestationService;
+  private TypeDePrestaService $typeDePrestaService;
   private UploadService $uploadService;
 
   public function __construct()
   {
     parent::__construct();
     $this->prestationService = ContainerId::getPrestationService();
+    $this->typeDePrestaService = ContainerId::getTypeDePrestaService();
     $this->uploadService = ContainerId::getUploadService();
   }
 
@@ -59,14 +62,29 @@ class PrestationController extends Controller
       }
 
     }else{
-      $this->render('pages/employe/creerPrestation');
+      $prestations = $this->prestationService->afficherPrestation();
+      $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
+      $prestationParType = $this->prestationService->afficherPrestationParType();
+      $role = $_SESSION['role_id'];
+
+    $this->render('pages/employe/creerPrestation', [
+      'prestations' => $prestations, 'typeDePresta' => $typeDePresta, 'prestationParType' => $prestationParType, 
+      'role' => $role, 'titre' => 'creer prestation']);
+      //$this->render('pages/employe/creerPrestation', ['titre' => 'creer prestation']);
     }
   }
 
   public function afficherPrestation()
   {
     $prestations = $this->prestationService->afficherPrestation();
-    $this->render('pages/employe/prestations', ['prestations' => $prestations]);
+    $prestationParType = $this->prestationService->afficherPrestationParType();
+    $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
+    $role = $_SESSION['role_id'] ?? null;
+
+    $this->render('pages/employe/prestations', [
+      'prestations' => $prestations, 'prestationParType' => $prestationParType, 
+      'typeDePresta' => $typeDePresta,
+      'role' => $role, 'titre' => 'nos prestations']);
   }
 
   public function afficherPrestationParId()
@@ -117,7 +135,7 @@ class PrestationController extends Controller
       }
 
     }else{
-      $this->render('pages/employe/modifierPrestation');
+      $this->render('pages/employe/modifierPrestation', ['titre' => 'modifier prestation']);
     }
   }
 
@@ -131,21 +149,15 @@ class PrestationController extends Controller
     $this->checkCsrfToken();
 
     $prestaId = (int) $_POST['id'];
-    $status = $_POST['prestation_actif'];
+    $statut = $_POST['prestation_actif'];
     $role = $_SESSION['role_id'];
 
     try{
-        $this->prestationService->modifierStatusPrestation($prestaId, $status, $role);
-
-        $_SESSION['succes'] = "Status modifé";
-        header('location: /detailPrestation?id='.$prestaId);
-        exit;
-
-      }catch(Exception $e){
-        $_SESSION['erreur'] = $e->getMessage();
-        header('location: /detailPrestation?id='.$prestaId);
-        exit;
-      }
+      $this->prestationService->modifierStatusPrestation($prestaId, $statut, $role);
+      echo json_encode(['succes' => true, 'message' => 'Statut modifié', 'statut' => $statut]);
+    }catch(Exception $e){
+      echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
+    }
   }
 
   public function supprimerPrestation()

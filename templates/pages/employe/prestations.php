@@ -1,90 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/asset/css/style.css">
 
-  <title>Document</title>
-</head>
-<body>
-  <h1>Prestation</h1>
+<?php require_once(APP_ROOT.'/templates/layouts/header.php');?>
+<?php require_once(APP_ROOT.'/templates/layouts/pageBanner.php');?>
 
-    
-    <?php /** @var TypeDePrestaController $prestations */ ?>
-
-   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <?php foreach ($prestations as $prestation): ?>
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-
-        <img src="<?= htmlspecialchars($prestation->getImgPresta()) ?>" 
-             alt="<?= htmlspecialchars($prestation->getNomPresta()) ?>"
-             class="w-full h-48 object-cover">
-
-        <div class="p-4">
-            <h3 class="text-lg font-semibold text-gray-800">
-                <?= htmlspecialchars($prestation->getNomPresta()) ?>
-            </h3>
-
-            <p class="text-sm text-gray-600 mt-1">
-                <?= htmlspecialchars($prestation->getLibelle()) ?>
-            </p>
-
-            <?php $contenu = $prestation->getContenuPresta(); ?>
-            <?php if (!empty($contenu)): ?>
-                <ul class="text-sm text-gray-600 mt-2 list-disc list-inside">
-                    <?php foreach ($contenu as $item): ?>
-                        <li><?= htmlspecialchars($item) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
+<?php /** @var array $prestations */?>
+<?php /** @var array $prestationParType */?>
+<?php /** @var object $role */?>
+<?php /** @var string $csrfToken */ ?>
 
 
-            <p class="text-sm text-gray-500 mt-2">
-                <?= htmlspecialchars($prestation->getDescriptionPresta()) ?>
-            </p>
+<div class="contenue-page">
 
-            <p class="text-xl font-bold text-gray-900 mt-3">
-                <?= htmlspecialchars($prestation->getPrixPresta()) ?> €
-            </p>
+  <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
 
-            <div class="flex gap-2 mt-3">
-                <?php if ($prestation->isNecessiteRetour()): ?>
-                    <span class="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full">
-                        Retour nécessaire
-                    </span>
-                <?php endif; ?>
+  <div  class="w-full py-2 mb-2">
+    <?php if (isset($_SESSION['succes'])): ?>
+      <p class="succes">
+          <?= $_SESSION['succes'] ?>
+      </p>
+      <?php unset($_SESSION['succes']); ?>
+    <?php endif; ?>
 
-                <?php if (!$prestation->isPrestationActif()): ?>
-                    <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
-                        Inactif
-                    </span>
-                <?php endif; ?>
-            </div>
+    <?php if(isset($_SESSION['erreur'])): ?>
+      <p class="erreur"><?= $_SESSION['erreur'] ?></p>
+      <?php unset($_SESSION['erreur']); ?>
+    <?php endif; ?>
+  </div>
 
-             <p class="text-sm text-gray-500 mt-2">
-              Id : <?= htmlspecialchars($prestation->getPrestationId()) ?>
-            </p>
-
-        </div>
-
+  <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
+    <div class="flex justify-end items-center">
+      <div class="flex justify-end border border-primary/50 bg-primary/80 text-fond-carte rounded-2xl py-2 px-4 md:py-4 md:px-6 text-lg font-medium w-fit">
+        <a href="/creerPrestation">Nouvelle prestation</a>
+      </div>
     </div>
-<?php endforeach; ?>
+  <?php endif; ?>
+
+  <p class="text-center text-lg py-8">Completez votre evenement avec nos services professionels et notre location de materiel.</p>
+ 
+    <?php foreach($prestationParType as $typeDePrestaLibelle => $prestations): ?>
+      <section class="py-8">
+        <h2 class="font-h2 text-primary text-2xl text-center"><?= htmlspecialchars($typeDePrestaLibelle) ?></h2>
+        <div class="grid grid-cols-2">
+          <?php foreach($prestations as $prestation): ?>
+          <?php if(count($prestation->getContenuPresta()) > 1): ?>
+            <div class="cart-presta-sm col-span-1 flex flex-col gap-4">
+              <div class="blockRetour w-full mb-1"></div>
+              <div class="flex flex-col gap-2">
+                <img class="w-15 object-cover self-center" src="<?= htmlspecialchars($prestation->getImgPresta()) ?>" alt="">
+                <h4 class="text-lg"><?= htmlspecialchars($prestation->getNomPresta()) ?></h4>
+              </div>
+              <div>
+                <ul class="list-disc marker:text-xs">
+                  <?php foreach($prestation->getContenuPresta() as $contenuePresta): ?>
+                    <li class="font-light"><?= htmlspecialchars($contenuePresta) ?></li>
+                  <?php endforeach; ?>
+                </ul>
+              </div>
+              <div class="flex flex-col items-center gap-4">
+                <p class="text-primary">A partir de <?= htmlspecialchars($prestation->getPrixPresta()) ?>€</p>
+                <a class="btn-detail py-1 w-fit" href="/detailPrestation?id=<?= $prestation->getPrestationId() ?>">Details</a>
+              </div>
+
+              <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
+              <div class="self-end">
+                <label class="text-sm">Statut: </label>
+                  <label class="flex gap-1">
+                    <span class="toggleLabelText text-texte/60 text-xs"><?= $prestation->isPrestationActif() == 1 ? 'Actif' : 'Inactif' ?></span>
+                  <input class="peer appearance-none togglePrestationInput" type="checkbox" name="prestation_actif" data-id="<?= $prestation->getPrestationId() ?>" <?= $prestation->isPrestationActif() == 1 ? 'checked' : '' ?>>
+                  <span class="toggle"></span>
+                </label>
+              </div>
+            <?php endif; ?>
+            </div>
+          <?php else: ?>
+            <div class="cart-presta col-span-full gap-2 md:gap-4 relative">
+              <div class="blockRetour w-full mb-1"></div>
+              <div class="flex flex-col gap-2">
+                <img class="w-15 object-cover self-center bg-transparent" src="<?= htmlspecialchars($prestation->getImgPresta()) ?>" alt="">
+                <h4 class="text-lg"><?= htmlspecialchars($prestation->getNomPresta()) ?></h4>
+              </div>
+              <div>
+                <?php foreach($prestation->getContenuPresta() as $contenuePresta): ?>
+                  <p class="font-light text-center"><?= htmlspecialchars($contenuePresta) ?></p>
+                <?php endforeach; ?>
+              </div>
+
+              <div class="flex flex-col items-center gap-4">
+                <p class="text-primary">A partir de <?= htmlspecialchars($prestation->getPrixPresta()) ?>€</p>
+                <a class="btn-detail py-1 w-fit" href="/detailPrestation?id=<?= $prestation->getPrestationId() ?>">Details</a>
+              </div>
+
+              <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
+                <div class="absolute bottom-3 right-4">
+                  <label>Statut: </label>
+                    <label class="flex gap-1">
+                      <span class="toggleLabelText"><?= $prestation->isPrestationActif() == 1 ? 'Actif' : 'Inactif' ?></span>
+                    <input class="peer appearance-none togglePrestationInput" type="checkbox" name="prestation_actif" data-id="<?= $prestation->getPrestationId() ?>" <?= $prestation->isPrestationActif() == 1 ? 'checked' : '' ?>>
+                    <span class="toggle"></span>
+                  </label>
+                </div>
+              <?php endif; ?>
+            </div>
+          <?php endif; ?>
+        <?php endforeach; ?>
+          </div>
+      </section>
+    <?php endforeach; ?>
 
 </div>
 
 
 
-  <?php if (isset($_SESSION['erreur'])): ?>
-    <p class="erreur"><?= $_SESSION['erreur'] ?></p>
-    <?php unset($_SESSION['erreur']); ?>
-  <?php endif; ?>
 
-  <?php if (isset($_SESSION['succes'])): ?>
-    <p class="succes">
-        <?= $_SESSION['succes'] ?>
-    </p>
-    <?php unset($_SESSION['succes']); ?>
-  <?php endif; ?>
-</body>
-</html>
+
+<?php require_once(APP_ROOT.'/templates/layouts/footer.php');?>
