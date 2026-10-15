@@ -35,14 +35,14 @@
       <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
       <div class="col-span-2 flex flex-col">
         <label for="titre">Titre</label>
-        <input class="grand-input w-2/3" type="text" name="nom_presta" required>
+        <input class="grand-input w-2/3" type="text" name="nom_presta">
       </div>
 
       <div class="col-span-2">
         <label id="imgPlat" for="img_presta">Image prestation</label>
   
         <label class="grand-input w-2/3 h-60 text-texte/50 flex flex-col items-center justify-center relative" for="img_presta" id="igmLabel">
-          <input class="sr-only lg:not-sr-only" type="file" name="img_presta" id="img_presta" required>
+          <input class="sr-only lg:not-sr-only" type="file" name="img_presta" id="img_presta">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-13">
             <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
           </svg>
@@ -58,9 +58,21 @@
         </select>
       </div>
 
-      <div class="col-span-2 flex flex-col">
-        <label for="prix_presta">Contenue prestation</label>
-        <textarea name="contenu_presta[]" class="grand-input w-xs md:w-2/3" rows="1" required></textarea>
+      <div class="col-span-2 flex ">
+        <div class="flex flex-col justify-center md:w-full">
+          <label for="prix_presta">Contenue prestation</label>
+          <div id="divInputContenuePresta">
+            <textarea name="contenu_presta[]" class="inputContenuePresta grand-input w-3/4 md:w-2/3" rows="1"></textarea>
+          </div>
+        </div>
+
+        <div class="w-20 p-4 items-start">
+          <button id="btnAjouter" class="border border-primary rounded-2xl p-4" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 md:size-10 text-primary">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div class="col-span-2 flex flex-col">
@@ -70,18 +82,18 @@
 
       <div class="flex flex-col">
         <label for="prix_presta">Prix</label>
-        <input class="grand-input" type="number" min="1" step="any" name="prix_presta" required>
+        <input class="grand-input" type="number" min="1" step="any" name="prix_presta">
       </div>
 
       <fieldset class="flex gap-2">
         <legend class="">Necessite retour</legend>
         <div class="flex gap-4 pl-6">
         <label class="has-checked:bg-primary/60 has-checked:text-fond-carte px-4 py-2 rounded-2xl border border-primary/50 self-center">
-          <input class="sr-only" type="radio" name="necessite_retour" value="1" required>
+          <input class="sr-only" type="radio" name="necessite_retour" value="1">
           Oui
         </label>
         <label class="has-checked:bg-primary/50 has-checked:text-fond-carte px-4 py-2 rounded-2xl border border-primary/50 self-center">
-          <input class="sr-only" type="radio" name="necessite_retour" value="0" required>
+          <input class="sr-only" type="radio" name="necessite_retour" value="0">
           Non
         </label>
         </div>

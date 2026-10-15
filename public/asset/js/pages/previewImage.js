@@ -1,5 +1,6 @@
 const imgInputPlat = document.getElementById("image_plat");
 const imgInputBoisson = document.getElementById("photo_boisson");
+const imgInputPresta = document.getElementById("img_presta");
 const igmLabel = document.getElementById("igmLabel");
 const imgHtml = document.querySelector(".imgHtml");
 
@@ -12,6 +13,10 @@ if (imgInputPlat) {
 
 if (imgInputBoisson) {
   gererImage(imgInputBoisson);
+}
+
+if (imgInputPresta) {
+  gererImage(imgInputPresta);
 }
 
 function gererImage(image) {

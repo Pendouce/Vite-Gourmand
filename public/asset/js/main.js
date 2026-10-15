@@ -7,3 +7,4 @@ import "./pages/imageSurvol.js";
 //import "./components/modifStock.js";
 import "./components/modif.js";
 import "./components/filtre.js";
+import "./components/ajouterChamp.js";
