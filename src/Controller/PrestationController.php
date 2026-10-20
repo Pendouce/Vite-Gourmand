@@ -34,8 +34,8 @@ class PrestationController extends Controller
         'nom_presta' => $_POST['nom_presta'],
         'prix_presta' => $_POST['prix_presta'],
         'description_presta' => $_POST['description_presta'],
-        'necessite_retour' => $_POST['necessite_retour'],
-        'prestation_actif' => $_POST['prestation_actif'],
+        'necessite_retour' => isset($_POST['necessite_retour']) ? 1 : 0,
+        'prestation_actif' => isset($_POST['prestation_actif']) ? 1 : 0,
         'type_presta_id' => (int) $_POST['type_presta_id'],
         'contenu_presta' => $_POST['contenu_presta']
       ];
@@ -105,8 +105,8 @@ class PrestationController extends Controller
         'nom_presta' => $_POST['nom_presta'] ?? null,
         'prix_presta' => $_POST['prix_presta'] ?? null,
         'description_presta' => $_POST['description_presta'] ?? null,
-        'necessite_retour' => $_POST['necessite_retour'] ?? null,
-        'prestation_actif' => $_POST['prestation_actif'] ?? null,
+        'necessite_retour' => isset($_POST['necessite_retour']) ? 1 : 0,
+        'prestation_actif' => isset($_POST['prestation_actif']) ? 1 : 0,
         'type_presta_id' => !empty($_POST['type_presta_id']) ? (int) $_POST['type_presta_id'] : null,
         'contenu_presta' => $_POST['contenu_presta'] ?? null
       ];

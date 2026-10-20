@@ -93,7 +93,7 @@
           Oui
         </label>
         <label class="has-checked:bg-primary/50 has-checked:text-fond-carte px-4 py-2 rounded-2xl border border-primary/50 self-center">
-          <input class="sr-only" type="radio" name="necessite_retour" value="0">
+          <input class="sr-only" type="radio" name="necessite_retour" value="0" checked>
           Non
         </label>
         </div>

@@ -1,4 +1,3 @@
-console.log("Ajouter champ");
 const btnAjouter = document.getElementById("btnAjouter");
 const divInputContenuePresta = document.getElementById("divInputContenuePresta");
 const inputContenuePresta = document.querySelector(".inputContenuePresta");

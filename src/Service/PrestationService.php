@@ -7,6 +7,7 @@ use App\Exceptions\IdInnexistantException;
 use App\Exceptions\LibelleExistantException;
 use App\Repository\PrestationRepository;
 use App\Repository\TypeDePrestaRepository;
+use Exception;
 
 class PrestationService
 {
@@ -22,14 +23,42 @@ class PrestationService
   public function creerPrestation(array $data, int $role)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+    
+    if(empty($data['nom_presta'])){
+      throw new Exception("Veuillez entrer un titre");
+    }
     $this->existeEnBase($data['nom_presta']);
+
+    if(empty($data['img_presta'])){
+      throw new Exception("Veuillez selectioner une image");
+    }
+    
+    if(empty($data['description_presta'])){
+      throw new Exception("Veuillez entrer une description");
+    }
+
+    $contenuPresta = [];
+
+    // Je boucle sur le contenue de mes prestations et ne garde que ceux qui sont remplis
+    foreach($data['contenu_presta'] as $contenu){
+      $input = trim($contenu);
+      if ($input !== "") {
+        $contenuPresta[] = $input;
+      }
+    }
 
     // contenu_presta est un tableau PHP
     // json_encode : tableau PHP -> string JSON
 
-    if($data['contenu_presta']){
-      $data['contenu_presta'] = json_encode($data['contenu_presta']);
+    if(empty($contenuPresta)){
+      throw new Exception("Veuillez entrer au moins un contenu de prestation");
     }
+    $data['contenu_presta'] = json_encode($contenuPresta);
+
+    if(empty($data['prix_presta'])){
+      throw new Exception("Veuillez fixer un prix");
+    }
+    VerifService::verifNbPositif($data['prix_presta']);
 
     return $this->prestationRepository->creerPrestation($data);
   }
@@ -61,7 +90,7 @@ class PrestationService
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
     if(!empty($data['nom_prestation'])){
-      $this->existeEnBase($data['nom_prestation']);
+      $this->existeEnBase($data['nom_prestation'], $prestaId);
     }
 
     $prestaActuels = $this->afficherPrestationParId($prestaId);
@@ -99,11 +128,12 @@ class PrestationService
     return $this->prestationRepository->supprimerPrestation($prestaId);
   }
 
-  private function existeEnBase(string $nom)
+  private function existeEnBase(string $nom, ?int $id = null)
   {
-    if($this->prestationRepository->trouverPrestationParNom($nom))
-      {
-        throw new LibelleExistantException($nom);
-      }
+    $presta = $this->prestationRepository->trouverPrestationParNom($nom);
+    if($presta && $presta->getPrestationId() !== $id)
+    {
+      throw new LibelleExistantException($nom);
+    }
   }
 }

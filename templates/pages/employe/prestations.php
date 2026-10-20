@@ -91,9 +91,9 @@
 
               <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
                 <div class="absolute bottom-3 right-4">
-                  <label>Statut: </label>
+                  <label class="text-sm">Statut: </label>
                     <label class="flex gap-1">
-                      <span class="toggleLabelText"><?= $prestation->isPrestationActif() == 1 ? 'Actif' : 'Inactif' ?></span>
+                      <span class="toggleLabelText text-texte/60 text-xs"><?= $prestation->isPrestationActif() == 1 ? 'Actif' : 'Inactif' ?></span>
                     <input class="peer appearance-none togglePrestationInput" type="checkbox" name="prestation_actif" data-id="<?= $prestation->getPrestationId() ?>" <?= $prestation->isPrestationActif() == 1 ? 'checked' : '' ?>>
                     <span class="toggle"></span>
                   </label>
