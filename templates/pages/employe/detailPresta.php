@@ -64,8 +64,8 @@
       <?php endif; ?>
         </div>
         <div class="col-span-1 order-1 md:order-2 md:col-span-2 md:m-6">
-          <div class="bg-fond-carte rounded-sm border border-primary/50 p-4">
-          <p><?= htmlspecialchars($prestation->getDescriptionPresta()) ?></p>
+          <div class="bg-fond-carte rounded-sm border border-primary/50 px-6 py-4">
+          <p class="whitespace-pre-line"><?= htmlspecialchars($prestation->getDescriptionPresta()) ?></p>
           </div>
         </div>
       </div>

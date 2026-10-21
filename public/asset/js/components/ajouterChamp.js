@@ -1,6 +1,7 @@
 const btnAjouter = document.getElementById("btnAjouter");
 const divInputContenuePresta = document.getElementById("divInputContenuePresta");
 const inputContenuePresta = document.querySelector(".inputContenuePresta");
+const btnSupprimerContenu = document.querySelectorAll(".btnSupprimerContenu");
 
 if (btnAjouter) {
   btnAjouter.addEventListener("click", () => {
@@ -25,9 +26,21 @@ const nouvelInput = () => {
   nvlDiv.appendChild(nvlInput);
   nvlDiv.appendChild(btnSupprimer);
 
-  btnSupprimer.addEventListener("click", () => {
+  /* btnSupprimer.addEventListener("click", () => {
     nvlDiv.remove();
-  });
+  }); */
+
+  supprimerInput(btnSupprimer, nvlDiv);
 
   divInputContenuePresta.appendChild(nvlDiv);
 };
+
+const supprimerInput = (btn, div) => {
+  btn.addEventListener("click", () => {
+    div.remove();
+  });
+};
+
+btnSupprimerContenu.forEach((btn) => {
+  supprimerInput(btn, btn.parentElement);
+});

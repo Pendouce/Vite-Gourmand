@@ -34,7 +34,7 @@ class PrestationController extends Controller
         'nom_presta' => $_POST['nom_presta'],
         'prix_presta' => $_POST['prix_presta'],
         'description_presta' => $_POST['description_presta'],
-        'necessite_retour' => isset($_POST['necessite_retour']) ? 1 : 0,
+        'necessite_retour' => !empty($_POST['necessite_retour']) ? 1 : 0,
         'prestation_actif' => isset($_POST['prestation_actif']) ? 1 : 0,
         'type_presta_id' => (int) $_POST['type_presta_id'],
         'contenu_presta' => $_POST['contenu_presta']
@@ -106,7 +106,7 @@ class PrestationController extends Controller
         'nom_presta' => $_POST['nom_presta'] ?? null,
         'prix_presta' => $_POST['prix_presta'] ?? null,
         'description_presta' => $_POST['description_presta'] ?? null,
-        'necessite_retour' => isset($_POST['necessite_retour']) ? 1 : 0,
+        'necessite_retour' => !empty($_POST['necessite_retour']) ? 1 : 0,
         'prestation_actif' => isset($_POST['prestation_actif']) ? 1 : 0,
         'type_presta_id' => !empty($_POST['type_presta_id']) ? (int) $_POST['type_presta_id'] : null,
         'contenu_presta' => $_POST['contenu_presta'] ?? null
@@ -126,7 +126,7 @@ class PrestationController extends Controller
         $this->prestationService->modifierPrestation($prestaId, $data, $role);
 
         $_SESSION['succes'] = "Prestation modifé";
-        header('location: /prestations');
+        header('location: /detailPrestation?id='.$prestaId);
         exit;
 
       }catch(Exception $e){
@@ -136,7 +136,15 @@ class PrestationController extends Controller
       }
 
     }else{
-      $this->render('pages/employe/modifierPrestation', ['titre' => 'modifier prestation']);
+      $prestation = $this->prestationService->afficherPrestationParId($_GET['id']);
+      $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
+      $prestationParType = $this->prestationService->afficherPrestationParType();
+      $role = $_SESSION['role_id'];
+
+    $this->render('pages/employe/modifierPrestation', [
+      'prestation' => $prestation, 'typeDePresta' => $typeDePresta, 'prestationParType' => $prestationParType, 
+      'role' => $role, 'titre' => 'modifier prestation']);
+      //$this->render('pages/employe/modifierPrestation', ['titre' => 'modifier prestation']);
     }
   }
 
