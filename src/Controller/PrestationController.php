@@ -90,9 +90,10 @@ class PrestationController extends Controller
   public function afficherPrestationParId()
   {
     $id = (int) $_GET['id'];
+    $role = $_SESSION['role_id'] ?? null;
 
     $prestation = $this->prestationService->afficherPrestationParId($id);
-    $this->render('pages/employe/detailPresta', ['prestation' => $prestation]);
+    $this->render('pages/employe/detailPresta', ['prestation' => $prestation, 'role' => $role, 'titre' =>'detail prestation']);
   }
 
   public function modifierPrestation()

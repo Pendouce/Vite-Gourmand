@@ -10,7 +10,7 @@ function gererToggle(toggleInputNom, statutNom, route) {
       const id = toggleInput.dataset.id;
       const csrf = csrfToken.value;
       // Je recupere les enfants de carte plat ou contenue page (si pas carte plat) ayant pour classe blockRetour
-      const conteneur = toggleInput.closest(".cart-plat, .cart-menu, .cart-presta, .cart-presta-sm .contenue-page");
+      const conteneur = toggleInput.closest(".cart-plat, .cart-menu, .cart-presta, .cart-presta-sm, .contenue-page");
       const divBlockRetourMessage = conteneur.querySelector(".blockRetour");
       //const divBlockRetourMessage = toggleInput.closest(".contenue-page").querySelector(".blockRetour");
       const labelText = toggleInput.closest("label").querySelector(".toggleLabelText");
