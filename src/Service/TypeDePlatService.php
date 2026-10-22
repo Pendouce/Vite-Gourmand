@@ -20,12 +20,19 @@ class TypeDePlatService
   public function creerTypeDePlat(string $libelle, int $role)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
-    $this->existeEnBase($libelle);
+
+    $libelle = VerifService::verifTitre($libelle);
+  
+    VerifService::verifDispoTitre($libelle, 
+    $this->typeDePlatRepository->trouverTypeDePlatByNom($libelle));
+    //$this->existeEnBase($libelle);
+
 
     $data =['libelle' => $libelle];
 
     return $this->typeDePlatRepository->creerTypeDePlat($data);
   }
+
 
   public function afficheTypeDePlat()
   {
@@ -35,9 +42,24 @@ class TypeDePlatService
   public function modifieTypeDePlat(string $libelle, int $id, int $role)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
-    $this->existeEnBase($libelle);
 
-    $this->existePasEnBase($id);
+    $libelle = VerifService::verifTitre($libelle);
+    $typeDePlat = $this->typeDePlatRepository->trouverTypeDePlatByNom($libelle);
+
+    VerifService::verifDispoTitre(
+      $libelle,
+      $typeDePlat,
+      $typeDePlat ? $typeDePlat->getTypeId() : null,
+      $id
+    );
+
+    VerifService::verifExisteEnBase(
+      $this->typeDePlatRepository->trouverTypeDePlatById($id),
+      'Type de plat'
+    );
+
+    //$this->existeEnBase($libelle);
+    //$this->existePasEnBase($id);
 
     $data['libelle'] = $libelle;
     $data['type_id'] = $id;
@@ -48,27 +70,38 @@ class TypeDePlatService
   public function supprimeTypeDePlat(int $id, int $role)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
-    $this->existePasEnBase($id);
-    if($this->typeDePlatRepository->estRattacheAUnPlatActif($id)){
+
+    VerifService::verifExisteEnBase(
+      $this->typeDePlatRepository->trouverTypeDePlatById($id),
+      'Type de plat'
+    );
+    
+    VerifService::verifActif(
+      $this->typeDePlatRepository->estRattacheAUnPlat($id),
+      "plat", "un plat"
+    );
+
+    //$this->existePasEnBase($id);
+
+
+    /* if($this->typeDePlatRepository->estRattacheAUnPlatActif($id)){
       throw new RattacheActifException("plat", "un plat actif");
-    }
+    } */
 
     return $this->typeDePlatRepository->supprimerTypeDePlat($id);
   }
 
-  //////////
-
-  private function existeEnBase(string $libelle)
+  /* private function existeEnBase(string $libelle)
   {
     if($this->typeDePlatRepository->trouverTypeDePlatByNom($libelle)){
       throw new LibelleExistantException($libelle);
     }
-  }
+  } */
 
-  private function existePasEnBase(int $id)
+  /* private function existePasEnBase(int $id)
   {
     if(!$this->typeDePlatRepository->trouverTypeDePlatById($id)){
       throw new IdInnexistantException('Type de plat');
     }
-  }
+  } */
 }

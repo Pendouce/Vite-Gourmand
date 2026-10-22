@@ -92,9 +92,9 @@ class TypeDePlatRepository extends Repository
     return $statement->execute();
   }
 
-  public function estRattacheAUnPlatActif(int $id): bool
+  public function estRattacheAUnPlat(int $id): bool
   {
-    $sql = 'SELECT COUNT(*) FROM plat WHERE type_id = :type_id AND plat_actif = 1';
+    $sql = 'SELECT COUNT(*) FROM plat WHERE type_id = :type_id';
     $statement = $this->pdo->prepare($sql);
     $statement->bindValue(':type_id', $id, PDO::PARAM_INT);
     $statement->execute();

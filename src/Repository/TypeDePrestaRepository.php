@@ -94,9 +94,9 @@ class TypeDePrestaRepository extends Repository
     $statement->execute();
   }
 
-    public function estRattacheAUnTypeDePrestaActif(int $id): bool
+  public function estRattacheAUnePresta(int $id): bool
   {
-    $sql = 'SELECT COUNT(*) FROM type_presta WHERE type_presta_id = :type_presta_id AND prestation_actif = 1';
+    $sql = 'SELECT COUNT(*) FROM prestation WHERE type_presta_id = :type_presta_id';
     $statement = $this->pdo->prepare($sql);
     $statement->bindValue(':type_presta_id', $id, PDO::PARAM_INT);
     $statement->execute();

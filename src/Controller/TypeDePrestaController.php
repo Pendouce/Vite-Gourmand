@@ -61,7 +61,7 @@ class TypeDePrestaController extends Controller
       $role = $_SESSION['role_id'];
 
       try{
-        $this->typeDePrestaService->modifierTypeDePresta($data, $role);
+        $this->typeDePrestaService->modifierTypeDePresta($data, $id, $role);
 
         echo json_encode(['succes' => true, 'message' => 'Type de prestation modifié']);
       }catch(Exception $e){
