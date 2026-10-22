@@ -62,13 +62,10 @@ class TypeDePrestaController extends Controller
 
       try{
         $this->typeDePrestaService->modifierTypeDePresta($data, $role);
-        $_SESSION['succes'] = "Type de prestation modifié";
-        header('location: /prestations');
-        exit;
+
+        echo json_encode(['succes' => true, 'message' => 'Type de prestation modifié']);
       }catch(Exception $e){
-        $_SESSION['erreur'] = $e->getMessage();
-        header('location: /prestations');
-        exit;
+        echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
       }
     }else{
       $this->render('pages/employe/prestations');

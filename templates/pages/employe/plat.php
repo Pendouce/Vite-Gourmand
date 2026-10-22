@@ -11,22 +11,22 @@
   <div id="modalContainer" class="fixed inset-0 flex justify-center items-center bg-black/50 hidden">
       <div id="modal" class="flex flex-col text-center justify-center items-center gap-6 bg-fond-carte w-xl h-fit p-6 rounded-2xl ">
         <h2 class="font-h2 text-primary text-xl">Types de plats</h2>
-        <div class="flex flex-col justify-around gap-8">
+        <div id="listeTypes" class="flex flex-col justify-around gap-8" data-route="/modifierTypeDePlat" data-nom-id="type_id">
           <?php foreach($typeDePlat as $type): ?>
-            <div class="divTypeDePlat flex justify-between items-center" data-id="<?= $type->getTypeId() ?>">
+            <div class="divType flex justify-between items-center" data-id="<?= $type->getTypeId() ?>">
               <p class="typeLibelle flex justify-center items-start"><?= $type->getLibelle()?></p>
               <div class="flex gap-8 items-end">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 btnModifTypeDePlat">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 btnModifType">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                 </svg>
   
                 <div class="divBtnValideAnnule text-primary font-semibold hidden">
-                  <button class="btnValideModifPlat" class="px-4" type="button">
+                  <button class="btnValideModif" class="px-4" type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 md:size-10">
                       <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                   </button>
-                  <button class="btnAnnuleModifPlat" class="px-2" type="button">
+                  <button class="btnAnnuleModif" class="px-2" type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 md:size-10">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>

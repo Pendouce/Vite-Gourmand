@@ -4,6 +4,7 @@ const btnAnnuler = document.getElementById("btnAnnuler");
 const btnSupprimerCmptEmploye = document.querySelectorAll(".btnSupprimerCmptEmploye");
 
 const btnGererTypePlat = document.getElementById("btnGererTypePlat");
+const btnGererTypePresta = document.getElementById("btnGererTypePresta");
 
 const fermerModal = () => {
   modalContainer.classList.add("hidden");
@@ -39,6 +40,11 @@ if (btnSupprimerCmptEmploye) {
 
 if (btnGererTypePlat) {
   btnGererTypePlat.addEventListener("click", () => {
+    ouvrirModal();
+  });
+}
+if (btnGererTypePresta) {
+  btnGererTypePresta.addEventListener("click", () => {
     ouvrirModal();
   });
 }

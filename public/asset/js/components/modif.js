@@ -58,37 +58,39 @@ if (document.getElementById("nbStock")) {
 }
 
 if (document.querySelector(".typeLibelle")) {
-  const divTypeDePlat = document.querySelectorAll(".divTypeDePlat");
+  const divType = document.querySelectorAll(".divType");
+  const listeTypes = document.getElementById("listeTypes");
+  const { route, nomId } = listeTypes.dataset;
 
-  divTypeDePlat.forEach((type) => {
+  divType.forEach((type) => {
     const typeLibelle = type.querySelector(".typeLibelle");
     const divBtnValideAnnule = type.querySelector(".divBtnValideAnnule");
     const btnSupprime = type.querySelector(".btnSupprime");
-    const btnModifTypeDePlat = type.querySelector(".btnModifTypeDePlat");
-    const btnValideModifPlat = type.querySelector(".btnValideModifPlat");
-    const btnAnnuleModifPlat = type.querySelector(".btnAnnuleModifPlat");
+    const btnModifType = type.querySelector(".btnModifType");
+    const btnValideModif = type.querySelector(".btnValideModif");
+    const btnAnnuleModif = type.querySelector(".btnAnnuleModif");
     const divSuppressionConfirm = type.querySelector(".divSuppressionConfirm");
     const id = type.dataset.id;
     const input = document.createElement("input");
 
-    btnModifTypeDePlat.addEventListener("click", () => {
+    btnModifType.addEventListener("click", () => {
       afficheBtnValideAnnule({
         inputType: "text",
         valeur: typeLibelle.textContent.trim(),
-        btnModif: btnModifTypeDePlat,
+        btnModif: btnModifType,
         contenu: typeLibelle,
         input,
         divBtnValideAnnule,
       });
     });
 
-    btnAnnuleModifPlat.addEventListener("click", () => {
+    btnAnnuleModif.addEventListener("click", () => {
       afficheBtnModif({
         input,
         divBtnValideAnnule,
         contenu: typeLibelle,
         valeur: typeLibelle.textContent.trim(),
-        btnModif: btnModifTypeDePlat,
+        btnModif: btnModifType,
       });
     });
 
@@ -105,13 +107,13 @@ if (document.querySelector(".typeLibelle")) {
     });
 
     valideModif({
-      btn: btnValideModifPlat,
-      nomId: "type_id",
+      btn: btnValideModif,
+      nomId,
       id: id,
       nomChamp: "libelle",
-      route: "/modifierTypeDePlat",
+      route,
       contenu: typeLibelle,
-      btnModif: btnModifTypeDePlat,
+      btnModif: btnModifType,
       input,
       divBtnValideAnnule,
     });
