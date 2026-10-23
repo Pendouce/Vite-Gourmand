@@ -43,6 +43,7 @@ if (btnGererTypePlat) {
     ouvrirModal();
   });
 }
+
 if (btnGererTypePresta) {
   btnGererTypePresta.addEventListener("click", () => {
     ouvrirModal();

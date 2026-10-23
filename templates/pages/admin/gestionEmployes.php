@@ -1,7 +1,7 @@
 <?php require_once(APP_ROOT.'/templates/layouts/header.php');?>
 <?php require_once(APP_ROOT.'/templates/layouts/pageBanner.php');?>
 
-  <div id="modalContainer" class="fixed inset-0 flex justify-center items-center bg-black/50 hidden">
+  <div id="modalContainer" class="fixed inset-0 z-50 flex justify-center items-center bg-black/50 p-4 hidden">
     <div id="modal" class="flex flex-col text-center justify-center items-center gap-6 bg-fond-carte w-xl h-1/3 p-6 rounded-2xl">
       <h2 class="font-h2 text-primary text-xl">Souhaitez vous vraiment supprimer le compte de <span id="nomEmploye"></span> ?</h2>
       <p>Une fois supprimé cet employe n'aura plus d'accès</p>
