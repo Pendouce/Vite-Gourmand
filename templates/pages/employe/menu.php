@@ -63,7 +63,7 @@
 
             <!-- <div class="w-full relative mx-auto flex items-center"> -->
               <div class="pl-4 w-full relative mx-auto flex items-center justify-center py-2 my-6">
-              <div id="rangeValueDiv" class=" absolute  -top-11 left-1/2 -translate-x-1/2 text-primary text-sm py-2 ">
+              <div id="rangeValueDiv" class=" absolute -top-11 left-1/2 -translate-x-1/2 text-primary text-sm py-2 ">
                 <span id="rangeValue"><?= $prixMin ?></span>
               </div>
               <input class="range-slider absolute" id="sliderPrixInput" type="range" min="<?= $prixMin ?>" max="<?= ceil($prixMax )?>" name="prix_personne" value="<?= $prixMin ?>">
@@ -86,9 +86,9 @@
 
       <fieldset>
         <legend class="text-lg lg:text-xl pb-6">Regimes</legend>
-          <div class="flex flex-wrap gap-6 pl-4">
+          <div class="flex flex-wrap text-center gap-6 pl-4">
             <?php foreach($regimes as $regime): ?>
-              <label class="cart-check px-4 has-checked:bg-primary/50 " for="regime-<?= $regime->getRegimeId() ?>"><?= htmlspecialchars($regime->getLibelle()) ?>
+              <label class="cart-check md:px-4 has-checked:bg-primary/50 " for="regime-<?= $regime->getRegimeId() ?>"><?= htmlspecialchars($regime->getLibelle()) ?>
                 <input class="regimes justify-self-center appearance-none" type="checkbox" name="regime_id[]" id="regime-<?= $regime->getRegimeId() ?>" value="<?= $regime->getRegimeId() ?>">
               </label>
             <?php endforeach; ?>
@@ -206,17 +206,18 @@
             </div>
 
           <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
-          <div class="flex items-center gap-8">
-            <label>Statut: </label>
-              <label>
-                <span class="toggleLabelText"><?= $menu->isMenuActif() == 1 ? 'Actif' : 'Inactif' ?></span>
+          <div class="flex flex-col items-center gap-2 px-2">
+            <label class="text-sm">Statut: </label>
+              <label class="flex flex-wrap gap-1">
+                <span class="toggleLabelText text-texte/60 text-xs"><?= $menu->isMenuActif() == 1 ? 'Actif' : 'Inactif' ?></span>
               <input class="peer appearance-none toggleMenuInput" type="checkbox" name="menu_actif" data-id="<?= $menu->getMenuId() ?>" <?= $menu->isMenuActif() == 1 ? 'checked' : '' ?>>
               <span class="toggle"></span>
             </label>
           </div>
+
           <?php endif; ?>
 
-          </div>
+        </div>
           <a class="btn-detail mt-4 self-end" href="/detailMenu?id=<?= $menu->getMenuId() ?>">Details</a>
         </div>
         <div class="flex items-center justify-center">

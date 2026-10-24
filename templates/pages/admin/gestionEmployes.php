@@ -55,7 +55,7 @@
         </div>
 
         <div>
-            <button type="button" class="btnSupprimerCmptEmploye btn-form bg-texte/90"
+            <button type="button" class="btnSupprimerCmptEmploye btn-form px-5 md:px-10 bg-texte/90"
              data-nom="<?= $employe->getPrenom() ?>" data-id="<?= $employe->getUserId() ?>"
              >Supprimer</button>
         </div>

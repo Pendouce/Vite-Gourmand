@@ -56,12 +56,14 @@
             <div class="flex justify-between items-center gap-8">
               <a class="btn-detail mt-4" href="/detailBoisson?id=<?= $boisson->getBoissonId() ?>">Details</a>
               <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
-              <label class="pl-6">Statut: </label>
-                <label>
-                  <span class="toggleLabelText"><?= $boisson->isBoissonActif() == 1 ? 'Actif' : 'Inactif' ?></span>
-                <input class="peer appearance-none toggleBoissonInput" type="checkbox" name="boisson_actif" data-id="<?= $boisson->getBoissonId() ?>" <?= $boisson->isBoissonActif() == 1 ? 'checked' : '' ?>>
-                <span class="toggle"></span>
-              </label>
+                <div class="self-end">
+                  <label class="text-sm">Statut: </label>
+                    <label class="flex gap-1">
+                      <span class="toggleLabelText text-texte/60 text-xs"><?= $boisson->isBoissonActif() == 1 ? 'Actif' : 'Inactif' ?></span>
+                    <input class="peer appearance-none toggleBoissonInput" type="checkbox" name="boisson_actif" data-id="<?= $boisson->getBoissonId() ?>" <?= $boisson->isBoissonActif() == 1 ? 'checked' : '' ?>>
+                    <span class="toggle"></span>
+                  </label>
+                </div>
               <?php endif; ?>
             </div>
         </div>

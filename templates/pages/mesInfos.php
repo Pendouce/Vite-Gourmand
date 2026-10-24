@@ -1,8 +1,8 @@
 <?php require_once(APP_ROOT.'/templates/layouts/header.php');?>
 <?php require_once(APP_ROOT.'/templates/layouts/pageBanner.php');?>
 
-  <div id="modalContainer" class="fixed inset-0 flex justify-center items-center bg-black/50 hidden">
-    <div id="modal" class="flex flex-col text-center justify-center items-center gap-6 bg-fond-carte w-xl h-1/3 p-6 rounded-2xl">
+  <div id="modalContainer" class="fixed inset-0 z-50 flex justify-center items-center bg-black/50 p-4 hidden">
+    <div id="modal" class="flex flex-col text-center justify-center items-center gap-6 bg-fond-carte w-full max-w-xl h-1/3 p-4 md:p-6 rounded-2xl">
       <h2 class="font-h2 text-primary text-xl">Souhaitez vous vraiment supprimer ce compte ?</h2>
       <p>Une fois supprimé vous n'aurez plus accès a vos commandes passées,<br> nous restons a votres disposition pour toutes questions</p>
         <div class="flex justify-center gap-8">
@@ -76,15 +76,15 @@
         <input id="ville" class="grand-input" type="text" name="ville" value="<?= $infoUtilisateur->getVille() ?>">
       </div>
 
-      <div class="flex justify-center col-span-1 ">
+      <div class="flex justify-center col-span-2 md:col-span-1 ">
         <button class="btn-form" type="submit">Modifier</button>
       </div>
 
-      <div class="flex justify-center col-span-1">
-        <a class="btn-form " href="/modificationMotDePasse">Modifier le mot de passe</a>
+      <div class="flex justify-center col-span-2 md:col-span-1">
+        <a class="btn-form" href="/modificationMotDePasse">Modifier le mot de passe</a>
       </div>
 
-      <div class="flex justify-center col-span-2 pt-4">
+      <div class="flex justify-center col-span-2 md:pt-4">
         <button id="btnSupprimerCmpt" class="btn-form bg-texte " type="button">Supprimer mon compte</button>
       </div>
     </form>
