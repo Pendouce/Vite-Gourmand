@@ -34,7 +34,7 @@ class BoissonRepository extends Repository
 
     $boisson = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if ($boisson === false) {
+    if($boisson === false) {
       return false;
     }
 

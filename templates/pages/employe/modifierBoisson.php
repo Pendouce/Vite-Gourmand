@@ -31,8 +31,8 @@
       <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
       <input type="hidden" name="id" value="<?= $boisson->getBoissonId() ?>">
       <div class="col-span-2 flex flex-col">
-        <label for="titre">Titre</label>
-        <input class="grand-input w-2/3" type="text" name="titre" value="<?= htmlspecialchars($boisson->getNomBoisson()) ?>">
+        <label>Titre</label>
+        <input class="grand-input w-2/3" type="text" name="nom_boisson" value="<?= htmlspecialchars($boisson->getNomBoisson()) ?>">
       </div>
 
       <div class="col-span-2">
@@ -52,8 +52,8 @@
         <textarea name="description_boisson" class="grand-input w-xs md:w-2/3" rows="6"><?= htmlspecialchars($boisson->getDescriptionBoisson()) ?></textarea>
       </div>
       <div class="flex flex-col">
-        <label for="prix_personne">Prix</label>
-        <input class="grand-input" type="number" min="1" step="any"  name="prix_personne" value="<?= htmlspecialchars($boisson->getPrixBoisson()) ?>">
+        <label>Prix</label>
+        <input class="grand-input" type="number" min="1" step="any" name="prix_boisson" value="<?= htmlspecialchars($boisson->getPrixBoisson()) ?>">
       </div>
       <div class="flex flex-col">
         <label for="stock_boisson">Stock</label>

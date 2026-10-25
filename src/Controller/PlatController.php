@@ -44,12 +44,12 @@ class PlatController extends Controller
         $data['image_plat'] = $this->uploadImage($_FILES['image_plat'], "plat", $extension);
       }
       $allergeneId = $_POST['allergene'] ?? [];
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
       if(isset($allergeneId)){
-        $allergeneId = $this->nettoyerDonnees($allergeneId);
+        $allergeneId = $this->formaterDonnees($allergeneId);
       }
       
-      $this->nettoyerDonnees($data);
+      $this->formaterDonnees($data);
       $role = $_SESSION['role_id'];
 
         $platCreer = $this->platService->creerPlat($data, $role);
@@ -129,7 +129,7 @@ class PlatController extends Controller
       }
       $allergeneId = $_POST['allergene'];
       //var_dump($allergeneId);
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
       try{
         $platId = $_POST['id'];
         $role = $_SESSION['role_id'];

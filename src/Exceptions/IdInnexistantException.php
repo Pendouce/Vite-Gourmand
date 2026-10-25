@@ -8,6 +8,6 @@ class IdInnexistantException extends Exception
 {
   public function __construct(string $nom) {
 
-    parent::__construct($nom." introuvable");
+    parent::__construct(ucfirst($nom)." est introuvable");
   }
 }

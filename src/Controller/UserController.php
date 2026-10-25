@@ -31,7 +31,7 @@ class UserController extends Controller
         'code_postal' => $_POST['code_postal'] ?? null,
         'adresse' => $_POST['adresse'] ?? null,
       ];
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       try{
         //Appel du service
@@ -67,7 +67,7 @@ class UserController extends Controller
         'code_postal' => $_POST['code_postal'] ?? null,
         'adresse' => $_POST['adresse'] ?? null,
       ];
-        $data = $this->nettoyerDonnees($data);
+        $data = $this->formaterDonnees($data);
 
         $role = $_SESSION['role_id'];
 
@@ -96,7 +96,7 @@ class UserController extends Controller
         'email' => $_POST['email'],
         'mot_de_passe' => $_POST['mot_de_passe'],
       ];
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
       try {
         // appel du service
         $connecte = $this->userService->connexion($data['email'], $data['mot_de_passe']);
@@ -157,7 +157,7 @@ class UserController extends Controller
       'code_postal' => $_POST['code_postal'] ?? null,
       'adresse' => $_POST['adresse'] ?? null,
     ];
-    $data = $this->nettoyerDonnees($data);
+    $data = $this->formaterDonnees($data);
     $data['id'] = $_SESSION['user_id'];
 
     try{
@@ -181,7 +181,7 @@ class UserController extends Controller
         'mot_de_passe' => $_POST['mot_de_passe'],
         'mdpConfirm' => $_POST['mdpConfirm'],
       ];
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       $data['id'] = $_SESSION['user_id'];
       try{
@@ -206,7 +206,7 @@ class UserController extends Controller
       $data = [
         'email' => $_POST['email'],
       ];
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       try{
         $this->userService->reinitialiseMdp($data);

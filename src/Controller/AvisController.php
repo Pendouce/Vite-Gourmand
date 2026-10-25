@@ -25,7 +25,7 @@ class AvisController extends Controller
       'commentaire' => $_POST['commentaire'], 
       ];
 
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
     try{
       $nbCommande = (int)$_GET['nb_commande'];
@@ -58,7 +58,7 @@ class AvisController extends Controller
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
   
-      $publier = htmlspecialchars($_POST['publie']);
+      $publier = $_POST['publie'];
       $avisId = (int)$_POST['id'];
       $role = $_SESSION['role_id'];
       

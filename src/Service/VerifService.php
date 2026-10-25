@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Exceptions\IdInnexistantException;
 use App\Exceptions\LibelleExistantException;
-use App\Exceptions\RattacheActifException;
 use Exception;
 
 class VerifService {
@@ -37,10 +36,11 @@ class VerifService {
     }
   }
 
-  public static function verifActif(bool $element, string $nom, string $type):void
+  public static function verifEstRatache(bool $element, string $nom, string $type):void
   {
     if($element){
-      throw new RattacheActifException($nom, $type);
+      //throw new RattacheActifException($nom, $type);
+      throw new Exception("Impossible de supprimer " .$nom.", qui est rataché".$type);
     }
   }
 }

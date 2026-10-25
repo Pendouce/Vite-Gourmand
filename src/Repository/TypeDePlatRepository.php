@@ -94,12 +94,7 @@ class TypeDePlatRepository extends Repository
 
   public function estRattacheAUnPlat(int $id): bool
   {
-    $sql = 'SELECT COUNT(*) FROM plat WHERE type_id = :type_id';
-    $statement = $this->pdo->prepare($sql);
-    $statement->bindValue(':type_id', $id, PDO::PARAM_INT);
-    $statement->execute();
-
-    return $statement->fetchColumn() > 0;
+    return $this->estRattache('plat', 'type_id', $id);
   }
 
 }

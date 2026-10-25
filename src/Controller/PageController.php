@@ -35,7 +35,7 @@ private MailService $mailService;
         'email' => $_POST['email'],
         'description' => $_POST['description'],
       ];
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       try {
         if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)){

@@ -36,7 +36,7 @@ class MenuController extends Controller
         'menu_actif' => isset($_POST['menu_actif']) ? 1 : 0,
       ];
       //$data['stock_dispo'] = $_GET['stock_dispo'];
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       $role = $_SESSION['role_id'];
 
@@ -155,7 +155,7 @@ class MenuController extends Controller
         'menu_actif' => isset($_POST['menu_actif']) ? 1 : 0,
       ];
 
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       $role = $_SESSION['role_id'];
 

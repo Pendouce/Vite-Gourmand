@@ -8,7 +8,7 @@ use PDO;
 
 class CommandeBoissonRepository extends Repository
 {
-  public function ajouterBoissonCommande(array $data)
+  public function ajouterBoissonCommande(array $data): CommandeBoisson
   {
     $sql = 'INSERT INTO commande_boisson (commande_id, boisson_id, quantite, prix_unitaire) 
     VALUES (:commande_id, :boisson_id, :quantite, :prix_unitaire)';
@@ -19,9 +19,9 @@ class CommandeBoissonRepository extends Repository
     return CommandeBoisson::creerEtHydrate($data);
   }
 
-  public function trouverBoissonDeLaCommande(int $commandeId)
+  public function trouverBoissonDeLaCommande(int $commandeId): array
   {
-    $sql = 'SELECT commande_boisson.*, boisson.*/* , boisson.boisson_id AS b_id */
+    $sql = 'SELECT commande_boisson.*, boisson.*
     FROM commande_boisson
     INNER JOIN boisson ON commande_boisson.boisson_id = boisson.boisson_id
     WHERE commande_boisson.commande_id = :commande_id';
@@ -65,7 +65,7 @@ class CommandeBoissonRepository extends Repository
     return $tabBoissonCommande;
   }
 
-  public function modifierBoissonDeLaCommande(array $data)
+  public function modifierBoissonDeLaCommande(array $data):void
   {
     $sql = 'UPDATE commande_boisson SET quantite = :quantite
     WHERE boisson_id = :boisson_id AND commande_id = :commande_id';
@@ -74,4 +74,8 @@ class CommandeBoissonRepository extends Repository
     $statement->execute($data);
   }
 
+  public function estRatacheAUneCommande(int $id): bool
+  {
+    return $this->estRattache('commande_boisson', 'boisson_id', $id);
+  }
 }

@@ -6,6 +6,8 @@ use App\Exceptions\PageInexistanteException;
 use App\Factory\ContainerId;
 use Exception;
 
+use function PHPUnit\Framework\isString;
+
 class Controller
 {
   protected string $token;
@@ -90,7 +92,37 @@ class Controller
     }
   }
 
-  protected function nettoyerDonnees(array $data): array
+protected function formaterDonnees(array $data): array
+{
+  $result = [];
+  foreach ($data as $key => $value) {
+    if (is_string($value) && !in_array($key, ['mot_de_passe', 'confirmation_mot_de_passe'], true)) {
+      $value = trim($value);
+
+      if (in_array($key, ['nom', 'prenom'], true)) {
+        $value = mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
+      } elseif (str_contains($key, 'description') && $value !== '') {
+        $value = mb_strtoupper(mb_substr($value, 0, 1)) . mb_substr($value, 1);
+      }
+    }
+    $result[$key] = $value;
+  }
+  return $result;
+}
+
+protected function formaterValeur(string $value): string | null
+{
+  if ($value === null){
+    return null;
+  }
+  
+  $value = trim($value);
+
+  return mb_strtoupper(mb_substr($value, 0, 1)) . mb_substr($value, 1);
+}
+
+
+/*   protected function formaterDonnees(array $data): array
 {
     $dataNettoye = array_map(function($value) 
     {
@@ -104,8 +136,8 @@ class Controller
       return htmlspecialchars($value);
     }, $data);
     return $dataNettoye;
-}
-/*   public function nettoyerDonnees(array $data): array
+} */
+/*   public function formaterDonnees(array $data): array
 {
     $dataNettoye = array_map(function($value) 
     {

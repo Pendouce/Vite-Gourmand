@@ -30,4 +30,14 @@ class Repository
   {
     $this->pdo->rollBack();
   }
+
+  public function estRattache(string $table, string $colId, int $id): bool
+  {
+    $sql = 'SELECT COUNT(*) FROM '.$table.' WHERE '.$colId.' = :'.$colId;
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(':'.$colId, $id, PDO::PARAM_INT);
+    $statement->execute();
+
+    return $statement->fetchColumn() > 0;
+  }
 }

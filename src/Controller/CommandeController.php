@@ -70,10 +70,10 @@ class CommandeController extends Controller
         'prix_total' => $_POST['prix_total'],
       ];
 
-      $dataCommande = $this->nettoyerDonnees($dataCommande);
-      $dataMenus = $this->nettoyerDonnees($dataMenus);
-      $dataPrestas = $this->nettoyerDonnees($dataPrestas);
-      $dataBoissons = $this->nettoyerDonnees($dataBoissons);
+      $dataCommande = $this->formaterDonnees($dataCommande);
+      $dataMenus = $this->formaterDonnees($dataMenus);
+      $dataPrestas = $this->formaterDonnees($dataPrestas);
+      $dataBoissons = $this->formaterDonnees($dataBoissons);
 
       $role = $_SESSION['role_id'];
 
@@ -203,12 +203,12 @@ class CommandeController extends Controller
         ];
         
 
-        $dataCommande = $this->nettoyerDonnees($dataCommande);
-        $dataMenus = $this->nettoyerDonnees($dataMenus);
-        $dataPrestas = $this->nettoyerDonnees($dataPrestas);
-        $dataBoissons = $this->nettoyerDonnees($dataBoissons);
+        $dataCommande = $this->formaterDonnees($dataCommande);
+        $dataMenus = $this->formaterDonnees($dataMenus);
+        $dataPrestas = $this->formaterDonnees($dataPrestas);
+        $dataBoissons = $this->formaterDonnees($dataBoissons);
 
-        $motif = htmlspecialchars($_POST['motif']);
+        $motif = $this->formaterValeur($_POST['motif']);
 
         try{
           $commandeId = (int) $_POST['id'];
@@ -297,7 +297,7 @@ class CommandeController extends Controller
       $commandeId = (int) $_POST['id'];
       $roleId = (int)$_SESSION['role_id'];
       $userId = $_SESSION['user_id'];
-      $motif = htmlspecialchars($_POST['motif']);
+      $motif = $this->formaterValeur($_POST['motif']);
       try{
         $this->commandeService->annulerCommande($commandeId, $roleId, $userId, $motif);
        $_SESSION['succes'] = 'Commande annulée';

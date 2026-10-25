@@ -36,7 +36,7 @@ class EquipeController extends Controller
         $extension = $this->uploadService->validerImage($_FILES['photo']);
         $data['photo'] = $this->uploadImage($_FILES['photo'], "equipe", $extension);
       }
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       $role = $_SESSION['role_id'];
 
@@ -82,7 +82,7 @@ class EquipeController extends Controller
         $extension = $this->uploadService->validerImage($_FILES['photo']);
         $data['photo'] = $this->uploadImage($_FILES['photo'], "equipe", $extension);
       }
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       $data['membre_id'] = (int)$_POST['id'];
       $role = $_SESSION['role_id'];

@@ -65,5 +65,10 @@ class CommandeMenuRepository extends Repository
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
   }
+
+  public function estRatacheAUneCommande(int $id): bool
+  {
+    return $this->estRattache('commande_menu', 'menu_id', $id);
+  }
 }
 

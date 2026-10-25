@@ -83,6 +83,7 @@ class ContainerId
   {
     return new MenuService(
       new MenuRepository (),
+      new CommandeMenuRepository (),
       new RegimeRepository (),
       new EvenementRepository (),
       new ThemeRepository (),
@@ -115,6 +116,7 @@ class ContainerId
   {
     return new BoissonService(
       new BoissonRepository(),
+      new CommandeBoissonRepository(),
       new CalculStockService()
     );
   }

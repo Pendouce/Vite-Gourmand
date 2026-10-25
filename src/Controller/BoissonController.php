@@ -38,7 +38,7 @@ class BoissonController extends Controller
         $extension = $this->uploadService->validerImage($_FILES['photo_boisson']);
         $data['photo_boisson'] = $this->uploadImage($_FILES['photo_boisson'], "boisson", $extension);
       }
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       $role = $_SESSION['role_id'];
 
@@ -97,7 +97,7 @@ class BoissonController extends Controller
         $data['photo_boisson'] = $this->uploadImage($_FILES['photo_boisson'], "boisson", $extension);
       }
 
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       try{
         $boissonId = (int) $_POST['id'];

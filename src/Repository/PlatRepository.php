@@ -194,4 +194,9 @@ class PlatRepository extends Repository
 
     return $statement->execute();
   }
+
+  public function estRatacheAUnMenu(int $id): bool
+  {
+    return $this->estRattache('menu_plat', 'plat_id', $id);
+  }
 }

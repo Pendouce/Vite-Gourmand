@@ -25,8 +25,6 @@ class TypeDePlatService
   
     VerifService::verifDispoTitre($libelle, 
     $this->typeDePlatRepository->trouverTypeDePlatByNom($libelle));
-    //$this->existeEnBase($libelle);
-
 
     $data =['libelle' => $libelle];
 
@@ -55,7 +53,7 @@ class TypeDePlatService
 
     VerifService::verifExisteEnBase(
       $this->typeDePlatRepository->trouverTypeDePlatById($id),
-      'Type de plat'
+      'Ce type de plat'
     );
 
     //$this->existeEnBase($libelle);
@@ -73,35 +71,14 @@ class TypeDePlatService
 
     VerifService::verifExisteEnBase(
       $this->typeDePlatRepository->trouverTypeDePlatById($id),
-      'Type de plat'
+      'Ce type de plat'
     );
     
-    VerifService::verifActif(
+    VerifService::verifEstRatache(
       $this->typeDePlatRepository->estRattacheAUnPlat($id),
-      "plat", "un plat"
+      "Ce type de plat", " à un plat"
     );
-
-    //$this->existePasEnBase($id);
-
-
-    /* if($this->typeDePlatRepository->estRattacheAUnPlatActif($id)){
-      throw new RattacheActifException("plat", "un plat actif");
-    } */
 
     return $this->typeDePlatRepository->supprimerTypeDePlat($id);
   }
-
-  /* private function existeEnBase(string $libelle)
-  {
-    if($this->typeDePlatRepository->trouverTypeDePlatByNom($libelle)){
-      throw new LibelleExistantException($libelle);
-    }
-  } */
-
-  /* private function existePasEnBase(int $id)
-  {
-    if(!$this->typeDePlatRepository->trouverTypeDePlatById($id)){
-      throw new IdInnexistantException('Type de plat');
-    }
-  } */
 }

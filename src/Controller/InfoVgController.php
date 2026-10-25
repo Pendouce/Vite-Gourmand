@@ -40,7 +40,7 @@ class InfoVgController extends Controller
         'horaires_weekend' => $_POST['horaires_weekend'] ?? null
       ];
 
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       $role = $_SESSION['role_id'];
 
@@ -80,7 +80,7 @@ class InfoVgController extends Controller
         $data['chemin'] = $this->uploadImage($_FILES['chemin'], "imageSite", $extension);
       }
 
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
       
       $data['id'] = $_POST['id'];
       $role = $_SESSION['role_id'];

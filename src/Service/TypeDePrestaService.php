@@ -3,8 +3,6 @@
 namespace App\Service;
 
 use App\Exceptions\AccesRefuseException;
-use App\Exceptions\IdInnexistantException;
-use App\Exceptions\LibelleExistantException;
 use App\Repository\TypeDePrestaRepository;
 
 class TypeDePrestaService
@@ -51,7 +49,7 @@ class TypeDePrestaService
 
     VerifService::verifExisteEnBase(
       $this->typeDePrestaRepository->trouverTypeDePrestaParId($id),
-      'Type de prestaion'
+      'ce type de prestaion'
     );
 
     //$this->typeDePrestaExistante($data['libelle']);
@@ -64,20 +62,17 @@ class TypeDePrestaService
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
       VerifService::verifExisteEnBase(
         $this->typeDePrestaRepository->trouverTypeDePrestaParId($id),
-        'Type de prestaion'
+        'ce type de prestaion'
       );
     /* if (!$this->typeDePrestaRepository->trouverTypeDePrestaParId($id)){
       throw new IdInnexistantException('Type de prestaion');
     } */
 
-    VerifService::verifActif(
+    VerifService::verifEstRatache(
       $this->typeDePrestaRepository->estRattacheAUnePresta($id),
-      'prestation',
-      'une prestation'
+      'ce type de prestation',
+      ' à une prestation'
     );
-   /*  if($this->typeDePrestaRepository->estRattacheAUnTypeDePrestaActif($id)){
-      throw new RattacheActifException('prestation', 'une prestation active');
-    } */
 
     return $this->typeDePrestaRepository->supprimertypeDePresta($id);
   }

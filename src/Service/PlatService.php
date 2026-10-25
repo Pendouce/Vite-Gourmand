@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Exceptions\AccesRefuseException;
-use App\Exceptions\LibelleExistantException;
 use App\Repository\AllergeneRepository;
 use App\Repository\PlatRepository;
 use App\Repository\TypeDePlatRepository;
@@ -30,13 +29,12 @@ class PlatService
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
-    if(empty($data['titre'])){
-      throw new Exception("Veuillez entrer un titre");
-    }
-
-    if($this->platRepository->trouverPlatByNom($data['titre'])){
-      throw new LibelleExistantException($data['titre']);
-    }
+      $data['titre'] = VerifService::verifTitre($data['titre']);
+      
+      VerifService::verifDispoTitre(
+        $data['titre'],
+        $this->platRepository->trouverPlatByNom($data['titre'])
+      );
 
     if(empty($data['image_plat'])){
       throw new Exception("Veuillez selectioner une image");
@@ -52,7 +50,6 @@ class PlatService
     }
     VerifService::verifNbPositif($data['stock_plat']);
 
-    $data['titre'] = ucfirst($data['titre']);
     $data['description_plat'] = ucfirst($data['description_plat']);
     
     return $this->platRepository->creerPlat($data);
@@ -139,9 +136,21 @@ class PlatService
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
+    $platActuel = $this->platRepository->trouverPlatParId($platId);
+
+    VerifService::verifExisteEnBase($platActuel, 'Ce plat');
+
     if(!empty($data['titre'])){
-      $this->verifNom($data['titre'], $platId);
-      $data['titre'] = ucfirst($data['titre']);
+      $data['titre'] = VerifService::verifTitre($data['titre']);
+
+      $plat = $this->platRepository->trouverPlatByNom($data['titre']);
+
+      VerifService::verifDispoTitre(
+        $data['titre'],
+        $plat,
+        $plat ? $plat->getPlatId(): null,
+        $platId
+      );
     }
 
     if(isset($data['prix_personne'])){
@@ -182,18 +191,36 @@ class PlatService
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
-    $this->allergeneRepository->supprimerPlat($platId);
-    $this->platRepository->supprimerPlat($platId);
+    VerifService::verifExisteEnBase(
+      $this->platRepository->trouverPlatParId($platId),
+      'Ce plat'
+    );
+    VerifService::verifEstRatache(
+      $this->platRepository->estRatacheAUnMenu($platId),
+      'ce plat', ' a un menu'
+    );
+
+    try{
+      $this->platRepository->beginTransaction();
+
+      $this->allergeneRepository->supprimerPlat($platId);
+      $this->platRepository->supprimerPlat($platId);
+
+      $this->platRepository->commit();
+    }catch(Exception $e){
+      $this->platRepository->rollBack();
+      throw new Exception('Erreur lors de la suppression du plat : '. $e->getMessage());
+    }
   }
 
-  private function verifNom(string $nom, int $id)
+/*   private function verifNom(string $nom, int $id)
   {
     $plat = $this->platRepository->trouverPlatByNom($nom);
 
     if($plat && $plat->getPlatId() !== $id){
       throw new LibelleExistantException($nom);
     }
-  }
+  } */
 
   public function ajouterAllergenes(array $plats)
   {

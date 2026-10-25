@@ -21,7 +21,7 @@ class TypeDePlatController extends Controller
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
 
-      $libelle = htmlspecialchars($_POST['libelle']);
+      $libelle = $this->formaterValeur($_POST['libelle']);
       $role = $_SESSION['role_id'];
 
       try{
@@ -51,7 +51,7 @@ class TypeDePlatController extends Controller
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       $this->checkCsrfToken();
 
-      $libelle = htmlspecialchars($_POST['libelle']);
+      $libelle = $this->formaterValeur($_POST['libelle']);
       $id = $_POST['type_id'];
       $role = $_SESSION['role_id'];
 

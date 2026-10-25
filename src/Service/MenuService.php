@@ -2,9 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\CommandeMenu;
 use App\Entity\Menu;
 use App\Exceptions\AccesRefuseException;
-use App\Exceptions\LibelleExistantException;
+use App\Repository\CommandeMenuRepository;
 use App\Repository\EvenementRepository;
 use App\Repository\MenuRepository;
 use App\Repository\PlatRepository;
@@ -16,6 +17,7 @@ use Exception;
 class MenuService
 {
   private MenuRepository $menuRepository;
+  private CommandeMenuRepository $commandeMenuRepository;
   private RegimeRepository $regimeRepository;
   private EvenementRepository $evenementRepository;
   private ThemeRepository $themeRepository;
@@ -23,9 +25,10 @@ class MenuService
   private PlatService $platService;
   private CalculStockService $calculStockService;
 
-  public function __construct(MenuRepository $menuRepository, RegimeRepository $regimeRepository,EvenementRepository $evenementRepository, ThemeRepository $themeRepository, PlatRepository $platRepository, PlatService $platService, CalculStockService $calculStockService)
+  public function __construct(MenuRepository $menuRepository, CommandeMenuRepository $commandeMenuRepository, RegimeRepository $regimeRepository,EvenementRepository $evenementRepository, ThemeRepository $themeRepository, PlatRepository $platRepository, PlatService $platService, CalculStockService $calculStockService)
   {
     $this->menuRepository = $menuRepository;
+    $this->commandeMenuRepository = $commandeMenuRepository;
     $this->regimeRepository = $regimeRepository;
     $this->evenementRepository = $evenementRepository;
     $this->themeRepository = $themeRepository;
@@ -37,7 +40,11 @@ class MenuService
   public function creerMenu(array $data, int $role, array $platsDuMenu)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
-    $this->menuExistant($data['titre']);
+
+    $data['titre'] = VerifService::verifTitre($data['titre']);
+
+    VerifService::verifDispoTitre($data['titre'],
+    $this->menuRepository->trouverMenuParNom($data['titre']));
 
     if(empty($platsDuMenu)){
       throw new Exception("Veuillez selectionner au moins un plat");
@@ -141,9 +148,21 @@ class MenuService
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
+    $ancienMenu = $this->menuRepository->trouverMenuParId($menuId);
+
+    VerifService::verifExisteEnBase($ancienMenu, 'Ce menu');
+
     if(!empty($data['titre'])){
-      $this->menuExistant($data['titre'], $menuId);
-      $data['titre'] = ucfirst($data['titre']);
+      $data['titre'] = VerifService::verifTitre($data['titre']);
+
+      $menu = $this->menuRepository->trouverMenuParNom($data['titre']);
+
+      VerifService::verifDispoTitre(
+        $data['titre'],
+        $menu,
+        $menu ? $menu->getMenuId() : null,
+        $menuId
+      );
     }
 
     if(isset($data['prix_personne'])){
@@ -154,7 +173,6 @@ class MenuService
       VerifService::verifNbPositif($data['nombre_personne_min']);
     }
 
-    $ancienMenu = $this->afficherMenuParId($menuId);
     $anciennesDonnees = $ancienMenu->deshydrate();
 
     $data = array_filter($data, fn($value) => $value !== null);
@@ -265,11 +283,29 @@ class MenuService
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
-    $this->platRepository->supprimerMenu($menuId);
-    $this->evenementRepository->supprimerMenu($menuId);
-    $this->regimeRepository->supprimerMenu($menuId);
-    $this->themeRepository->supprimerMenu($menuId);
-    $this->menuRepository->supprimerMenu($menuId);
+    VerifService::verifExisteEnBase(
+      $this->menuRepository->trouverMenuParId($menuId),
+      'Ce menu'
+    );
+    VerifService::verifEstRatache(
+      $this->commandeMenuRepository->estRatacheAUneCommande($menuId),
+      'Ce menu', " a une commande"
+    );
+
+    try{
+      $this->menuRepository->beginTransaction();
+
+      $this->platRepository->supprimerMenu($menuId);
+      $this->evenementRepository->supprimerMenu($menuId);
+      $this->regimeRepository->supprimerMenu($menuId);
+      $this->themeRepository->supprimerMenu($menuId);
+      $this->menuRepository->supprimerMenu($menuId);
+
+      $this->menuRepository->commit();
+    }catch(Exception $e){
+      $this->menuRepository->rollBack();
+      throw new Exception('Erreur lors de la suppression du menu : '. $e->getMessage());
+    }
   }
 
   private function ajouterPlat(array $menus)
@@ -402,15 +438,6 @@ class MenuService
     $this->ajouterImage($menus);
 
     return $menus;
-  }
-
-  private function menuExistant(string $nomMenu, ?int $id = null)
-  {
-    $menu = $this->menuRepository->trouverMenuParNom($nomMenu);
-
-    if($menu && $menu->getMenuId() !== $id){
-      throw new LibelleExistantException($nomMenu);
-    }
   }
 
   private function modifierElementDuMenu(int $menuId, array $nouveauxId, object $repo, string $mehodeTrouver, string $getId, callable $ajouter, callable $supprimer)

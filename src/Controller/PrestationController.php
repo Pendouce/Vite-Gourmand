@@ -45,7 +45,7 @@ class PrestationController extends Controller
         $data['img_presta'] = $this->uploadImage($_FILES['img_presta'], "prestation", $extension);
       }
 
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
       $role = $_SESSION['role_id'];
 
       try{
@@ -117,7 +117,7 @@ class PrestationController extends Controller
         $data['img_presta'] = $this->uploadImage($_FILES['img_presta'], "prestation", $extension);
       }
 
-      $data = $this->nettoyerDonnees($data);
+      $data = $this->formaterDonnees($data);
 
       $prestaId = (int) $_POST['id'];
       $role = $_SESSION['role_id'];

@@ -80,5 +80,10 @@ class CommandePrestaRepository extends Repository
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
   }
+
+  public function estRatacheAUneCommande(int $id): bool
+  {
+    return $this->estRattache('commande_prestation', 'prestation_id', $id);
+  }
 }
 
