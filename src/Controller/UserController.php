@@ -106,6 +106,12 @@ class UserController extends Controller
         $_SESSION['role_id'] = $nouvelUtilisateurRole;
         // Je regenere l'id de session apres connexion
         session_regenerate_id(true);
+        if(isset($_SESSION['redirection'])){
+          $redirection = $_SESSION['redirection'];
+          header('location: '.$redirection);
+          unset($_SESSION['redirection']);
+          exit;
+        }
         header('location: /');
         exit;
 

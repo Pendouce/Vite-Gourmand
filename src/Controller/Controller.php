@@ -6,8 +6,6 @@ use App\Exceptions\PageInexistanteException;
 use App\Factory\ContainerId;
 use Exception;
 
-use function PHPUnit\Framework\isString;
-
 class Controller
 {
   protected string $token;
@@ -21,6 +19,7 @@ class Controller
     session_start();
     // Je genere le token dans le constructeur
     $this->token = $this->genererToken();
+    $this->redirection();
   }
   
   protected function render(string $path, array $params=[]): void
@@ -119,6 +118,15 @@ protected function formaterValeur(string $value): string | null
   $value = trim($value);
 
   return mb_strtoupper(mb_substr($value, 0, 1)) . mb_substr($value, 1);
+}
+
+protected function redirection()
+{
+  $chemin = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+  if ($_SERVER['REQUEST_METHOD'] === 'GET' && $chemin !== '/connexion' && $chemin !== '/inscription') {
+    $_SESSION['redirection'] = $_SERVER['REQUEST_URI'];
+  }
 }
 
 

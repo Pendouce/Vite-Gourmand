@@ -5,19 +5,16 @@ namespace App\Service;
 use App\Exceptions\AccesRefuseException;
 use App\Repository\CommandePrestaRepository;
 use App\Repository\PrestationRepository;
-use App\Repository\TypeDePrestaRepository;
 use Exception;
 
 class PrestationService
 {
   private PrestationRepository $prestationRepository;
-  private TypeDePrestaRepository $typePrestaRepository;
   private CommandePrestaRepository $commandePrestaRepository;
 
-  public function __construct(PrestationRepository $prestationRepository, TypeDePrestaRepository $typePrestaRepository, CommandePrestaRepository $commandePrestaRepository)
+  public function __construct(PrestationRepository $prestationRepository, CommandePrestaRepository $commandePrestaRepository)
   {
     $this->prestationRepository = $prestationRepository;
-    $this->typePrestaRepository = $typePrestaRepository;
     $this->commandePrestaRepository = $commandePrestaRepository;
   }
 

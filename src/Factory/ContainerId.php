@@ -52,7 +52,7 @@ class ContainerId
   {
     return new PrestationService(
       new PrestationRepository(),
-      new TypeDePrestaRepository()
+      new CommandePrestaRepository()
     );
   }
   public static function getTypeDePrestaService(): TypeDePrestaService
