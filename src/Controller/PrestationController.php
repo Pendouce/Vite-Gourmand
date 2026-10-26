@@ -62,10 +62,10 @@ class PrestationController extends Controller
       }
 
     }else{
-      $prestations = $this->prestationService->afficherPrestation();
-      $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
-      $prestationParType = $this->prestationService->afficherPrestationParType();
       $role = $_SESSION['role_id'];
+      $prestations = $this->prestationService->afficherPrestation($role);
+      $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
+      $prestationParType = $this->prestationService->afficherPrestationParType($role);
 
     $this->render('pages/employe/creerPrestation', [
       'prestations' => $prestations, 'typeDePresta' => $typeDePresta, 'prestationParType' => $prestationParType, 
@@ -76,10 +76,12 @@ class PrestationController extends Controller
 
   public function afficherPrestation()
   {
-    $prestations = $this->prestationService->afficherPrestation();
-    $prestationParType = $this->prestationService->afficherPrestationParType();
-    $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
     $role = $_SESSION['role_id'] ?? null;
+
+    $prestations = $this->prestationService->afficherPrestation($role);
+    $prestationParType = $this->prestationService->afficherPrestationParType($role);
+    $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
+    
 
     $this->render('pages/employe/prestations', [
       'prestations' => $prestations, 'prestationParType' => $prestationParType, 
@@ -136,10 +138,12 @@ class PrestationController extends Controller
       }
 
     }else{
+      $role = $_SESSION['role_id'];
+
       $prestation = $this->prestationService->afficherPrestationParId($_GET['id']);
       $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
-      $prestationParType = $this->prestationService->afficherPrestationParType();
-      $role = $_SESSION['role_id'];
+      $prestationParType = $this->prestationService->afficherPrestationParType($role);
+      
 
     $this->render('pages/employe/modifierPrestation', [
       'prestation' => $prestation, 'typeDePresta' => $typeDePresta, 'prestationParType' => $prestationParType, 

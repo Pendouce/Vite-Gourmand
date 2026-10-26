@@ -61,8 +61,8 @@ class BoissonController extends Controller
 
   public function afficherBoisson(): void
   {
-    $boissons = $this->boissonService->afficherBoisson();
     $role = $_SESSION['role_id'] ?? null;
+    $boissons = $this->boissonService->afficherBoisson($role);
 
     $this->render('pages/employe/boisson', ['boissons' => $boissons, 'role' => $role, 'titre' => 'boissons']);
   }

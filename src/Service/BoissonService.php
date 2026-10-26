@@ -49,10 +49,17 @@ class BoissonService
     return $this->boissonRepository->creerBoisson($data);
   }
 
-  public function afficherBoisson()
+  public function afficherBoisson(?int $role)
+  {
+    if($role === ROLE_EMPLOYE || $role === ROLE_ADMIN){
+      return $this->boissonRepository->trouverBoisson();
+    }
+    return $this->boissonRepository->trouverBoissonActif();
+  }
+  /* public function afficherBoisson()
   {
     return $this->boissonRepository->trouverBoisson();
-  }
+  } */
 
   public function afficherBoissonParId(int $id)
   {

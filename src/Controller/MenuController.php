@@ -86,7 +86,7 @@ class MenuController extends Controller
   public function afficherMenus()
   {
     $role = $_SESSION['role_id'] ?? null;
-    $menus = $this->menuService->afficherMenus();
+    $menus = $this->menuService->afficherMenus($role);
     $evenements = $this->menuService->afficherEvenements();
     $themes = $this->menuService->afficherThemes();
     $regimes = $this->menuService->afficherRegimes();

@@ -4,9 +4,8 @@ namespace App\Service;
 
 use App\Exceptions\AccesRefuseException;
 use App\Repository\AllergeneRepository;
+use App\Repository\MenuRepository;
 use App\Repository\PlatRepository;
-use App\Repository\TypeDePlatRepository;
-use App\Service\TypeDePlatService;
 use App\Service\VerifService;
 use Exception;
 
@@ -14,15 +13,14 @@ class PlatService
 {
   private PlatRepository $platRepository;
   private AllergeneRepository $allergeneRepository;
-  private TypeDePlatRepository $typeDePlatRepository;
-  private TypeDePlatService $typeDePlatService;
+  private MenuRepository $menuRepository;
 
-  public function __construct(PlatRepository $platRepository, AllergeneRepository $AllergeneRepository, TypeDePlatRepository $typeDePlatRepository, TypeDePlatService $typeDePlatService)
+
+  public function __construct(PlatRepository $platRepository, AllergeneRepository $AllergeneRepository, MenuRepository $menuRepository)
   {
     $this->platRepository = $platRepository;
     $this->allergeneRepository = $AllergeneRepository;
-    $this->typeDePlatRepository = $typeDePlatRepository;
-    $this->typeDePlatService = $typeDePlatService;
+    $this->menuRepository = $menuRepository;
   }
 
   public function creerPlat(array $data, int $role)
@@ -66,6 +64,7 @@ class PlatService
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
     // Je recupere tous les plats
+
     $plats = $this->platRepository->trouverPlat();
 
     // Je retourne plat qui contient maintenant ses allergenes
@@ -178,6 +177,16 @@ class PlatService
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
 
     $this->platRepository->modifierStatusPlat($platId, $status);
+
+    if($status === 0){
+      $menusContenantPlat = $this->menuRepository->trouverMenuDePlat($platId);
+  
+      foreach($menusContenantPlat as $menu){
+        if($menu->isMenuActif()){
+          $this->menuRepository->modifierStatusMenu($menu->getMenuId(), 0);
+        }
+      }
+    }
   }
 
   public function modifierStockPlat(int $platId, int $stock, int $role)

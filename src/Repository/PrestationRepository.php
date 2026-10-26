@@ -27,7 +27,28 @@ class PrestationRepository extends Repository
 
   public function trouverPrestation()
   {
-    $sql = 'SELECT * FROM prestation INNER JOIN type_presta ON prestation.type_presta_id = type_presta.type_presta_id';
+    $sql = 'SELECT * FROM prestation 
+    INNER JOIN type_presta ON prestation.type_presta_id = type_presta.type_presta_id
+    ORDER BY prestation_actif DESC';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabPresta = [];
+
+    foreach($data as $presta){
+      $tabPresta[] = Prestation::creerEtHydrate($presta);
+    }
+
+    return $tabPresta;
+  }
+
+  public function trouverPrestationActif()
+  {
+    $sql = 'SELECT * FROM prestation 
+    INNER JOIN type_presta ON prestation.type_presta_id = type_presta.type_presta_id
+    WHERE prestation_actif = 1';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute();
@@ -81,7 +102,28 @@ class PrestationRepository extends Repository
   public function trouverPrestationParType()
   {
     $sql = 'SELECT * FROM prestation
-      INNER JOIN type_presta ON prestation.type_presta_id = type_presta.type_presta_id';
+      INNER JOIN type_presta ON prestation.type_presta_id = type_presta.type_presta_id
+      ORDER BY type_presta.type_presta_id, prestation_actif DESC';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabPresta = [];
+
+    foreach($data as $presta){
+      $tabPresta[] = Prestation::creerEtHydrate($presta);
+    }
+
+    return $tabPresta;
+  }
+
+  public function trouverPrestationActifParType()
+  {
+    $sql = 'SELECT * FROM prestation
+      INNER JOIN type_presta ON prestation.type_presta_id = type_presta.type_presta_id
+      WHERE prestation_actif = 1
+      ORDER BY type_presta.type_presta_id';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute();

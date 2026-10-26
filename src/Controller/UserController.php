@@ -126,6 +126,7 @@ class UserController extends Controller
 
   public function afficheInfos()
   {
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR]);
     $id = $_SESSION['user_id'];
     $infoUtilisateur = $this->userService->afficheInfo($id);
     $this->render('pages/mesInfos', ['infoUtilisateur' => $infoUtilisateur,'titre' => 'mes infos']);

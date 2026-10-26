@@ -98,9 +98,14 @@ class MenuService
     }
   }
 
-  public function afficherMenus()
+  public function afficherMenus(?int $role)
   {
-    $menu = $this->menuRepository->trouverMenu();
+    if($role === ROLE_EMPLOYE || $role === ROLE_ADMIN){
+      $menu = $this->menuRepository->trouverMenu();
+    }else{
+      $menu = $this->menuRepository->trouverMenuActif();
+    }
+
     $this->ajouterElementsMenu($menu);
 
     return $menu;
@@ -275,7 +280,17 @@ class MenuService
   public function modifierStatusMenu(int $menuId, int $status, int $role)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])) throw new AccesRefuseException();
+    
+    if($status === 1){
+      $platDuMenu = $this->platRepository->trouverPlatDuMenu($menuId);
 
+      foreach($platDuMenu as $plat){
+        if(!$plat->isPlatActif()){
+          throw new Exception("Impossible d'activer ce menu il contient un ou plusieurs plats inactifs");
+        }
+      }
+    }
+    
     $this->menuRepository->modifierStatusMenu($menuId, $status);
   }
 

@@ -64,9 +64,12 @@ class PrestationService
     return $this->prestationRepository->creerPrestation($data);
   }
 
-  public function afficherPrestation()
+  public function afficherPrestation(?int $role)
   {
-    return $this->prestationRepository->trouverPrestation();
+    if($role === ROLE_EMPLOYE || $role === ROLE_ADMIN){
+      return $this->prestationRepository->trouverPrestation();
+    }
+    return $this->prestationRepository->trouverPrestationActif();
   }
 
   public function afficherPrestationParId(int $id)
@@ -74,9 +77,13 @@ class PrestationService
     return $this->prestationRepository->trouverPrestationParId($id);
   }
 
-  public function afficherPrestationParType()
+  public function afficherPrestationParType(?int $role)
   {
-    $prestations = $this->prestationRepository->trouverPrestationParType();
+    if($role === ROLE_EMPLOYE || $role === ROLE_ADMIN){
+      $prestations = $this->prestationRepository->trouverPrestationParType();
+    }else{
+      $prestations = $this->prestationRepository->trouverPrestationActifParType();
+    }
     $prestaParType = [];
 
     foreach ($prestations as $presta) {

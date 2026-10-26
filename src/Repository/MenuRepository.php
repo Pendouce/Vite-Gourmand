@@ -55,6 +55,21 @@ class MenuRepository extends Repository
     return $tabMenus;
   }
 
+  public function trouverMenuActif()
+  {
+    $sql = 'SELECT * FROM menu WHERE menu_actif = 1';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute();
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabMenus = [];
+
+    foreach($data as $menu){
+      $tabMenus[] = Menu::creerEtHydrate($menu);
+    }
+    return $tabMenus;
+  }
+
   public function trouverMenuParId(int $menuId)
   {
     $sql = 'SELECT * FROM menu WHERE menu_id = :menu_id';

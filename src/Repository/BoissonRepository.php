@@ -43,7 +43,24 @@ class BoissonRepository extends Repository
 
   public function trouverBoisson()
   {
-    $sql = 'SELECT * FROM boisson';
+    $sql = 'SELECT * FROM boisson ORDER BY boisson_actif DESC';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute();
+
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $tabBoisson = [];
+
+    foreach($data as $boisson){
+      $tabBoisson[] = Boisson::creerEtHydrate($boisson);
+    }
+
+    return $tabBoisson;
+  }
+
+  public function trouverBoissonActif()
+  {
+    $sql = 'SELECT * FROM boisson WHERE boisson_actif = 1';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute();

@@ -77,6 +77,7 @@ class PlatController extends Controller
     $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
 
     $role = $_SESSION['role_id'];
+    
     $plats = $this->platService->afficherPlats($role);
     $platsParType = $this->platService->afficherPlatsParType($role);
     $typeDePlat = $this->typeDePlatService->afficheTypeDePlat();

@@ -53,7 +53,8 @@ class PlatRepository extends Repository
   public function trouverPlat()
   {
     $sql = 'SELECT * FROM plat
-    INNER JOIN type_de_plat ON plat.type_id = type_de_plat.type_id';
+    INNER JOIN type_de_plat ON plat.type_id = type_de_plat.type_id
+    ORDER BY plat_actif DESC';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute();
@@ -72,7 +73,7 @@ class PlatRepository extends Repository
   {
     $sql = 'SELECT * FROM plat
     INNER JOIN type_de_plat ON plat.type_id = type_de_plat.type_id
-    ORDER BY type_de_plat.type_id';
+    ORDER BY type_de_plat.type_id, plat_actif DESC';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute();
