@@ -60,6 +60,16 @@ class PrestationService
       throw new Exception("Veuillez fixer un prix");
     }
     VerifService::verifNbPositif($data['prix_presta']);
+    
+    if(empty($data['seuil'])){
+      throw new Exception("Veuillez fixer un seuil");
+    }
+    VerifService::verifNbPositif($data['seuil']);
+    
+    if(empty($data['supplement'])){
+      throw new Exception("Veuillez fixer un supplement");
+    }
+    VerifService::verifNbPositif($data['supplement']);
 
     return $this->prestationRepository->creerPrestation($data);
   }

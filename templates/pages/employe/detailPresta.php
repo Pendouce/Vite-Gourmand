@@ -37,7 +37,10 @@
       src="<?= htmlspecialchars($prestation->getImgPresta()) ?>"
       alt="<?= htmlspecialchars($prestation->getNomPresta()) ?>"
       class="w-80 h-60 object-cover">
-      <p class="font-semibold text-lg md:text-xl"><?= htmlspecialchars($prestation->getPrixPresta()) ?> €</p>
+      <div class="flex items-center gap-2">
+        <p class="font-semibold text-lg md:text-xl"><?= htmlspecialchars($prestation->getPrixPresta()) ?> €</p>
+        <p>/<?= $prestation->getSeuil() ?>pers</p>
+      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 w-full max-w-4xl gap-6">
         <div class="col-span-1 order-2 md:order-1 md:col-span-1">

@@ -82,7 +82,7 @@
 
       <div class="flex flex-col">
         <label for="prix_presta">Prix</label>
-        <input class="grand-input" type="number" min="1" step="any" name="prix_presta">
+        <input class="petit-input" type="number" min="1" step="any" name="prix_presta">
       </div>
 
       <fieldset class="flex gap-2">
@@ -98,6 +98,16 @@
         </label>
         </div>
       </fieldset>
+
+      <div class="flex flex-col">
+        <label for="seuil">Seuil</label>
+        <input class="petit-input" type="number" min="1" step="any" name="seuil">
+      </div>
+
+      <div class="flex flex-col">
+        <label for="supplement">Supplement</label>
+        <input class="petit-input" type="number" min="1" step="any" name="supplement">
+      </div>
       
       <div class="col-span-1 col-start-2 flex flex-col justify-between items-center ">
           <label>Statut: </label>

@@ -11,8 +11,8 @@ class PrestationRepository extends Repository
 
   public function creerPrestation(array $data)
   {
-    $sql = 'INSERT INTO prestation (nom_presta, prix_presta, description_presta, img_presta, necessite_retour, prestation_actif, type_presta_id, contenu_presta)
-    VALUES(:nom_presta, :prix_presta, :description_presta, :img_presta, :necessite_retour, :prestation_actif, :type_presta_id, :contenu_presta)';
+    $sql = 'INSERT INTO prestation (nom_presta, prix_presta, description_presta, img_presta, necessite_retour, prestation_actif, type_presta_id, contenu_presta, seuil, supplement)
+    VALUES(:nom_presta, :prix_presta, :description_presta, :img_presta, :necessite_retour, :prestation_actif, :type_presta_id, :contenu_presta, :seuil, :supplement)';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
@@ -150,7 +150,9 @@ class PrestationRepository extends Repository
     necessite_retour = :necessite_retour, 
     prestation_actif = :prestation_actif, 
     type_presta_id = :type_presta_id,
-    contenu_presta = :contenu_presta
+    contenu_presta = :contenu_presta,
+    seuil = :seuil, 
+    supplement = :supplement
     WHERE prestation_id = :prestation_id';
 
     $statement = $this->pdo->prepare($sql);

@@ -77,6 +77,11 @@ CREATE TABLE prestation(
 ALTER TABLE prestation CHANGE type_presta type_presta_id INT;
 
 ALTER TABLE prestation ADD COLUMN contenu_presta JSON;
+
+ALTER TABLE prestation
+  ADD COLUMN seuil INT NOT NULL,
+  ADD COLUMN supplement INT NOT NULL;
+
 ALTER TABLE prestation
 ADD CONSTRAINT fk_tp FOREIGN KEY (type_presta_id) REFERENCES type_presta (type_presta_id);
 

@@ -635,6 +635,29 @@ class CommandeService
   {
     //Je boucle sur mes prestation pour recuperer le prix de chacunes d'entres elles
     $prixPresta = [];
+    $prestaCalcul = [];
+    foreach($dataPresta as $presta){
+      $prestationParId = $this->prestationRepository->trouverPrestationparId($presta['prestation_id']);
+      $prixPresta[] = $prestationParId->getPrixPresta();
+      $prestaCalcul[] = [
+        'prix_presta' => $prestationParId->getPrixPresta(),
+        'seuil' => $prestationParId->getSeuil(),
+        'supplement' => $prestationParId->getSupplement()
+      ];
+    }
+
+    $total = $this->calculPrixService->calculerTotalpresta($menusCommande, $prestaCalcul);
+
+    if($prixTotalPresta != $total){
+      throw new Exception('Erreur prix total presta '. $total);
+    }
+
+    return $prixPresta;
+  }
+  /* private function verifPresta(array $dataPresta, float $prixTotalPresta, array $menusCommande)
+  {
+    //Je boucle sur mes prestation pour recuperer le prix de chacunes d'entres elles
+    $prixPresta = [];
     foreach($dataPresta as $presta){
       $prestationParId = $this->prestationRepository->trouverPrestationparId($presta['prestation_id']);
       $prixPresta[] = $prestationParId->getPrixPresta();
@@ -644,7 +667,7 @@ class CommandeService
       throw new Exception('Erreur prix total presta '. $this->calculPrixService->calculerTotalpresta($menusCommande, $prixPresta));
     }
     return $prixPresta;
-  }
+  } */
 
   private function verifBoisson(array $dataBoisson, array $diffStock = [])
   {

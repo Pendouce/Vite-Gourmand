@@ -15,6 +15,8 @@ class Prestation extends Entity
   protected ?bool $prestationActif = null;
   protected ?string $typePrestaId = null;
   protected ?array $contenuPresta = null;
+  protected ?int $seuil = null;
+  protected ?int $supplement = null;
 
   protected ?string $libelle = null;
 
@@ -202,6 +204,42 @@ class Prestation extends Entity
       $contenuPresta = json_decode($contenuPresta, true);
     }
     $this->contenuPresta = $contenuPresta;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of seuil
+   */
+  public function getSeuil(): ?int
+  {
+    return $this->seuil;
+  }
+
+  /**
+   * Set the value of seuil
+   */
+  public function setSeuil(?int $seuil): self
+  {
+    $this->seuil = $seuil;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of supplement
+   */
+  public function getSupplement(): ?int
+  {
+    return $this->supplement;
+  }
+
+  /**
+   * Set the value of supplement
+   */
+  public function setSupplement(?int $supplement): self
+  {
+    $this->supplement = $supplement;
 
     return $this;
   }

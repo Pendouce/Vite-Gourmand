@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Exceptions\IdInnexistantException;
-
+use Exception;
 
 class CalculPrixService
 {
@@ -26,7 +26,39 @@ class CalculPrixService
     return $totalCommande;
   }
 
-  private const SEUIL_DE_BASE = 5; // Prix presta fixe commence a partir de 5 prsn
+  private const PALIER = 5; // Calcul par 5 personnes (si nbPersonne = 7, presta pour 10)
+
+  public function calculerTotalpresta(array $menuCommande, array $presta)
+  {
+    // Je calcul le prix total de chaques prestations (map)
+    // Je les additionnent entres eux (sum)
+    $result = array_sum(
+      array_map(
+        fn($p) => $this->calculerPresta($menuCommande, $p['prix_presta'], $p['seuil'], $p['supplement']),$presta)
+    );
+
+    return $result;
+  }
+
+  public function calculerPresta(array $menuCommande, float $prixPresta, int $seuil, int $supplementPalier)
+  {
+    $nbPersonnes = $this->calculerNbPersonneCommande($menuCommande);
+    $supplement = 0;
+
+    if ($nbPersonnes < $seuil) {
+      throw new Exception('Cette prestation est disponible a partir de '.$seuil. ' personnes');
+    }
+
+    while($seuil < $nbPersonnes){
+      $seuil += self::PALIER;
+      $supplement += $supplementPalier;
+    }
+
+    $result = $supplement + $prixPresta;
+
+    return $result;
+  }
+  /* private const SEUIL_DE_BASE = 5; // Prix presta fixe commence a partir de 5 prsn
   private const PALIER = 5; // Calcul par 5 personnes (si nbPersonne = 7, presta pour 10)
   private const SUPPLEMENT = 20; // 20€ ajouté par pallier
 
@@ -41,6 +73,7 @@ class CalculPrixService
       $supplement += self::SUPPLEMENT;
     }
 
+
     // Je calcul le prix total de chaques prestations (map)
     // Je les additionnent entres eux (sum)
     $result = array_sum(
@@ -48,7 +81,7 @@ class CalculPrixService
     );
 
     return $result;
-  }
+  } */
 
   public function calculerNbPersonneCommande(array $menuCommande)
   {

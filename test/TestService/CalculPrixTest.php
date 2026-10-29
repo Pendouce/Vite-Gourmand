@@ -2,9 +2,10 @@
 
 namespace App\Test\TestService;
 
-use PHPUnit\Framework\TestCase;
 use App\Service\CalculPrixService;
+use Exception;
 use Override;
+use PHPUnit\Framework\TestCase;
 
 class CalculPrixTest extends TestCase
 {
@@ -77,8 +78,14 @@ class CalculPrixTest extends TestCase
       ]
     ];
 
+    $prixPresta = [
+      ['prix_presta' => 12, 'seuil' => 5, 'supplement' => 20],
+      ['prix_presta' => 20, 'seuil' => 5, 'supplement' => 20],
+      ['prix_presta' => 40, 'seuil' => 5, 'supplement' => 20]
+    ];
+
      $total = $this->calculPrixService->calculTotalCommande(
-        [12, 20, 40],     // prix prestas
+        $prixPresta,
         $menuCommande,
         $boissonCommande,
         'adresse traiteur',
@@ -105,8 +112,14 @@ class CalculPrixTest extends TestCase
       ]
     ];
 
+    $prixPresta = [
+      ['prix_presta' => 12, 'seuil' => 5, 'supplement' => 20],
+      ['prix_presta' => 20, 'seuil' => 5, 'supplement' => 20],
+      ['prix_presta' => 40, 'seuil' => 5, 'supplement' => 20]
+    ];
+
      $total = $this->calculPrixService->calculTotalCommande(
-        [12, 20, 40],     // prix prestas
+        $prixPresta,     // prix prestas
         $menuCommande,
         $boissonCommande,
         'adresse traiteur',
@@ -126,10 +139,16 @@ class CalculPrixTest extends TestCase
       ]
     ];
 
+    $prixPresta = [
+      ['prix_presta' => 12, 'seuil' => 5, 'supplement' => 20],
+      ['prix_presta' => 20, 'seuil' => 5, 'supplement' => 20],
+      ['prix_presta' => 40, 'seuil' => 5, 'supplement' => 20]
+    ];
+
     $boissonCommande = [];
 
      $total = $this->calculPrixService->calculTotalCommande(
-        [12, 20, 40],     // prix prestas
+        $prixPresta,
         $menuCommande,
         $boissonCommande,
         'adresse traiteur',
@@ -138,5 +157,15 @@ class CalculPrixTest extends TestCase
 
     $this->assertEquals(872.00, $total);
   }
+
+  public function testPrestaSousLeSeuil(): void
+  {
+    $service = $this->createPartialMock(CalculPrixService::class, ['calculerNbPersonneCommande']);
+    $service->method('calculerNbPersonneCommande')->willReturn(3);
+
+    $this->expectException(Exception::class);
+    $service->calculerTotalpresta([], [['prix_presta' => 20.0, 'seuil' => 5, 'supplement' => 20]]);
+  }
+
 
 }

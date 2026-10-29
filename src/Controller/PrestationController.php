@@ -37,7 +37,9 @@ class PrestationController extends Controller
         'necessite_retour' => !empty($_POST['necessite_retour']) ? 1 : 0,
         'prestation_actif' => isset($_POST['prestation_actif']) ? 1 : 0,
         'type_presta_id' => (int) $_POST['type_presta_id'],
-        'contenu_presta' => $_POST['contenu_presta']
+        'contenu_presta' => $_POST['contenu_presta'],
+        'seuil' => $_POST['seuil'],
+        'supplement' => $_POST['supplement']
       ];
 
       if (key_exists('img_presta', $_FILES) && $_FILES['img_presta']['error'] === UPLOAD_ERR_OK) {
@@ -111,7 +113,9 @@ class PrestationController extends Controller
         'necessite_retour' => !empty($_POST['necessite_retour']) ? 1 : 0,
         'prestation_actif' => isset($_POST['prestation_actif']) ? 1 : 0,
         'type_presta_id' => !empty($_POST['type_presta_id']) ? (int) $_POST['type_presta_id'] : null,
-        'contenu_presta' => $_POST['contenu_presta'] ?? null
+        'contenu_presta' => $_POST['contenu_presta'] ?? null,
+        'seuil' => $_POST['seuil'] ?? null,
+        'supplement' => $_POST['supplement'] ?? null
       ];
 
       if (key_exists('img_presta', $_FILES) && $_FILES['img_presta']['error'] === UPLOAD_ERR_OK) {
