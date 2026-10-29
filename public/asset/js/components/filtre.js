@@ -15,6 +15,23 @@ const sliderPrixInput = document.getElementById("sliderPrixInput");
 const rangeValue = document.getElementById("rangeValue");
 const rangeValueDiv = document.getElementById("rangeValueDiv");
 
+const nbPersonnePlusMoins = (nbPersonneInput) => {
+  btnPlus.addEventListener("click", () => {
+    let nb = Number(nbPersonneInput.value) + 1;
+    nbPersonneInput.value = nb;
+    nbPersonneInput.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+
+  btnMoin.addEventListener("click", () => {
+    let nb = Number(nbPersonneInput.value);
+    if (nb > 0) {
+      nb -= 1;
+      nbPersonneInput.value = nb;
+      nbPersonneInput.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  });
+};
+
 if (btnFiltre) {
   /* Ouvrir filtre */
   btnFiltre.addEventListener("click", () => {
@@ -67,7 +84,7 @@ if (btnFiltre) {
   });
 
   const nbPersonneMin = () => {
-    btnPlus.addEventListener("click", () => {
+    /* btnPlus.addEventListener("click", () => {
       let nb = Number(nbPersonneMinInput.value) + 1;
       nbPersonneMinInput.value = nb;
       nbPersonneMinInput.dispatchEvent(new Event("change", { bubbles: true }));
@@ -80,8 +97,9 @@ if (btnFiltre) {
         nbPersonneMinInput.value = nb;
         nbPersonneMinInput.dispatchEvent(new Event("change", { bubbles: true }));
       }
-    });
+    }); */
 
+    nbPersonnePlusMoins(nbPersonneMinInput);
     nbPersonneMinInput.addEventListener("input", menuFiltre);
   };
 
@@ -132,4 +150,10 @@ if (btnFiltre) {
 
   nbPersonneMin();
   slider();
+}
+
+const nbPersonne = document.getElementById("nbPersonne");
+
+if (nbPersonne) {
+  nbPersonnePlusMoins(nbPersonne);
 }

@@ -35,11 +35,11 @@
   }
 
   .btn {
-    @apply bg-primary text-texte hover:bg-primary/80 flex items-center rounded rounded-2xl px-4 py-2 text-center;
+    @apply bg-primary text-texte hover:bg-primary/80 flex items-center rounded-2xl px-4 py-2 text-center;
   }
 
   .btn-detail {
-    @apply border-primary text-primary flex items-center rounded rounded-3xl border px-4 py-2 text-center hover:bg-gray-300 md:px-6;
+    @apply border-primary text-primary flex items-center rounded-3xl border px-4 py-2 text-center hover:bg-gray-300 md:px-6;
   }
 
   .btn-lien {
@@ -47,11 +47,11 @@
   }
 
   .btn-form {
-    @apply bg-primary text-fond-carte hover:bg-primary/80 flex items-center rounded rounded-3xl px-10 py-3 text-center;
+    @apply bg-primary text-fond-carte hover:bg-primary/80 flex items-center rounded-3xl px-10 py-3 text-center;
   }
 
   .btn-form-dark {
-    @apply bg-texte/90 text-fond-carte hover:bg-primary/80 flex items-center rounded rounded-3xl px-10 py-3 text-center;
+    @apply bg-texte/90 text-fond-carte hover:bg-primary/80 flex items-center rounded-3xl px-10 py-3 text-center;
   }
 
   .btn-retour-page {
@@ -59,7 +59,7 @@
   }
 
   .cart-form {
-    @apply border-primary/50 bg-fond-banniere/50 m-10 mx-auto flex max-w-2xl flex-col items-center justify-center rounded-3xl border px-4 py-6 sm:px-8 sm:pt-6 sm:pb-10;
+    @apply border-primary/50 bg-fond-banniere/50 mx-auto my-10 flex w-full max-w-2xl flex-col items-center justify-center rounded-3xl border px-4 py-6 sm:px-8 sm:py-10;
   }
 
   .cart-plat {
@@ -81,8 +81,16 @@
     @apply text-lg font-medium;
   }
 
-  .grand-input {
+  /*  .grand-input {
     @apply border-primary/50 m-4 rounded-3xl border bg-transparent px-6 py-2 lg:w-full;
+  } */
+
+  .grand-input {
+    @apply border-primary/50 m-4 w-full max-w-lg rounded-3xl border bg-transparent px-6 py-2;
+  }
+
+  .petit-input {
+    @apply border-primary/50 m-4 w-full max-w-3xs rounded-3xl border bg-transparent px-6 py-2 md:max-w-sm;
   }
 
   .erreur {

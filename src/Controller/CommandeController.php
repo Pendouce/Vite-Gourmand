@@ -4,16 +4,29 @@ namespace App\Controller;
 
 use App\Service\CommandeService;
 use App\Factory\ContainerId;
+use App\Service\BoissonService;
+use App\Service\MenuService;
+use App\Service\PrestationService;
+use App\Service\TypeDePrestaService;
+use App\Service\UserService;
 use Exception;
 
 
 class CommandeController extends Controller
 {
   private CommandeService $commandeService;
+  private PrestationService $prestationService;
+  private UserService $userService;
+  private MenuService $menuService;
+  private BoissonService $boissonService;
 
   public function __construct() {
     parent::__construct();
     $this->commandeService = ContainerId::getCommandeService();
+    $this->prestationService = ContainerId::getPrestationService();
+    $this->userService = ContainerId::getUserService();
+    $this->menuService = ContainerId::getMenuService();
+    $this->boissonService = ContainerId::getBoissonService();
   }
 
   public function creerCommande()
@@ -94,7 +107,26 @@ class CommandeController extends Controller
       exit;
     }
     }else{
-      $this->render('pages/client/commandeMenu');
+      $role = $role = $_SESSION['role_id'];
+      $userId = $_SESSION['user_id'];
+      $prestations = $this->prestationService->afficherPrestation($role);
+      $prestation = $this->prestationService->afficherPrestationParId($role);
+      $prestationsParType = $this->prestationService->afficherPrestationParType();
+      $menu = $this->menuService->afficherMenuParId($_GET['id']);
+      $boisson = $this->boissonService->afficherBoissonParId($_GET['id']);
+
+      if($role === ROLE_UTILISATEUR){
+        $user = $this->userService->afficheInfo($userId);
+      }else{
+       $user = null;
+      }
+
+
+      $this->render('pages/client/commandeMenu', [
+        'user' => $user, 'menu' => $menu,
+        'prestations' => $prestations, 'prestation' => $prestation,
+        'prestationsParType' => $prestationsParType, 'boisson' => $boisson,
+        'role' => $role, 'titre' => 'commande menu']);
     }
     }
 

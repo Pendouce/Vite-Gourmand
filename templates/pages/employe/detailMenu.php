@@ -182,7 +182,7 @@
 
   <div class="flex justify-center items-center p-6">
     <div class="btn-form-dark">
-      <a href="/commandeMenu">Commander</a>
+      <a href="/commandeMenu?id=<?= $menu->getMenuId() ?>">Commander</a>
     </div>
   </div>
 

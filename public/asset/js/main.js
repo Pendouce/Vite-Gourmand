@@ -1,5 +1,5 @@
 import "./components/burgerNav.js";
-import "./components/modales.js";
+import "./pages/modales.js";
 import "./components/etoiles.js";
 import "./components/activeSlide.js";
 import "./pages/previewImage.js";
@@ -8,3 +8,4 @@ import "./pages/imageSurvol.js";
 import "./components/modif.js";
 import "./components/filtre.js";
 import "./components/ajouterChamp.js";
+import "./pages/commande.js";

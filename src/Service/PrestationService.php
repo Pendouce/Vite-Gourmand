@@ -77,7 +77,7 @@ class PrestationService
     return $this->prestationRepository->trouverPrestationParId($id);
   }
 
-  public function afficherPrestationParType(?int $role)
+  public function afficherPrestationParType(?int $role = null)
   {
     if($role === ROLE_EMPLOYE || $role === ROLE_ADMIN){
       $prestations = $this->prestationRepository->trouverPrestationParType();
