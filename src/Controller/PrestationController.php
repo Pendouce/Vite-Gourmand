@@ -81,14 +81,16 @@ class PrestationController extends Controller
     $role = $_SESSION['role_id'] ?? null;
 
     $prestations = $this->prestationService->afficherPrestation($role);
-    $prestationParType = $this->prestationService->afficherPrestationParType($role);
+    $prestationsParType = $this->prestationService->afficherPrestationParType($role);
     $typeDePresta = $this->typeDePrestaService->afficherTypeDePresta();
+
+    $modeCommande = $modeCommande ?? false;
     
 
     $this->render('pages/employe/prestations', [
-      'prestations' => $prestations, 'prestationParType' => $prestationParType, 
+      'prestations' => $prestations, 'prestationParType' => $prestationsParType, 
       'typeDePresta' => $typeDePresta,
-      'role' => $role, 'titre' => 'nos prestations']);
+      'role' => $role, 'modeCommande' => $modeCommande, 'titre' => 'nos prestations']);
   }
 
   public function afficherPrestationParId()
@@ -96,8 +98,11 @@ class PrestationController extends Controller
     $id = (int) $_GET['id'];
     $role = $_SESSION['role_id'] ?? null;
 
+    $modeCommande = $modeCommande ?? false;
+
     $prestation = $this->prestationService->afficherPrestationParId($id);
-    $this->render('pages/employe/detailPresta', ['prestation' => $prestation, 'role' => $role, 'titre' =>'detail prestation']);
+    $this->render('pages/employe/detailPresta', ['prestation' => $prestation, 'role' => $role, 
+    'modeCommande' => $modeCommande, 'titre' =>'detail prestation']);
   }
 
   public function modifierPrestation()

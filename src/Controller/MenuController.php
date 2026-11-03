@@ -95,9 +95,12 @@ class MenuController extends Controller
     $prixMin = min($prixMenus);
     $prixMax = max($prixMenus);
 
+    $modeCommande = $modeCommande ?? false;
+
     $this->render('pages/employe/menu', ['menus' => $menus, 'evenements' => $evenements, 
     'themes' => $themes, 'regimes' => $regimes, 'role' => $role, 
-    'prixMin' => $prixMin, 'prixMax' => $prixMax, 'titre' => 'menus']);
+    'prixMin' => $prixMin, 'prixMax' => $prixMax, 
+    'modeCommande' => $modeCommande, 'titre' => 'menus']);
   }
 
   public function afficherDetailMenu()
@@ -106,7 +109,9 @@ class MenuController extends Controller
     $role = $_SESSION['role_id'] ?? null;
     $menu = $this->menuService->afficherMenuParId($menuId);
 
-    $this->render('pages/employe/detailMenu', ['menu' => $menu,'role' => $role, 'titre' => 'detail menu']);
+    $modeCommande = $modeCommande ?? false;
+
+    $this->render('pages/employe/detailMenu', ['menu' => $menu,'role' => $role, 'modeCommande' => $modeCommande, 'titre' => 'detail menu']);
   }
 
   public function afficherMenuFiltre()

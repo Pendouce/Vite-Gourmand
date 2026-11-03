@@ -113,8 +113,25 @@
     @apply border-primary has-checked:bg-primary hover:bg-primary flex w-fit items-center rounded-xl border px-2 py-1;
   }
 
+  .modal-container-commande {
+    @apply fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50 p-4;
+  }
+
+  .modal-commande {
+    @apply relative mx-auto max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-[url(/asset/images/smooth-white-plaster-wall.jpg)] px-6 md:max-w-6xl;
+  }
+
+  .side-bar-filter,
+  .side-bar-filter-modal {
+    @apply border-primary z-50 flex w-full max-w-md flex-col gap-4 overflow-auto rounded-lg border-r bg-[url(/asset/images/smooth-white-plaster-wall.jpg)] px-4 py-2;
+  }
+
   .side-bar-filter {
-    @apply border-primary fixed top-20 bottom-0 left-0 z-50 flex w-full max-w-md flex-col gap-4 overflow-auto rounded-lg border-r bg-[url(/asset/images/smooth-white-plaster-wall.jpg)] px-4 py-2;
+    @apply fixed top-20 bottom-0 left-0;
+  }
+
+  .side-bar-filter-modal {
+    @apply border-primary sticky top-0 z-10 -mt-6 -mb-[90vh] -ml-6 flex h-[90vh] w-[calc(100%+3rem)] max-w-none flex-col gap-4 overflow-auto rounded-lg border-r bg-[url(/asset/images/smooth-white-plaster-wall.jpg)] px-4 py-2 md:w-[28rem] md:max-w-[90%] md:rounded-r-none;
   }
 
   .range-slider {

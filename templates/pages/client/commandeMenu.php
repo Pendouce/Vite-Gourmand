@@ -7,12 +7,32 @@
 <?php /** @var object $prestation */?>
 <?php /** @var object $user */?>
 <?php /** @var object $menu */?>
-<?php /** @var array $boisson */?>
+<?php /** @var object $boisson */?>
 <?php /** @var object $role */?>
 <?php /** @var string $csrfToken */ ?>
+<?php /** @var string $modeCommande */?>
+<?php $modeCommande = true ?>
 
 
 <div class="contenue-page">
+
+  <div id="modalMenu" class="modal-container-commande block">
+    <div class="modal-commande">
+      <?php include(APP_ROOT.'/templates/partials/menus.php');?>
+    </div>
+  </div>
+
+  <div id="modalBoisson" class="modal-container-commande">
+    <div class="modal-commande">
+      <?php include(APP_ROOT.'/templates/partials/boissons.php');?>
+    </div>
+  </div>
+
+  <div id="modalPresta" class="modal-container-commande ">
+    <div class="modal-commande">
+      <?php include(APP_ROOT.'/templates/partials/presta.php');?>
+    </div>
+  </div>
 
   <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
 
@@ -59,7 +79,7 @@
               <h3 class="uppercase text-xl text-center md:text-2xl">menus selectionés</h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>
             </div>
-            <div class="flex justify-center">
+            <div class="flex justify-evenly">
               <div class="flex flex-col gap-6">
                 <!-- Titre menu -->
                 <input type="hidden" name="menu[]" id="<?= htmlspecialchars($menu->getMenuId()) ?>">
@@ -67,11 +87,14 @@
                   <h4 class="text-lg md:text-xl"><?= htmlspecialchars($menu->getTitre()) ?></h4>
                 </div>
                 <!-- prix + nb pers -->
-                <div class="flex flex-col gap-2">
-                    <div>
-                      <p>
-                        Prix unitaire: <?= htmlspecialchars($menu->getPrixPersonne()) ?>€ /pers
-                      </p>
+                <div class="menu flex flex-col gap-2">
+                    <div class="flex gap-2">
+                      <p>Prix unitaire: </p>
+                      <div class="flex gap-1">
+                        <span id="prixUnitaireMenu"><?= htmlspecialchars($menu->getPrixPersonne()) ?></span>
+                        <p>€ /pers</p>
+                      </div>
+                      
                     </div>
 
                     <div id="divNbPers" class="flex flex-col gap-2">
@@ -90,19 +113,54 @@
                         </button>
                       </div>
                     </div>
+                
 
                 </div>
                 <!-- Sous total -->
-                <div>
-                  <label for="">Sous total: </label>
-                  <input type="text" name="">
+                <div class="flex gap-3">
+                  <p>Sous total: </p>
+                  <div class="flex gap-1">
+                    <span id="prixTotalMenu">2</span>
+                    <p>€</p>
+                  </div>
+
                 </div>
               </div>
               <div>
                 <!-- Div ajouter menu -->
               </div>
               <div class="w-20 p-4 self-center">
-                <button id="btnAjouter" class="border border-primary rounded-2xl p-4" type="button">
+                <button id="btnAjouterMenu" class="border border-primary rounded-2xl p-4" type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 md:size-12 text-primary">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Boisson -->
+
+          <section class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
+            <div class="flex flex-col items-center gap-2">
+              <h3 class="uppercase text-xl text-center md:text-2xl">boisson</h3>
+              <button id="btnAjouterBoisson" class="absolute right-6 top-4 text-primary" type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                  </svg>
+                </button>
+              <div class="h-px bg-primary w-2/3 self-center"></div>
+            </div>
+            <div class="flex justify-evenly">
+              <div class="flex flex-col gap-6">
+                
+                
+              </div> 
+              
+                <!-- Div ajouter menu -->
+              </div>
+              <div class="w-20 p-4 justify-center self-center">
+                <button id="btnAjouterBoisson" class="border border-primary rounded-2xl p-4" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 md:size-12 text-primary">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                   </svg>
@@ -114,8 +172,13 @@
           <!-- Divs presta -->
 
           <?php foreach($prestationsParType as $typeDePrestaLibelle => $prestations): ?>
-            <section class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6">
-              <h3 class="uppercase text-xl text-center md:text-2xl"><?= $typeDePrestaLibelle ?></h3>
+            <section class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
+                <h3 class="uppercase text-xl text-center md:text-2xl"><?= $typeDePrestaLibelle ?></h3>
+                <button class="btnModalPresta absolute right-3 md:right-6 top-4 text-primary" type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                  </svg>
+                </button>
               <div class="h-px bg-primary w-2/3 self-center"></div>
               
               <div class="flex flex-col items-center gap-4">
@@ -125,20 +188,29 @@
                     <option value="<?= $presta->getNomPresta() ?>"><?= htmlspecialchars($presta->getNomPresta()) ?></option>
                   <?php endforeach; ?>
                 </select>
-                  <p>
-                    Prix unitaire: <?= htmlspecialchars($menu->getPrixPersonne()) ?>€ /pers
-                  </p>
-                  <div class="flex gap-2">
-                    <p>Sous total: </p>
-                    <span>10</span>
-                    <p>€</p>
 
+                <!-- <div class="flex gap-2">
+                  <p>A partir de:</p>
+                  <div class="flex gap-1">
+                    <span class="prixTotalPresta"></span>
+                    <p>€ / <span class="seuilPresta"></span> pers</p>
                   </div>
+
+                </div>
+                  <div class="flex gap-3">
+                    <p>Sous total: </p>
+                    <div class="flex gap-1">
+                      <span class="prixPresta">10</span>
+                      <p>€</p>
+                    </div>
+
+                  </div> -->
               </div>
               
             </section>
           <?php endforeach; ?>
           </section>
+        
 
       <!-- Infos -->
       <section>
@@ -177,14 +249,13 @@
             <div class="flex flex-col col-span-2">
               <label for="">Adresse de livraison</label>
               <input class="grand-input" type="text" name="lieu_livraison">
+              <p class="text-texte/90 text-sm pb-4">*majoration de 59 centime par kilometre parcourus sera apliquée si hors bordeaux</p>
             </div>
             <div class="flex flex-col col-span-1">
               <label for="">Date et heure</label>
               <input class="petit-input" type="datetime-local" name="date_livraison">
             </div>
-            <div class="col-span-full">
-              <p>*majoration de 59 centime par kilometre parcourus sera apliquée si hors bordeaux</p>
-            </div>
+            
           </div>
         </div>
       </section>
@@ -194,7 +265,7 @@
           <div class="h-px bg-primary"></div>
           <div class="flex text-center bg-fond-carte/60 gap-2 p-4">
             <label for="">Prix total : </label>
-            <input class="w-12 px-2" value="1">
+            <input id="inputPrixTotal" class="w-12 px-2" value="1">
             <p>€</p>
             
           </div>

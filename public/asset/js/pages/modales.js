@@ -6,18 +6,18 @@ const btnSupprimerCmptEmploye = document.querySelectorAll(".btnSupprimerCmptEmpl
 const btnGererTypePlat = document.getElementById("btnGererTypePlat");
 const btnGererTypePresta = document.getElementById("btnGererTypePresta");
 
-const fermerModal = () => {
-  modalContainer.classList.add("hidden");
+const fermerModal = (modal) => {
+  modal.classList.add("hidden");
 };
 
-const ouvrirModal = () => {
-  modalContainer.classList.remove("hidden");
+const ouvrirModal = (modal) => {
+  modal.classList.remove("hidden");
 };
 
 // Je verifie que le bouton existe avant d'ajouter l'event listener
 if (btnSupprimerCmpt) {
   btnSupprimerCmpt.addEventListener("click", () => {
-    ouvrirModal();
+    ouvrirModal(modalContainer);
   });
 }
 
@@ -33,29 +33,31 @@ if (btnSupprimerCmptEmploye) {
       document.getElementById("nomEmploye").textContent = nom;
       // J'assigigne a idEmploye la valeur de l'id employe (idEmploye = id selectionné)
       document.getElementById("idEmploye").value = id;
-      ouvrirModal();
+      ouvrirModal(modalContainer);
     });
   });
 }
 
 if (btnGererTypePlat) {
   btnGererTypePlat.addEventListener("click", () => {
-    ouvrirModal();
+    ouvrirModal(modalContainer);
   });
 }
 
 if (btnGererTypePresta) {
   btnGererTypePresta.addEventListener("click", () => {
-    ouvrirModal();
+    ouvrirModal(modalContainer);
   });
 }
 
 if (modalContainer) {
   modalContainer.addEventListener("click", (event) => {
-    if (event.target === modalContainer) fermerModal();
+    if (event.target === modalContainer) fermerModal(modalContainer);
   });
 }
 
 if (btnAnnuler) {
-  btnAnnuler.addEventListener("click", fermerModal);
+  btnAnnuler.addEventListener("click", () => fermerModal(modalContainer));
 }
+
+export { ouvrirModal, fermerModal };

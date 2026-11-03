@@ -610,6 +610,10 @@ class CommandeService
       $menuParId = $this->menuRepository->trouverMenuParId($menu['menu_id']);
       $nbPersMin = $menuParId->getNombrePersonneMin();
 
+      if(!$menuParId->isMenuActif()){
+        throw new Exception("Ce menu n'est plus disponible");
+      }
+
       if($menu['nb_personne_menu'] < $nbPersMin){
         throw new Exception('Nombre de personnes minimum '. $nbPersMin .' pour le menu '. $menuParId->getTitre());
       }

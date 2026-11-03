@@ -64,7 +64,10 @@ class BoissonController extends Controller
     $role = $_SESSION['role_id'] ?? null;
     $boissons = $this->boissonService->afficherBoisson($role);
 
-    $this->render('pages/employe/boisson', ['boissons' => $boissons, 'role' => $role, 'titre' => 'boissons']);
+    $modeCommande = $modeCommande ?? false;
+
+    $this->render('pages/employe/boisson', ['boissons' => $boissons, 'role' => $role, 
+    'modeCommande' => $modeCommande, 'titre' => 'boissons']);
   }
 
   public function afficherBoissonParId(): void
@@ -73,7 +76,10 @@ class BoissonController extends Controller
     $boisson = $this->boissonService->afficherBoissonParId($boissonId);
     $role = $_SESSION['role_id'] ?? null;
 
-    $this->render('pages/employe/detailBoisson', ['boisson' => $boisson, 'role' => $role, 'titre' => 'detail boisson']);
+    $modeCommande = $modeCommande ?? false;
+
+    $this->render('pages/employe/detailBoisson', ['boisson' => $boisson, 'role' => $role, 
+    'modeCommande' => $modeCommande, 'titre' => 'detail boisson']);
   }
 
   public function modifierBoisson(): void

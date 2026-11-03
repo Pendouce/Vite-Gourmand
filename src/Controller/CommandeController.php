@@ -113,7 +113,19 @@ class CommandeController extends Controller
       $prestation = $this->prestationService->afficherPrestationParId($role);
       $prestationsParType = $this->prestationService->afficherPrestationParType();
       $menu = $this->menuService->afficherMenuParId($_GET['id']);
+      $menus = $this->menuService->afficherMenus($role);
+      $boissons = $this->boissonService->afficherBoisson($role);
       $boisson = $this->boissonService->afficherBoissonParId($_GET['id']);
+
+      $evenements = $this->menuService->afficherEvenements();
+      $themes = $this->menuService->afficherThemes();
+      $regimes = $this->menuService->afficherRegimes();
+    
+      $prixMenus = array_map(fn ($e) => $e->getPrixPersonne(), $menus);
+      $prixMin = min($prixMenus);
+      $prixMax = max($prixMenus);
+
+      $modeCommande = $modeCommande ?? false;
 
       if($role === ROLE_UTILISATEUR){
         $user = $this->userService->afficheInfo($userId);
@@ -123,10 +135,16 @@ class CommandeController extends Controller
 
 
       $this->render('pages/client/commandeMenu', [
-        'user' => $user, 'menu' => $menu,
+        'user' => $user, 
+        'menus' => $menus, 'menu' => $menu,
+        'evenements' => $evenements, 
+        'themes' => $themes, 'regimes' => $regimes,
         'prestations' => $prestations, 'prestation' => $prestation,
-        'prestationsParType' => $prestationsParType, 'boisson' => $boisson,
-        'role' => $role, 'titre' => 'commande menu']);
+        'prestationsParType' => $prestationsParType, 
+        'boissons' => $boissons, 'boisson' => $boisson,
+        'prixMin' => $prixMin, 'prixMax' => $prixMax,
+        'role' => $role, 'modeCommande' => $modeCommande,
+        'titre' => 'commande menu']);
     }
     }
 
