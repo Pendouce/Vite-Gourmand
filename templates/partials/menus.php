@@ -146,7 +146,7 @@
 
   <div id="menuListe" class="grid grid-cols-1 md:grid-cols-2 gap-6">
   <?php foreach($menus as $menu): ?>
-  <div class="cart-menu">
+  <div class="cart-menu" data-id="<?= $menu->getMenuId() ?>">
     <div class="grid grid-cols-4">
       <!-- Texte -->
       <div class="grid col-span-3 text-center gap-6 px-4 py-6 sm:px-8 sm:pt-6 sm:pb-10">
@@ -229,7 +229,7 @@
           <?php if(!$modeCommande): ?>
             <a class="btn-form-dark flex justify-center items-center w-40" href="/commandeMenu?id=<?= $menu->getMenuId() ?>">Commander</a>
             <?php else: ?>
-              <button class="btn-form-dark flex justify-center items-center w-40" type="button">Ajouter</button>
+              <button class="btnAjouterMenu btn-form-dark flex justify-center items-center w-40" type="button">Ajouter</button>
             <?php endif; ?>
         </div>
       </div>

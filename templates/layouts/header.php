@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="asset/css/style.css">
-  <title>Document</title>
+  <link rel="icon" href="/asset/images/logo.png">
+  <title>Vite&Gourmand</title>
 </head>
 <body>
   <header class="bg-fond-nav p-4 h-20 flex items-center mb-6 lg:justify-between sticky top-0 z-50">

@@ -114,6 +114,15 @@ class MenuController extends Controller
     $this->render('pages/employe/detailMenu', ['menu' => $menu,'role' => $role, 'modeCommande' => $modeCommande, 'titre' => 'detail menu']);
   }
 
+  public function afficherDetailMenuApi()
+  {
+    
+    $menuId = (int)$_GET['id'];
+    $menu = $this->menuService->afficherMenuParId($menuId);
+
+    echo json_encode($menu);
+  }
+
   public function afficherMenuFiltre()
   {
     $menuFiltre = [];

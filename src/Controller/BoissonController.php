@@ -74,6 +74,14 @@ class BoissonController extends Controller
   {
     $boissonId = (int) $_GET['id'];
     $boisson = $this->boissonService->afficherBoissonParId($boissonId);
+ 
+    echo json_encode($boisson);
+  }
+
+  public function afficherBoissonParIdApi(): void
+  {
+    $boissonId = (int) $_GET['id'];
+    $boisson = $this->boissonService->afficherBoissonParId($boissonId);
     $role = $_SESSION['role_id'] ?? null;
 
     $modeCommande = $modeCommande ?? false;

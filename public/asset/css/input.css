@@ -114,7 +114,7 @@
   }
 
   .modal-container-commande {
-    @apply fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50 p-4;
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4;
   }
 
   .modal-commande {

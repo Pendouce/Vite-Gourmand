@@ -29,7 +29,7 @@
 
     <div class="md:grid md:grid-cols-2 lg:grid lg:grid-cols-3">
       <?php foreach ($boissons as $boisson): ?>
-        <div class="cart-plat flex justify-center items-center gap-4 col-span-1">
+        <div class="cart-plat flex justify-center items-center gap-4 col-span-1" data-id="<?= $boisson->getBoissonId() ?>">
           <div class="blockRetour w-full mb-6"></div>
             <h3 class="text-xl font-medium lg:text-2xl text-center"><?= htmlspecialchars($boisson->getNomBoisson()) ?></h3>
             <img
@@ -50,7 +50,7 @@
               <?php if(!$modeCommande): ?>
                 <a class="btn-detail mt-4" href="/detailBoisson?id=<?= $boisson->getBoissonId() ?>">Details</a>
               <?php else: ?>
-                <button class="btn-detail mt-4" type="button" data-id="detail-boisson"<?= $boisson->getBoissonId() ?>">Details</button>
+                <button class="btn-detail mt-4" type="button">Details</button>
               <?php endif; ?>
               <?php if(!$modeCommande && ($role === ROLE_ADMIN || $role === ROLE_EMPLOYE)): ?>
                 <div class="self-end">
@@ -63,6 +63,11 @@
                 </div>
               <?php endif; ?>
             </div>
+            <div class="flex items-center justify-center">
+          <?php if($modeCommande): ?>
+              <button class="btnAjouterBoisson btn-form-dark flex justify-center items-center w-40" type="button">Ajouter</button>
+          <?php endif; ?>
+        </div>
         </div>
       <?php endforeach; ?>
     </div>

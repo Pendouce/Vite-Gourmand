@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
-class Menu extends Entity
+use JsonSerializable;
+
+class Menu extends Entity implements JsonSerializable
 {
   protected ?int $menuId = null;
   protected ?string $titre = null;
@@ -19,6 +21,16 @@ class Menu extends Entity
   protected array $regime = [];
   protected ?string $imageMenu = null;
 
+
+  public function jsonSerialize(): array
+  {
+    return[
+    'menuId' => $this->getMenuId(),
+    'titre' => $this->getTitre(),
+    'prix' => $this->getPrixPersonne(),
+    'nbPersMin' => $this->getNombrePersonneMin(),
+    ];
+  }
 
   /**
    * Get the value of menuId

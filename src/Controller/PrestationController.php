@@ -88,7 +88,7 @@ class PrestationController extends Controller
     
 
     $this->render('pages/employe/prestations', [
-      'prestations' => $prestations, 'prestationParType' => $prestationsParType, 
+      'prestations' => $prestations, 'prestationsParType' => $prestationsParType, 
       'typeDePresta' => $typeDePresta,
       'role' => $role, 'modeCommande' => $modeCommande, 'titre' => 'nos prestations']);
   }

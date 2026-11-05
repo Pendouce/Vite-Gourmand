@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
-class Boisson extends Entity
+use JsonSerializable;
+
+class Boisson extends Entity implements JsonSerializable
 {
   protected ?int $boissonId = null;
   protected ?string $nomBoisson = null;
@@ -13,6 +15,15 @@ class Boisson extends Entity
   protected ?bool $boissonActif = null;
   protected ?string $descriptionBoisson = null;
 
+
+  public function jsonSerialize(): array
+  {
+    return[
+    'boissonId' => $this->getBoissonId(),
+    'titre' => $this->getNomBoisson(),
+    'prix' => $this->getPrixBoisson(),
+    ];
+  }
 
   /**
    * Get the value of boissonId

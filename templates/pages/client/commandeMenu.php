@@ -16,20 +16,35 @@
 
 <div class="contenue-page">
 
-  <div id="modalMenu" class="modal-container-commande block">
+  <div id="modalMenu" class="modal-container-commande hidden">
     <div class="modal-commande">
+      <button type="button" class="btnFermerModalCommande absolute right-6 top-6 hover:text-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 lg:size-8">
+          <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        </svg>
+      </button>
       <?php include(APP_ROOT.'/templates/partials/menus.php');?>
     </div>
   </div>
 
-  <div id="modalBoisson" class="modal-container-commande">
+  <div id="modalBoisson" class="modal-container-commande hidden">
     <div class="modal-commande">
+      <button type="button" class="btnFermerModalCommande absolute right-6 top-6 hover:text-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 lg:size-8">
+          <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        </svg>
+      </button>
       <?php include(APP_ROOT.'/templates/partials/boissons.php');?>
     </div>
   </div>
 
-  <div id="modalPresta" class="modal-container-commande ">
+  <div id="modalPresta" class="modal-container-commande hidden">
     <div class="modal-commande">
+      <button type="button" class="btnFermerModalCommande absolute right-6 top-6 hover:text-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 lg:size-8">
+          <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        </svg>
+      </button>
       <?php include(APP_ROOT.'/templates/partials/presta.php');?>
     </div>
   </div>
@@ -80,57 +95,66 @@
               <div class="h-px bg-primary w-2/3 self-center"></div>
             </div>
             <div class="flex justify-evenly">
-              <div class="flex flex-col gap-6">
-                <!-- Titre menu -->
-                <input type="hidden" name="menu[]" id="<?= htmlspecialchars($menu->getMenuId()) ?>">
-                <div>
-                  <h4 class="text-lg md:text-xl"><?= htmlspecialchars($menu->getTitre()) ?></h4>
-                </div>
-                <!-- prix + nb pers -->
-                <div class="menu flex flex-col gap-2">
-                    <div class="flex gap-2">
-                      <p>Prix unitaire: </p>
-                      <div class="flex gap-1">
-                        <span id="prixUnitaireMenu"><?= htmlspecialchars($menu->getPrixPersonne()) ?></span>
-                        <p>€ /pers</p>
-                      </div>
-                      
-                    </div>
-
-                    <div id="divNbPers" class="flex flex-col gap-2">
-                      <label for="">Nombre des personnes:</label>
-                      <div class="flex gap-2">
-                        <button id="btnMoin" type="button">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                          </svg>
-                        </button>
-                        <input id="nbPersonne" name="nb_personne_menu" class="border border-primary/50 py-1 px-2 rounded-lg w-15 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" min="<?= $menu->getNombrePersonneMin() ?>" step="1" type="number">
-                        <button id="btnPlus" type="button">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                
-
-                </div>
-                <!-- Sous total -->
-                <div class="flex gap-3">
-                  <p>Sous total: </p>
-                  <div class="flex gap-1">
-                    <span id="prixTotalMenu">2</span>
-                    <p>€</p>
+              <div class="divMenus flex flex-wrap gap-8">
+                <div class="divMenu px-2 flex flex-col gap-6">
+                  <!-- Titre menu -->
+                  <input type="hidden" name="menu[]" id="<?= htmlspecialchars($menu->getMenuId()) ?>">
+                  <div class="relative">
+                    <h4 class="titreMenu font-medium text-center text-lg md:text-xl"><?= htmlspecialchars($menu->getTitre()) ?></h4>
+                    <button class="btnSupprimer absolute -left-4 -top-2 hover:text-primary" type="button">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
+                  <!-- prix + nb pers -->
+                  <div class="menu flex flex-col gap-2">
+                      <div class="flex gap-2">
+                        <p>Prix unitaire: </p>
+                        <div class="flex gap-1">
+                          <span class="prixUnitaireMenu"><?= htmlspecialchars($menu->getPrixPersonne()) ?></span>
+                          <p>€ /pers</p>
+                        </div>
+                        
+                      </div>
 
+                      <div id="divNbPers" class="flex flex-col gap-2">
+                        <label for="">Nombre des personnes:</label>
+                        <div class="flex gap-2">
+                          <button class="btnMoins" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                          </button>
+                          <input name="nb_personne_menu" class="nbPersonneMenu text-center border border-primary/50 py-1 px-2 rounded-lg w-15 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                           min="<?= $menu->getNombrePersonneMin() ?>" max="<?= $menu->getStockDispo() ?>" step="1" type="number"
+                           value="<?= $menu->getNombrePersonneMin() ?>">
+                          <button class="btnPlus" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                  
+
+                  </div>
+                  <!-- Sous total -->
+                  <div class="flex gap-3">
+                    <p>Sous total: </p>
+                    <div class="flex gap-1">
+                      <span class="sousTotalMenu"><?= $menu->getPrixPersonne() ?></span>
+                      <p>€</p>
+                    </div>
+
+                  </div>
                 </div>
               </div>
-              <div>
+
                 <!-- Div ajouter menu -->
-              </div>
-              <div class="w-20 p-4 self-center">
-                <button id="btnAjouterMenu" class="border border-primary rounded-2xl p-4" type="button">
+
+              <div class="w-20 p-4 flex justify-center">
+                <button id="btnNvMenu" class="border border-primary rounded-2xl p-4 self-center" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 md:size-12 text-primary">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                   </svg>
@@ -139,46 +163,57 @@
             </div>
           </section>
 
-          <!-- Boisson -->
+          <!-- BOISSON -->
 
           <section class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
             <div class="flex flex-col items-center gap-2">
               <h3 class="uppercase text-xl text-center md:text-2xl">boisson</h3>
-              <button id="btnAjouterBoisson" class="absolute right-6 top-4 text-primary" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-                  </svg>
-                </button>
               <div class="h-px bg-primary w-2/3 self-center"></div>
             </div>
-            <div class="flex justify-evenly">
-              <div class="flex flex-col gap-6">
-                
-                
-              </div> 
-              
-                <!-- Div ajouter menu -->
-              </div>
-              <div class="w-20 p-4 justify-center self-center">
-                <button id="btnAjouterBoisson" class="border border-primary rounded-2xl p-4" type="button">
+            <div class="divBoissons flex justify-evenly">
+              <div class="divBoisson flex flex-col gap-6">
+          
+                <!-- Div ajouter Boisson -->
+
+              <div class="w-20 p-4 flex justify-center">
+                <button id="btnNvlBoisson" class="border border-primary rounded-2xl p-4" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 md:size-12 text-primary">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                   </svg>
                 </button>
               </div>
             </div>
+            </div>
           </section>
+    </section>
 
-          <!-- Divs presta -->
-
-          <?php foreach($prestationsParType as $typeDePrestaLibelle => $prestations): ?>
-            <section class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
-                <h3 class="uppercase text-xl text-center md:text-2xl"><?= $typeDePrestaLibelle ?></h3>
-                <button class="btnModalPresta absolute right-3 md:right-6 top-4 text-primary" type="button">
+    <!-- PRESTATIONS -->
+    
+    <section>
+        <div class="mb-8 relative">
+          <div class="flex flex-col gap-3">
+            <div class="h-0.75 bg-primary w-2/3 self-center"></div>
+            <div class="h-0.5 bg-primary w-1/2 self-center"></div>
+          </div>
+          <button id="btnModalPresta" class="absolute right-30 top-6 text-primary" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
                   </svg>
                 </button>
+          <h2 class="font-h2 uppercase text-3xl text-center font-medium text-primary lg:text-4xl py-6 md:py-4">
+            prestations
+          </h2>
+          <div class="flex flex-col gap-3">
+            <div class="h-0.5 bg-primary w-1/2 self-center"></div>
+            <div class="h-0.75 bg-primary w-2/3 self-center"></div>
+          </div>
+        </div>
+          <!-- Divs presta -->
+
+        <div class="flex flex-col gap-10">
+          <?php foreach($prestationsParType as $typeDePrestaLibelle => $prestations): ?>
+            <section class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
+                <h3 class="uppercase text-xl text-center md:text-2xl"><?= $typeDePrestaLibelle ?></h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>
               
               <div class="flex flex-col items-center gap-4">
@@ -209,6 +244,7 @@
               
             </section>
           <?php endforeach; ?>
+        </div>
           </section>
         
 
