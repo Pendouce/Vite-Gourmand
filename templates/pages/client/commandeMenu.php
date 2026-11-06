@@ -89,7 +89,7 @@
         <!-- Div menus -->
         <div class="flex flex-col gap-10">
 
-          <section class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6">
+          <section id="sectionMenus" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6">
             <div class="flex flex-col items-center gap-2">
               <h3 class="uppercase text-xl text-center md:text-2xl">menus selectionés</h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>
@@ -146,7 +146,6 @@
                       <span class="sousTotalMenu"><?= $menu->getPrixPersonne() ?></span>
                       <p>€</p>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -159,6 +158,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                   </svg>
                 </button>
+              </div>
+            </div>
+
+            <div class="flex gap-3 font-medium justify-center">
+              <p> Total menus: </p>
+              <div class="flex gap-1">
+                <span class="total"></span>
+                <p>€</p>
               </div>
             </div>
           </section>
@@ -175,14 +182,22 @@
           
                 <!-- Div ajouter Boisson -->
 
-              <div class="w-20 p-4 flex justify-center">
-                <button id="btnNvlBoisson" class="border border-primary rounded-2xl p-4" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 md:size-12 text-primary">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                  </svg>
-                </button>
+                <div class="w-20 p-4 flex justify-center">
+                  <button id="btnNvlBoisson" class="border border-primary rounded-2xl p-4" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 md:size-12 text-primary">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
+
+            <div class="flex gap-3 font-medium justify-center">
+              <p> Total boissons: </p>
+              <div class="flex gap-1">
+                <span class="total"></span>
+                <p>€</p>
+              </div>
             </div>
           </section>
     </section>
