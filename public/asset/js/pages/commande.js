@@ -36,8 +36,12 @@ const getData = async (api, id) => {
 };
 
 /* Gestion du sous total */
-const calculSousTotal = (prix, nbPersonne) => {
-  const result = Number(prix) * Number(nbPersonne);
+const calculSousTotal = (prix, nbPersonne, nbPersMin) => {
+  let result = Number(prix) * Number(nbPersonne);
+
+  if (nbPersMin && Number(nbPersonne) > Number(nbPersMin) + 5) {
+    result *= 0.9;
+  }
 
   return result;
 };
@@ -49,7 +53,7 @@ const recalculSousTotal = (div, nbElement, prixElement, totalElement) => {
   const sousTotal = div.querySelector(totalElement);
 
   nb.addEventListener("change", () => {
-    sousTotal.textContent = calculSousTotal(prix.textContent, nb.value).toFixed(2);
+    sousTotal.textContent = calculSousTotal(prix.textContent, nb.value, nb.dataset.nbPersMin).toFixed(2);
   });
 };
 
@@ -84,18 +88,26 @@ const nbPersonnePlusMoins = (div, plus, moins, nbElement) => {
   const btnPlus = div.querySelector(plus);
   const btnMoins = div.querySelector(moins);
   const input = div.querySelector(nbElement);
+  const max = Number(input.max);
+  const min = Number(input.min);
 
   btnPlus.addEventListener("click", () => {
-    input.value = Number(input.value) + 1;
-    input.dispatchEvent(new Event("change", { bubbles: true }));
+    if (Number(input.value) < max) {
+      input.value = Number(input.value) + 1;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    }
   });
 
   btnMoins.addEventListener("click", () => {
-    const nb = Number(input.value);
-    if (nb > 0) {
-      input.value = nb - 1;
+    if (Number(input.value) > min) {
+      input.value = Number(input.value) - 1;
       input.dispatchEvent(new Event("change", { bubbles: true }));
     }
+  });
+
+  input.addEventListener("change", () => {
+    if (Number(input.value) < min) input.value = min;
+    if (Number(input.value) > max) input.value = max;
   });
 };
 
@@ -108,11 +120,16 @@ const ajouterALaCommande = async (id, config) => {
   nvlDiv.querySelector(`${config.prix}`).textContent = data.prix;
   inputQuantite.value = data.nbPersMin ?? 1;
   inputQuantite.max = data.stock;
+  if (config.remise) inputQuantite.dataset.nbPersMin = data.nbPersMin;
   nvlDiv.querySelector(config.stock).textContent = data.stock;
   nvlDiv.querySelector(config.inputId).value = id;
-  nvlDiv.querySelector(`${config.total}`).textContent = calculSousTotal(data.prix, inputQuantite.value).toFixed(2);
-  recalculSousTotal(nvlDiv, config.quantite, config.prix, config.total);
+  nvlDiv.querySelector(`${config.total}`).textContent = calculSousTotal(
+    data.prix,
+    inputQuantite.value,
+    data.nbPersMin,
+  ).toFixed(2);
   nbPersonnePlusMoins(nvlDiv, ".btnPlus", ".btnMoins", config.quantite);
+  recalculSousTotal(nvlDiv, config.quantite, config.prix, config.total);
   config.conteneur.appendChild(nvlDiv);
   config.conteneur.parentElement.classList.replace("justify-center", "justify-evenly");
   afficheTotal(config.section, config);
@@ -149,6 +166,7 @@ const configMenu = {
   titre: ".titreMenu",
   stock: ".stockMenu",
   prix: ".prixUnitaireMenu",
+  remise: true,
   quantite: ".nbPersonneMenu",
   total: ".sousTotalMenu",
   section: sectionMenus,
@@ -160,11 +178,11 @@ btnAjouterMenu.forEach((btn) => {
     const id = carteMenu.dataset.id;
     fermerModal(modalMenu);
     ajouterALaCommande(id, configMenu);
-    console.log(id);
   });
 });
 
-sousTotalMenu.textContent = calculSousTotal(prixUnitaireMenu.textContent, nbPersonneMenu.value).toFixed(2);
+const nbPersMin = nbPersonneMenu.dataset.nbPersMin;
+sousTotalMenu.textContent = calculSousTotal(prixUnitaireMenu.textContent, nbPersonneMenu.value, nbPersMin).toFixed(2);
 recalculSousTotal(divMenu, configMenu.quantite, configMenu.prix, configMenu.total);
 nbPersonnePlusMoins(divMenu, ".btnPlus", ".btnMoins", configMenu.quantite);
 supprimerDeLaCommande(divMenu, configMenu);
