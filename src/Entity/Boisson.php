@@ -22,6 +22,7 @@ class Boisson extends Entity implements JsonSerializable
     'boissonId' => $this->getBoissonId(),
     'titre' => $this->getNomBoisson(),
     'prix' => $this->getPrixBoisson(),
+    'stock' => $this->getStockBoisson(),
     ];
   }
 

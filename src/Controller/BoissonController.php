@@ -82,12 +82,8 @@ class BoissonController extends Controller
   {
     $boissonId = (int) $_GET['id'];
     $boisson = $this->boissonService->afficherBoissonParId($boissonId);
-    $role = $_SESSION['role_id'] ?? null;
 
-    $modeCommande = $modeCommande ?? false;
-
-    $this->render('pages/employe/detailBoisson', ['boisson' => $boisson, 'role' => $role, 
-    'modeCommande' => $modeCommande, 'titre' => 'detail boisson']);
+    echo json_encode($boisson);
   }
 
   public function modifierBoisson(): void

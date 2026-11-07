@@ -2,6 +2,7 @@ import { ouvrirModal, fermerModal } from "./modales.js";
 console.log("commande ok");
 
 const sectionMenus = document.getElementById("sectionMenus");
+const modalContainerCommande = document.querySelectorAll(".modal-container-commande");
 const inputPrixTotal = document.getElementById("inputPrixTotal");
 const prixPresta = document.querySelector(".prixPresta");
 const prixTotalPresta = document.querySelector(".prixTotalPresta");
@@ -26,6 +27,7 @@ const divMenus = document.querySelector(".divMenus");
 //const btnSupprimer = document.querySelector(".btnSupprimer");
 const total = document.querySelectorAll(".total");
 
+/* Gestion des donnees recuperees du back */
 const getData = async (api, id) => {
   const res = await fetch(`/api/${api}?id=${id}`);
   const result = await res.json();
@@ -33,12 +35,14 @@ const getData = async (api, id) => {
   return result;
 };
 
+/* Gestion du sous total */
 const calculSousTotal = (prix, nbPersonne) => {
   const result = Number(prix) * Number(nbPersonne);
 
   return result;
 };
 
+/* Gestion des sous totaux apres modification de la quantite */
 const recalculSousTotal = (div, nbElement, prixElement, totalElement) => {
   const nb = div.querySelector(nbElement);
   const prix = div.querySelector(prixElement);
@@ -49,6 +53,7 @@ const recalculSousTotal = (div, nbElement, prixElement, totalElement) => {
   });
 };
 
+/* Gestion du total de sous totaux */
 const calculTotal = (sousTotal, element) => {
   const total = element.querySelectorAll(`${sousTotal}`);
   // Je transforme ma node liste en tableau pour pouvoir lui appliquer reduce
@@ -57,6 +62,7 @@ const calculTotal = (sousTotal, element) => {
   return result;
 };
 
+/* Gestion du total apres ajout/supression ou modification de la quantite */
 const recalculTotal = (div, nbElement, element, config) => {
   const nb = div.querySelector(nbElement);
 
@@ -65,6 +71,7 @@ const recalculTotal = (div, nbElement, element, config) => {
   });
 };
 
+/* Affichage du total apres calcul */
 const afficheTotal = (element, config) => {
   const total = element.querySelector(".total");
   total.textContent = calculTotal(config.total, config.section).toFixed(2);
@@ -72,6 +79,7 @@ const afficheTotal = (element, config) => {
   return total;
 };
 
+/* Gestion de l'input quantite avec les boutons plus/mois et la valeur de l'input */
 const nbPersonnePlusMoins = (div, plus, moins, nbElement) => {
   const btnPlus = div.querySelector(plus);
   const btnMoins = div.querySelector(moins);
@@ -91,6 +99,7 @@ const nbPersonnePlusMoins = (div, plus, moins, nbElement) => {
   });
 };
 
+/* Gestion de l'ajout d'un nouveau menu/boisson a la commande */
 const ajouterALaCommande = async (id, config) => {
   const data = await getData(config.api, id);
   const nvlDiv = config.modele.cloneNode(true);
@@ -98,6 +107,9 @@ const ajouterALaCommande = async (id, config) => {
   nvlDiv.querySelector(`${config.titre}`).textContent = data.titre;
   nvlDiv.querySelector(`${config.prix}`).textContent = data.prix;
   inputQuantite.value = data.nbPersMin ?? 1;
+  inputQuantite.max = data.stock;
+  nvlDiv.querySelector(config.stock).textContent = data.stock;
+  nvlDiv.querySelector(config.inputId).value = id;
   nvlDiv.querySelector(`${config.total}`).textContent = calculSousTotal(data.prix, inputQuantite.value).toFixed(2);
   recalculSousTotal(nvlDiv, config.quantite, config.prix, config.total);
   nbPersonnePlusMoins(nvlDiv, ".btnPlus", ".btnMoins", config.quantite);
@@ -108,14 +120,18 @@ const ajouterALaCommande = async (id, config) => {
   supprimerDeLaCommande(nvlDiv, config);
 };
 
+const replacerBtnAjouter = (config) => {
+  if (config.conteneur.children.length === 0) {
+    config.conteneur.parentElement.classList.replace("justify-evenly", "justify-center");
+  }
+};
+
 const supprimerDeLaCommande = (div, config) => {
   div.querySelector(".btnSupprimer").addEventListener("click", () => {
     div.remove();
     afficheTotal(config.section, config);
 
-    if (config.conteneur.children.length === 0) {
-      config.conteneur.parentElement.classList.replace("justify-evenly", "justify-center");
-    }
+    replacerBtnAjouter(config);
   });
 };
 
@@ -129,7 +145,9 @@ const configMenu = {
   api: "detailMenu",
   modele: divMenu,
   conteneur: divMenus,
+  inputId: "input[name='menu[]']",
   titre: ".titreMenu",
+  stock: ".stockMenu",
   prix: ".prixUnitaireMenu",
   quantite: ".nbPersonneMenu",
   total: ".sousTotalMenu",
@@ -156,8 +174,39 @@ recalculTotal(configMenu.conteneur, configMenu.quantite, configMenu.section, con
 
 /* BOISSON */
 
+const sectionBoissons = document.getElementById("sectionBoissons");
+// Je recupere le template boisson
+const templateBoisson = document.getElementById("templateBoisson");
+const divBoissons = document.querySelector(".divBoissons");
+// Je recupere uniquement la div Boisson
+const divBoisson = templateBoisson.content.firstElementChild;
+
 btnNvlBoisson.addEventListener("click", () => {
   ouvrirModal(modalBoisson);
+});
+
+const configBoisson = {
+  api: "detailBoisson",
+  modele: divBoisson,
+  conteneur: divBoissons,
+  inputId: "input[name='boisson[]']",
+  titre: ".titreBoisson",
+  stock: ".stockBoisson",
+  prix: ".prixUnitaireBoisson",
+  quantite: ".quantiteBoisson",
+  total: ".sousTotalBoisson",
+  section: sectionBoissons,
+};
+
+replacerBtnAjouter(configBoisson);
+
+btnAjouterBoisson.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const carteBoisson = btn.closest(".cart-plat");
+    const id = carteBoisson.dataset.id;
+    fermerModal(modalBoisson);
+    ajouterALaCommande(id, configBoisson);
+  });
 });
 
 /* PRESTA */
@@ -166,12 +215,31 @@ btnModalPresta.addEventListener("click", () => {
   ouvrirModal(modalPresta);
 });
 
-/*  */
-
+/* Gestion de la fermeture des modales */
 btnFermerModalCommande.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    modalContainerCommande.forEach((modalContainer) => {
+      modalContainer.addEventListener("click", () => {
+        fermerModal(modalContainer);
+      });
+    });
+  });
+});
+
+/* btnFermerModalCommande.forEach((btn) => {
   btn.addEventListener("click", () => {
     fermerModal(modalMenu);
     fermerModal(modalBoisson);
     fermerModal(modalPresta);
   });
+}); */
+
+modalContainerCommande.forEach((modalContainer) => {
+  modalContainer.addEventListener("click", (event) => {
+    if (event.target === modalContainer) fermerModal(modalContainer);
+  });
 });
+
+/* modalContainerCommande.addEventListener("click", (event) => {
+  if (event.target === modalContainerCommande) fermerModal(modalContainerCommande);
+}); */

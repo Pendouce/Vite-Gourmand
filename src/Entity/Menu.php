@@ -29,6 +29,7 @@ class Menu extends Entity implements JsonSerializable
     'titre' => $this->getTitre(),
     'prix' => $this->getPrixPersonne(),
     'nbPersMin' => $this->getNombrePersonneMin(),
+    'stock' => $this->getStockDispo(),
     ];
   }
 

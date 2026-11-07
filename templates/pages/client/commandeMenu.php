@@ -96,11 +96,17 @@
             </div>
             <div class="flex justify-evenly">
               <div class="divMenus flex flex-wrap gap-8">
-                <div class="divMenu px-2 flex flex-col gap-6">
+                <div class="divMenu w-60 px-2 flex flex-col gap-6">
                   <!-- Titre menu -->
                   <input type="hidden" name="menu[]" id="<?= htmlspecialchars($menu->getMenuId()) ?>">
                   <div class="relative">
-                    <h4 class="titreMenu font-medium text-center text-lg md:text-xl"><?= htmlspecialchars($menu->getTitre()) ?></h4>
+                    <div class="text-center">
+                      <h4 class="titreMenu flex min-h-14 items-center justify-center line-clamp-2 text-balance font-medium text-lg md:text-xl"><?= htmlspecialchars($menu->getTitre()) ?></h4>
+                        <p class="text-texte/70"> 
+                          <span class="stockMenu text-texte/70"><?= htmlspecialchars($menu->getStockDispo()) ?></span>
+                          disponible</p>
+                    </div>
+
                     <button class="btnSupprimer absolute -left-4 -top-2 hover:text-primary" type="button">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -172,33 +178,98 @@
 
           <!-- BOISSON -->
 
-          <section class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
+          <section id="sectionBoissons" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
             <div class="flex flex-col items-center gap-2">
               <h3 class="uppercase text-xl text-center md:text-2xl">boisson</h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>
             </div>
-            <div class="divBoissons flex justify-evenly">
-              <div class="divBoisson flex flex-col gap-6">
-          
-                <!-- Div ajouter Boisson -->
+            <div class="flex justify-evenly">
 
-                <div class="w-20 p-4 flex justify-center">
-                  <button id="btnNvlBoisson" class="border border-primary rounded-2xl p-4" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 md:size-12 text-primary">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                  </button>
-                </div>
+              <div class="divBoissons flex flex-wrap gap-8">
+
+              
+              </div>
+                  <!-- Div ajouter Boisson -->
+  
+              <div class="w-20 p-4 flex justify-center">
+                <button id="btnNvlBoisson" class="border border-primary rounded-2xl p-4 self-center" type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 md:size-12 text-primary">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                </button>
               </div>
             </div>
 
+            <!-- Total boisson -->
             <div class="flex gap-3 font-medium justify-center">
               <p> Total boissons: </p>
               <div class="flex gap-1">
-                <span class="total"></span>
+                <span class="total">0</span>
                 <p>€</p>
               </div>
             </div>
+
+            <!-- Template boisson -->
+                <template id="templateBoisson">
+  
+                  <div class="divBoisson w-60 px-2 flex flex-col gap-6">
+    
+                    <!-- Titre boisson -->
+                      <input type="hidden" name="boisson[]">
+                      <div class="relative">
+                        <div class=" text-center">
+                          <!-- <h4 class="titreBoisson text-balance font-medium text-lg md:text-xl"></h4> -->
+                           <h4 class="titreBoisson flex min-h-14 items-center justify-center line-clamp-2 text-balance font-medium text-lg md:text-xl"></h4>
+                            <p class="text-texte/70"><span class="stockBoisson text-texte/70"></span> disponible</p>
+                        </div>
+                        <button class="btnSupprimer absolute -left-4 -top-4 hover:text-primary" type="button">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+    
+                      <!-- prix + quantite -->
+                      <div class="boisson flex flex-col gap-2">
+                          <div class="flex gap-2">
+                            <p>Prix unitaire: </p>
+                            <div class="flex gap-1">
+                              <span class="prixUnitaireBoisson"></span>
+                              <p>€</p>
+                            </div>
+                            
+                          </div>
+    
+                          <div class="divQuantiteflex flex-col gap-2">
+                            <label for="">Quantité:</label>
+                            <div class="flex gap-2">
+                              <button class="btnMoins" type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                              </button>
+                              <input name="quantite" class="quantiteBoisson text-center border border-primary/50 py-1 px-2 rounded-lg w-15 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                               min="1" step="1" type="number"
+                               value="0">
+                              <button class="btnPlus" type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                    
+                      </div>
+                      <!-- Sous total -->
+                      <div class="flex gap-3">
+                        <p>Sous total: </p>
+                        <div class="flex gap-1">
+                          <span class="sousTotalBoisson"></span>
+                          <p>€</p>
+                        </div>
+                      </div>
+                  </div>
+                </template>
           </section>
     </section>
 
