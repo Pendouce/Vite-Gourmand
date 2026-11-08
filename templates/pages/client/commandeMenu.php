@@ -297,17 +297,30 @@
 
         <div class="flex flex-col gap-10">
           <?php foreach($prestationsParType as $typeDePrestaLibelle => $prestations): ?>
-            <section class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
+            <section class="sectionPresta flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
                 <h3 class="uppercase text-xl text-center md:text-2xl"><?= $typeDePrestaLibelle ?></h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>
               
-              <div class="flex flex-col items-center gap-4">
-                <select class="petit-input mx-0" name="prestation[]">
+              <div class="divPresta flex flex-col items-center gap-4">
+                <select class="select petit-input mx-0" name="prestation[]">
                   <option value="">Non</option>
                   <?php foreach($prestations as $presta): ?>
-                    <option value="<?= $presta->getNomPresta() ?>"><?= htmlspecialchars($presta->getNomPresta()) ?></option>
+                    <option class="presta" value="<?= $presta->getNomPresta() ?>" data-id-presta="<?= $presta->getPrestationId() ?>"><?= htmlspecialchars($presta->getNomPresta()) ?></option>
                   <?php endforeach; ?>
                 </select>
+
+                <div class="blockMsg text-center hidden">
+                  <p>A partir de <span class="prixPresta"></span>€ /seuil de <span class="seuilPresta"></span> pers</p>
+                  <p>Supplement <span class="supplementPresta"></span>€ /seuil</p>
+                </div>
+
+                <div class="flex gap-3 font-medium justify-center">
+                  <p> Sous total: </p>
+                  <div class="flex gap-1">
+                    <span class="total">0</span>
+                    <p>€</p>
+                  </div>
+                </div>
 
                 <!-- <div class="flex gap-2">
                   <p>A partir de:</p>

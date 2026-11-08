@@ -4,9 +4,7 @@ console.log("commande ok");
 const sectionMenus = document.getElementById("sectionMenus");
 const modalContainerCommande = document.querySelectorAll(".modal-container-commande");
 const inputPrixTotal = document.getElementById("inputPrixTotal");
-const prixPresta = document.querySelector(".prixPresta");
 const prixTotalPresta = document.querySelector(".prixTotalPresta");
-const seuilPresta = document.querySelector(".seuilPresta");
 const btnModalPresta = document.getElementById("btnModalPresta");
 const titreMenu = document.querySelector(".titreMenu");
 const sousTotalMenu = document.querySelector(".sousTotalMenu");
@@ -232,6 +230,63 @@ btnAjouterBoisson.forEach((btn) => {
 btnModalPresta.addEventListener("click", () => {
   ouvrirModal(modalPresta);
 });
+
+const selectList = document.querySelectorAll(".select");
+
+const trouverOption = (select) => {
+  // Je recupere l'option du select en cours
+  const option = select.selectedOptions[0];
+  const idPresta = option.dataset.idPresta;
+  //console.log(option);
+
+  return idPresta;
+};
+
+const recupererDonnees = async (id) => {
+  const dataPresta = await getData("detailPrestation", id);
+
+  return dataPresta;
+};
+
+const retrouverBlock = (select, data) => {
+  const divPresta = select.closest(".divPresta");
+  const blockMsg = divPresta.querySelector(".blockMsg");
+  const prixPresta = divPresta.querySelector(".prixPresta");
+  const seuilPresta = divPresta.querySelector(".seuilPresta");
+  const supplementPresta = divPresta.querySelector(".supplementPresta");
+  const sousTotal = divPresta.querySelector(".total");
+
+  blockMsg.classList.remove("hidden");
+
+  if (!data) blockMsg.classList.add("hidden");
+
+  prixPresta.textContent = data.prix;
+  seuilPresta.textContent = data.seuil;
+  supplementPresta.textContent = data.supplement;
+  //sousTotal.textContent = recalculSousTotal(divPresta, seuilPresta, prixPresta);
+};
+
+selectList.forEach((select) => {
+  select.addEventListener("change", async () => {
+    const id = trouverOption(select);
+    const donnees = await recupererDonnees(id);
+    retrouverBlock(select, donnees);
+    if (!donnees) return;
+    console.log(donnees);
+  });
+});
+
+/* selectList.forEach((select) => {
+  select.addEventListener("change", async () => {
+    // Je recupere l'option du select en cours
+    const option = select.selectedOptions[0];
+    console.log(option);
+    const idPresta = option.dataset.idPresta;
+    const dataPresta = await getData("detailPrestation", idPresta);
+    const divPresta = select.closest(".divPresta");
+    console.log(divPresta);
+  });
+}); */
 
 /* Gestion de la fermeture des modales */
 btnFermerModalCommande.forEach((btn) => {

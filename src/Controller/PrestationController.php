@@ -105,6 +105,14 @@ class PrestationController extends Controller
     'modeCommande' => $modeCommande, 'titre' =>'detail prestation']);
   }
 
+  public function afficherPrestationParIdApi()
+  {
+    $id = (int) $_GET['id'];
+    $prestation = $this->prestationService->afficherPrestationParId($id);
+
+    echo json_encode($prestation);
+  }
+
   public function modifierPrestation()
   {
     $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);

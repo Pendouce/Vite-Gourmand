@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use function PHPUnit\Framework\isString;
+use JsonSerializable;
 
-class Prestation extends Entity
+class Prestation extends Entity implements JsonSerializable
 {
   protected ?int $prestationId = null;
   protected ?string $nomPresta = null;
@@ -19,6 +19,17 @@ class Prestation extends Entity
   protected ?int $supplement = null;
 
   protected ?string $libelle = null;
+
+
+  public function jsonSerialize(): mixed
+  {
+    return[
+      'id' => $this->getPrestationId(),
+      'prix' => $this->getPrixPresta(),
+      'seuil' => $this->getSeuil(),
+      'supplement' => $this->getSupplement(),
+    ];
+  }
 
   /**
    * Get the value of prestationId
