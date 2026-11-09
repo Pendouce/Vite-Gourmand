@@ -222,7 +222,7 @@
         <?php if(!$modeCommande): ?>
           <a class="btn-detail mt-4 self-end" href="/detailMenu?id=<?= $menu->getMenuId() ?>">Details</a>
           <?php else: ?>
-            <button class="btn-detail mt-4 self-end" type="button">Details</button>
+            <button class="btnDetailsMenu btn-detail mt-4 self-end" type="button">Details</button>
         <?php endif; ?>
         </div>
         <div class="flex items-center justify-center">

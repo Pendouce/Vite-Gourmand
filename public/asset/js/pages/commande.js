@@ -13,6 +13,7 @@ const nbPersonneMenu = document.querySelector(".nbPersonneMenu");
 const btnNvlBoisson = document.getElementById("btnNvlBoisson");
 const btnNvMenu = document.getElementById("btnNvMenu");
 const btnAjouterMenu = document.querySelectorAll(".btnAjouterMenu");
+const btnDetailsMenu = document.querySelectorAll(".btnDetailsMenu");
 const btnAjouterBoisson = document.querySelectorAll(".btnAjouterBoisson");
 const modalMenu = document.getElementById("modalMenu");
 const modalBoisson = document.getElementById("modalBoisson");
@@ -132,7 +133,10 @@ const ajouterALaCommande = async (id, config) => {
   config.conteneur.parentElement.classList.replace("justify-center", "justify-evenly");
   afficheTotal(config.section, config);
   recalculTotal(nvlDiv, config.quantite, config.section, config);
+  actualiserPresta();
   supprimerDeLaCommande(nvlDiv, config);
+
+  //calculTotalNbPersMenu();
 };
 
 const replacerBtnAjouter = (config) => {
@@ -147,6 +151,7 @@ const supprimerDeLaCommande = (div, config) => {
     afficheTotal(config.section, config);
 
     replacerBtnAjouter(config);
+    actualiserPresta();
   });
 };
 
@@ -242,10 +247,80 @@ const trouverOption = (select) => {
   return idPresta;
 };
 
+const calculTotalNbPersMenu = () => {
+  const nbPersonneMenuInput = document.querySelectorAll(".nbPersonneMenu");
+
+  const totalPers = [...nbPersonneMenuInput].reduce((acc, curr) => acc + Number(curr.value), 0);
+
+  return totalPers;
+};
+
+const calculSousTotalPresta = (data) => {
+  const nbPersonnes = calculTotalNbPersMenu();
+  let supplement = 0;
+  let seuil = data.seuil;
+
+  if (nbPersonnes < data.seuil) {
+    return 0;
+  }
+
+  while (seuil < nbPersonnes) {
+    seuil += 5;
+    supplement += data.supplement;
+  }
+
+  const result = supplement + data.prix;
+
+  return result;
+};
+
+/* const recalculSousTotalPresta = (sousTotal, div) => {
+  const nb = divMenus.querySelectorAll(".nbPersonneMenu");
+
+  nb.forEach((n) => {
+    n.addEventListener("change", () => {
+      if (!div.dataPresta) return;
+      sousTotal.textContent = calculSousTotalPresta(div.dataPresta).toFixed(2);
+      msgNbPersInsufisant(div.dataPresta, div);
+    });
+  });
+}; */
+
+const actualiserPresta = () => {
+  const divsPresta = document.querySelectorAll(".divPresta");
+
+  divsPresta.forEach((divP) => {
+    if (divP.dataPresta) {
+      const sousTotal = divP.querySelector(".total");
+      sousTotal.textContent = calculSousTotalPresta(divP.dataPresta).toFixed(2);
+      msgNbPersInsufisant(divP.dataPresta, divP);
+    }
+  });
+};
+
+divMenus.addEventListener("change", actualiserPresta);
+
 const recupererDonnees = async (id) => {
   const dataPresta = await getData("detailPrestation", id);
 
   return dataPresta;
+};
+
+const msgNbPersInsufisant = (data, div) => {
+  const msgPresta = div.querySelector(".msgPresta");
+  if (!data) {
+    msgPresta.classList.add("hidden");
+    return;
+  }
+  msgPresta.textContent = `Cette prestation est disponible a partir de ${data.seuil} personnes`;
+
+  const nbPersonnes = calculTotalNbPersMenu();
+
+  if (nbPersonnes < data.seuil) {
+    msgPresta.classList.remove("hidden");
+  } else {
+    msgPresta.classList.add("hidden");
+  }
 };
 
 const retrouverBlock = (select, data) => {
@@ -256,14 +331,22 @@ const retrouverBlock = (select, data) => {
   const supplementPresta = divPresta.querySelector(".supplementPresta");
   const sousTotal = divPresta.querySelector(".total");
 
-  blockMsg.classList.remove("hidden");
+  if (!data) {
+    divPresta.dataPresta = null;
+    blockMsg.classList.add("hidden");
+    msgNbPersInsufisant(data, divPresta);
+    sousTotal.textContent = "0.00";
+    return;
+  }
 
-  if (!data) blockMsg.classList.add("hidden");
+  blockMsg.classList.remove("hidden");
 
   prixPresta.textContent = data.prix;
   seuilPresta.textContent = data.seuil;
   supplementPresta.textContent = data.supplement;
-  //sousTotal.textContent = recalculSousTotal(divPresta, seuilPresta, prixPresta);
+  sousTotal.textContent = calculSousTotalPresta(data).toFixed(2);
+  divPresta.dataPresta = data;
+  msgNbPersInsufisant(data, divPresta);
 };
 
 selectList.forEach((select) => {

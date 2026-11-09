@@ -178,7 +178,7 @@
 
           <!-- BOISSON -->
 
-          <section id="sectionBoissons" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
+          <section id="sectionBoissons" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative hidden">
             <div class="flex flex-col items-center gap-2">
               <h3 class="uppercase text-xl text-center md:text-2xl">boisson</h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>
@@ -300,8 +300,10 @@
             <section class="sectionPresta flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
                 <h3 class="uppercase text-xl text-center md:text-2xl"><?= $typeDePrestaLibelle ?></h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>
-              
+
               <div class="divPresta flex flex-col items-center gap-4">
+            
+                <span class="msgPresta erreur rounded-md py-1 hidden"></span>
                 <select class="select petit-input mx-0" name="prestation[]">
                   <option value="">Non</option>
                   <?php foreach($prestations as $presta): ?>
@@ -311,7 +313,7 @@
 
                 <div class="blockMsg text-center hidden">
                   <p>A partir de <span class="prixPresta"></span>€ /seuil de <span class="seuilPresta"></span> pers</p>
-                  <p>Supplement <span class="supplementPresta"></span>€ /seuil</p>
+                  <p>Supplement <span class="supplementPresta"></span>€ /palier de 5</p>
                 </div>
 
                 <div class="flex gap-3 font-medium justify-center">

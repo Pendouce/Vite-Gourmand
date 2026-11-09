@@ -118,12 +118,12 @@
 
       <div class="flex flex-col">
         <label for="seuil">Seuil</label>
-        <input class="petit-input" type="number" min="1" step="any" name="seuil">
+        <input class="petit-input" type="number" min="1" step="any" name="seuil" value="<?= htmlspecialchars($prestation->getSeuil()) ?>">
       </div>
 
       <div class="flex flex-col">
         <label for="supplement">Supplement</label>
-        <input class="petit-input" type="number" min="1" step="any" name="supplement">
+        <input class="petit-input" type="number" min="1" step="any" name="supplement" value="<?= htmlspecialchars($prestation->getSupplement()) ?>">
       </div>
       
       <div class="col-span-1 col-start-2 flex flex-col justify-between items-center ">
