@@ -98,11 +98,18 @@ class PrestationController extends Controller
     $id = (int) $_GET['id'];
     $role = $_SESSION['role_id'] ?? null;
 
-    $modeCommande = $modeCommande ?? false;
-
     $prestation = $this->prestationService->afficherPrestationParId($id);
     $this->render('pages/employe/detailPresta', ['prestation' => $prestation, 'role' => $role, 
-    'modeCommande' => $modeCommande, 'titre' =>'detail prestation']);
+    'modeCommande' => false, 'titre' =>'detail prestation']);
+  }
+  
+  public function afficherPrestationParIdPartial()
+  {
+    $id = (int) $_GET['id'];
+
+    $prestation = $this->prestationService->afficherPrestationParId($id);
+
+    $this->render('partials/detailPresta', ['prestation' => $prestation, 'modeCommande' => true]);
   }
 
   public function afficherPrestationParIdApi()

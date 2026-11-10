@@ -23,7 +23,10 @@
           <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
         </svg>
       </button>
-      <?php include(APP_ROOT.'/templates/partials/menus.php');?>
+      <div id="listeMenusModal">
+        <?php include(APP_ROOT.'/templates/partials/menus.php');?>
+      </div>
+      <div id="detailMenuModal" class="hidden pt-6"></div>
     </div>
   </div>
 
@@ -34,7 +37,10 @@
           <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
         </svg>
       </button>
-      <?php include(APP_ROOT.'/templates/partials/boissons.php');?>
+      <div id="listeBoissonsModal">
+        <?php include(APP_ROOT.'/templates/partials/boissons.php');?>
+      </div>
+      <div id="detailBoissonModal" class="hidden pt-6"></div>
     </div>
   </div>
 
@@ -45,13 +51,17 @@
           <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
         </svg>
       </button>
-      <?php include(APP_ROOT.'/templates/partials/presta.php');?>
+      <div id="listePrestasModal">
+        <?php include(APP_ROOT.'/templates/partials/presta.php');?>
+      </div>
+      <div id="detailPrestaModal" class="hidden pt-6"></div>
+      
     </div>
   </div>
 
   <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
 
-  <div  class="w-full py-4 mb-2">
+  <div class="w-full py-4 mb-2">
     <?php if (isset($_SESSION['succes'])): ?>
       <p class="succes">
           <?= $_SESSION['succes'] ?>
@@ -178,7 +188,7 @@
 
           <!-- BOISSON -->
 
-          <section id="sectionBoissons" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative hidden">
+          <section id="sectionBoissons" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
             <div class="flex flex-col items-center gap-2">
               <h3 class="uppercase text-xl text-center md:text-2xl">boisson</h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>

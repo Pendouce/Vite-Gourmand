@@ -14,6 +14,7 @@ const btnNvlBoisson = document.getElementById("btnNvlBoisson");
 const btnNvMenu = document.getElementById("btnNvMenu");
 const btnAjouterMenu = document.querySelectorAll(".btnAjouterMenu");
 const btnDetailsMenu = document.querySelectorAll(".btnDetailsMenu");
+const btnDetailsBoisson = document.querySelectorAll(".btnDetailsBoisson");
 const btnAjouterBoisson = document.querySelectorAll(".btnAjouterBoisson");
 const modalMenu = document.getElementById("modalMenu");
 const modalBoisson = document.getElementById("modalBoisson");
@@ -22,6 +23,14 @@ const btnFermerModalCommande = document.querySelectorAll(".btnFermerModalCommand
 //const divMenus = document.querySelectorAll(".divMenu");
 const divMenu = document.querySelector(".divMenu");
 const divMenus = document.querySelector(".divMenus");
+const listeMenusModal = document.getElementById("listeMenusModal");
+const detailMenuModal = document.getElementById("detailMenuModal");
+const listeBoissonsModal = document.getElementById("listeBoissonsModal");
+const detailBoissonModal = document.getElementById("detailBoissonModal");
+const listePrestasModal = document.getElementById("listePrestasModal");
+const detailPrestaModal = document.getElementById("detailPrestaModal");
+const btnDetailsPresta = document.querySelectorAll(".btnDetailsPresta");
+
 //const carteMenu = document.querySelectorAll(".cart-menu");
 //const btnSupprimer = document.querySelector(".btnSupprimer");
 const total = document.querySelectorAll(".total");
@@ -135,16 +144,16 @@ const ajouterALaCommande = async (id, config) => {
   recalculTotal(nvlDiv, config.quantite, config.section, config);
   actualiserPresta();
   supprimerDeLaCommande(nvlDiv, config);
-
-  //calculTotalNbPersMenu();
 };
 
+/* Gestion de l'emplacement du btn ajouter des sections menu et boisson */
 const replacerBtnAjouter = (config) => {
   if (config.conteneur.children.length === 0) {
     config.conteneur.parentElement.classList.replace("justify-evenly", "justify-center");
   }
 };
 
+/* Gestion de la suppression d'un menu ou d'une boisson de la commande */
 const supprimerDeLaCommande = (div, config) => {
   div.querySelector(".btnSupprimer").addEventListener("click", () => {
     div.remove();
@@ -155,9 +164,82 @@ const supprimerDeLaCommande = (div, config) => {
   });
 };
 
+/* Gestion de l'ajout de l'ouverture des modales menu et boisson au click sur ajouter */
+const btnAjouter = (config) => {
+  config.btnAjouter.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const carte = btn.closest(config.classe);
+      const id = carte.dataset.id;
+      fermerModal(config.modal);
+      ajouterALaCommande(id, config.config);
+    });
+  });
+};
+/* const btnAjouter = (btnAjouter, classe, modal, config) => {
+  btnAjouter.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const carte = btn.closest(classe);
+      const id = carte.dataset.id;
+      fermerModal(modal);
+      ajouterALaCommande(id, config);
+    });
+  });
+}; */
+
+/* btnDetailsMenu.forEach((btn) => {
+  btn.addEventListener("click", async () => {
+    const carteMenu = btn.closest(".cart-menu");
+    const id = carteMenu.dataset.id;
+    const res = await fetch(`/detailMenuPartial?id=${id}`);
+    const data = await res.text();
+    detailMenuModal.innerHTML = data;
+    detailMenuModal.classList.remove("hidden");
+    listeMenusModal.classList.add("hidden");
+  });
+}); */
+
+/* detailMenuModal.addEventListener("click", (e) => {
+  if (e.target.closest("#btnRetourMenu")) {
+    detailMenuModal.innerHTML = "";
+    detailMenuModal.classList.add("hidden");
+    listeMenusModal.classList.remove("hidden");
+  }
+}); */
+
+/* Gestion de l'affichage du detail du catalogue */
+const afficheDetail = (config) => {
+  config.btnDetails.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const carte = btn.closest(config.classe);
+      const id = carte.dataset.id;
+      const res = await fetch(`/${config.api}?id=${id}`);
+      const data = await res.text();
+      config.detailModal.innerHTML = data;
+      config.detailModal.classList.remove("hidden");
+      config.listeModal.classList.add("hidden");
+    });
+  });
+};
+
+const nettoyerModal = (config) => {
+  config.detailModal.innerHTML = "";
+  config.detailModal.classList.add("hidden");
+  config.listeModal.classList.remove("hidden");
+};
+
+/* Gestion du retour a la liste du catalogue */
+const retourListe = (config) => {
+  config.detailModal.addEventListener("click", (e) => {
+    if (e.target.closest(config.btnRetourListe)) {
+      nettoyerModal(config);
+    }
+  });
+};
+
 /* MENU */
 
 btnNvMenu.addEventListener("click", () => {
+  nettoyerModal(configModalMenu);
   ouvrirModal(modalMenu);
 });
 
@@ -175,14 +257,21 @@ const configMenu = {
   section: sectionMenus,
 };
 
-btnAjouterMenu.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const carteMenu = btn.closest(".cart-menu");
-    const id = carteMenu.dataset.id;
-    fermerModal(modalMenu);
-    ajouterALaCommande(id, configMenu);
-  });
-});
+const configModalMenu = {
+  api: "detailMenuPartial",
+  classe: ".cart-menu",
+  btnAjouter: btnAjouterMenu,
+  btnDetails: btnDetailsMenu,
+  modal: modalMenu,
+  listeModal: listeMenusModal,
+  detailModal: detailMenuModal,
+  btnRetourListe: "#btnRetourMenu",
+  config: configMenu,
+};
+
+btnAjouter(configModalMenu);
+afficheDetail(configModalMenu);
+retourListe(configModalMenu);
 
 const nbPersMin = nbPersonneMenu.dataset.nbPersMin;
 sousTotalMenu.textContent = calculSousTotal(prixUnitaireMenu.textContent, nbPersonneMenu.value, nbPersMin).toFixed(2);
@@ -203,6 +292,7 @@ const divBoissons = document.querySelector(".divBoissons");
 const divBoisson = templateBoisson.content.firstElementChild;
 
 btnNvlBoisson.addEventListener("click", () => {
+  nettoyerModal(configModalBoisson);
   ouvrirModal(modalBoisson);
 });
 
@@ -219,18 +309,38 @@ const configBoisson = {
   section: sectionBoissons,
 };
 
+const configModalBoisson = {
+  api: "detailBoissonPartial",
+  classe: ".cart-plat",
+  btnAjouter: btnAjouterBoisson,
+  btnDetails: btnDetailsBoisson,
+  modal: modalBoisson,
+  listeModal: listeBoissonsModal,
+  detailModal: detailBoissonModal,
+  btnRetourListe: "#btnRetourBoisson",
+  config: configBoisson,
+};
+
+btnAjouter(configModalBoisson);
+afficheDetail(configModalBoisson);
+retourListe(configModalBoisson);
+
 replacerBtnAjouter(configBoisson);
 
-btnAjouterBoisson.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const carteBoisson = btn.closest(".cart-plat");
-    const id = carteBoisson.dataset.id;
-    fermerModal(modalBoisson);
-    ajouterALaCommande(id, configBoisson);
-  });
-});
-
 /* PRESTA */
+
+const configModalPresta = {
+  api: "detailPrestaPartial",
+  classe: ".cart-presta-sm, .cart-presta",
+  btnDetails: btnDetailsPresta,
+  modal: modalPresta,
+  listeModal: listePrestasModal,
+  detailModal: detailPrestaModal,
+  btnRetourListe: "#btnRetourPresta",
+};
+
+afficheDetail(configModalPresta);
+retourListe(configModalPresta);
 
 btnModalPresta.addEventListener("click", () => {
   ouvrirModal(modalPresta);
@@ -374,11 +484,8 @@ selectList.forEach((select) => {
 /* Gestion de la fermeture des modales */
 btnFermerModalCommande.forEach((btn) => {
   btn.addEventListener("click", () => {
-    modalContainerCommande.forEach((modalContainer) => {
-      modalContainer.addEventListener("click", () => {
-        fermerModal(modalContainer);
-      });
-    });
+    const modal = btn.closest(".modal-container-commande");
+    fermerModal(modal);
   });
 });
 

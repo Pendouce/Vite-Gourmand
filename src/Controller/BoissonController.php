@@ -75,7 +75,16 @@ class BoissonController extends Controller
     $boissonId = (int) $_GET['id'];
     $boisson = $this->boissonService->afficherBoissonParId($boissonId);
  
-    echo json_encode($boisson);
+    $this->render('pages/employe/detailBoisson', ['boisson' => $boisson,
+    'modeCommande' => false, 'titre' => 'detail boisson']);
+  }
+
+  public function afficherBoissonParIdPartial(): void
+  {
+    $boissonId = (int) $_GET['id'];
+    $boisson = $this->boissonService->afficherBoissonParId($boissonId);
+ 
+    $this->render('partials/detailBoisson', ['boisson' => $boisson, 'modeCommande' => true]);
   }
 
   public function afficherBoissonParIdApi(): void

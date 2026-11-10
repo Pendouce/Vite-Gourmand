@@ -45,7 +45,7 @@
         <div class="grid grid-cols-2 gap-4 sm:gap-0">
           <?php foreach($prestations as $prestation): ?>
           <?php if(count($prestation->getContenuPresta()) > 1): ?>
-            <div class="cart-presta-sm col-span-1 flex flex-col gap-4">
+            <div class="cart-presta-sm col-span-1 flex flex-col gap-4" data-id="<?= $prestation->getPrestationId() ?>">
               <div class="blockRetour w-full mb-1"></div>
               <div class="flex flex-col gap-2">
                 <img class="w-15 object-cover self-center" src="<?= htmlspecialchars($prestation->getImgPresta()) ?>" alt="">
@@ -63,7 +63,7 @@
                 <?php if(!$modeCommande): ?>
                   <a class="btn-detail py-1 w-fit" href="/detailPrestation?id=<?= $prestation->getPrestationId() ?>">Details</a>
                 <?php else: ?>
-                  <button class="btn-detail py-1 w-fit" type="button" data-id="<?= $prestation->getPrestationId() ?>">Details</button>
+                  <button class="btnDetailsPresta btn-detail py-1 w-fit" type="button">Details</button>
                 <?php endif; ?>
               </div>
 
@@ -79,7 +79,7 @@
             <?php endif; ?>
             </div>
           <?php else: ?>
-            <div class="cart-presta col-span-full gap-2 relative">
+            <div class="cart-presta col-span-full gap-2 relative" data-id="<?= $prestation->getPrestationId() ?>">
               <div class="blockRetour w-full mb-1"></div>
               <div class="flex flex-col gap-2">
                 <img class="w-15 object-cover self-center bg-transparent" src="<?= htmlspecialchars($prestation->getImgPresta()) ?>" alt="">
@@ -96,7 +96,7 @@
                 <?php if(!$modeCommande): ?>
                   <a class="btn-detail py-1 w-fit" href="/detailPrestation?id=<?= $prestation->getPrestationId() ?>">Details</a>
                   <?php else: ?>
-                    <button class="btn-detail py-1 w-fit" data-id="<?= $prestation->getPrestationId() ?>">Details</button>
+                    <button class="btnDetailsPresta btn-detail py-1 w-fit">Details</button>
                     <?php endif; ?>
               </div>
 

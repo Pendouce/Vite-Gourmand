@@ -50,7 +50,7 @@
               <?php if(!$modeCommande): ?>
                 <a class="btn-detail mt-4" href="/detailBoisson?id=<?= $boisson->getBoissonId() ?>">Details</a>
               <?php else: ?>
-                <button class="btn-detail mt-4" type="button">Details</button>
+                <button class="btnDetailsBoisson btn-detail mt-4" type="button">Details</button>
               <?php endif; ?>
               <?php if(!$modeCommande && ($role === ROLE_ADMIN || $role === ROLE_EMPLOYE)): ?>
                 <div class="self-end">
