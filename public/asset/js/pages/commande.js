@@ -30,6 +30,7 @@ const detailBoissonModal = document.getElementById("detailBoissonModal");
 const listePrestasModal = document.getElementById("listePrestasModal");
 const detailPrestaModal = document.getElementById("detailPrestaModal");
 const btnDetailsPresta = document.querySelectorAll(".btnDetailsPresta");
+//const btnAjouterDetail = document.getElementById("btnAjouterDetail");
 
 //const carteMenu = document.querySelectorAll(".cart-menu");
 //const btnSupprimer = document.querySelector(".btnSupprimer");
@@ -229,8 +230,26 @@ const nettoyerModal = (config) => {
 
 /* Gestion du retour a la liste du catalogue */
 const retourListe = (config) => {
+  // J'ajoute un evenement click sur la modale de la page detail
+  // car le btn retour n'existe pas sur la modale initale
   config.detailModal.addEventListener("click", (e) => {
+    // e represente l'evenement click
+    // e.target l'element precis sur lequel je viens de cliquer
+    // closest() vérifie si cet element correspond au bouton retour.
+    // Si ce n'est pas le cas, il recherche ce bouton parmi ses parents.
     if (e.target.closest(config.btnRetourListe)) {
+      nettoyerModal(config);
+    }
+  });
+};
+
+/* Gestion de l'ajout a la commande depuis la page detail */
+const ajouterALaCommandeDepuisDetail = (config) => {
+  config.detailModal.addEventListener("click", (e) => {
+    const btn = e.target.closest(config.btnAjouterDetail);
+    if (btn) {
+      const id = btn.dataset.id;
+      ajouterALaCommande(id, config.config);
       nettoyerModal(config);
     }
   });
@@ -261,6 +280,7 @@ const configModalMenu = {
   api: "detailMenuPartial",
   classe: ".cart-menu",
   btnAjouter: btnAjouterMenu,
+  btnAjouterDetail: "#btnAjouterDetail",
   btnDetails: btnDetailsMenu,
   modal: modalMenu,
   listeModal: listeMenusModal,
@@ -270,6 +290,7 @@ const configModalMenu = {
 };
 
 btnAjouter(configModalMenu);
+ajouterALaCommandeDepuisDetail(configModalMenu);
 afficheDetail(configModalMenu);
 retourListe(configModalMenu);
 
@@ -313,6 +334,7 @@ const configModalBoisson = {
   api: "detailBoissonPartial",
   classe: ".cart-plat",
   btnAjouter: btnAjouterBoisson,
+  btnAjouterDetail: "#btnAjouterDetail",
   btnDetails: btnDetailsBoisson,
   modal: modalBoisson,
   listeModal: listeBoissonsModal,
@@ -322,6 +344,7 @@ const configModalBoisson = {
 };
 
 btnAjouter(configModalBoisson);
+ajouterALaCommandeDepuisDetail(configModalBoisson);
 afficheDetail(configModalBoisson);
 retourListe(configModalBoisson);
 

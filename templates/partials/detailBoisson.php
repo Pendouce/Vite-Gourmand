@@ -82,6 +82,15 @@
         <p class="bg-primary/70 py-1 px-2 rounded-lg md:text-xl">Sans alcool</p>
       <?php endif; ?>
     </div>
+
+    <div class="self-center p-6">
+    <div class="btn-form-dark">
+      <?php if($modeCommande): ?>
+        <button id="btnAjouterDetail" type="button" data-id="<?= $boisson->getBoissonId() ?>">Ajouter</button>
+        <?php endif; ?>
+    </div>
+  </div>
+
     <?php if(!$modeCommande && ($role === ROLE_ADMIN || $role === ROLE_EMPLOYE)): ?>
       <div class="flex justify-between items-center gap-8">
         <label class="md:text-xl">Statut: </label>

@@ -193,7 +193,7 @@
       <?php if(!$modeCommande): ?>
         <a href="/commandeMenu?id=<?= $menu->getMenuId() ?>">Commander</a>
       <?php else: ?>
-        <button type="button" data-id="<?= $menu->getMenuId() ?>">Ajouter</button>
+        <button id="btnAjouterDetail" type="button" data-id="<?= $menu->getMenuId() ?>">Ajouter</button>
         <?php endif; ?>
     </div>
   </div>
