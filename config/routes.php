@@ -58,6 +58,7 @@ return[
     "/supprimerBoisson/" => ["controller" => "App\Controller\BoissonController", "action" => "supprimerBoisson"],
     "/commandeMenu/" => ["controller" => "App\Controller\CommandeController", "action" => "creerCommande"],
     "/commandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesEmploye"],
+    "/calculerPrixLivraison/" => ["controller" => "App\Controller\CommandeController", "action" => "calculerPrixLivraison"],
     "/mesCommandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesUser"],
     "/detailCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherDetailsCommande"],
     "/commandesFiltre/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandeFiltre"],

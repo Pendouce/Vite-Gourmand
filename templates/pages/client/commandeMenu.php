@@ -214,7 +214,7 @@
             <div class="flex gap-3 font-medium justify-center">
               <p> Total boissons: </p>
               <div class="flex gap-1">
-                <span class="total">0</span>
+                <span class="total">0.00</span>
                 <p>€</p>
               </div>
             </div>
@@ -329,27 +329,10 @@
                 <div class="flex gap-3 font-medium justify-center">
                   <p> Sous total: </p>
                   <div class="flex gap-1">
-                    <span class="total">0</span>
+                    <span class="total">0.00</span>
                     <p>€</p>
                   </div>
                 </div>
-
-                <!-- <div class="flex gap-2">
-                  <p>A partir de:</p>
-                  <div class="flex gap-1">
-                    <span class="prixTotalPresta"></span>
-                    <p>€ / <span class="seuilPresta"></span> pers</p>
-                  </div>
-
-                </div>
-                  <div class="flex gap-3">
-                    <p>Sous total: </p>
-                    <div class="flex gap-1">
-                      <span class="prixPresta">10</span>
-                      <p>€</p>
-                    </div>
-
-                  </div> -->
               </div>
               
             </section>
@@ -394,9 +377,23 @@
 
             <div class="flex flex-col col-span-2">
               <label for="">Adresse de livraison</label>
-              <input class="grand-input" type="text" name="lieu_livraison">
-              <p class="text-texte/90 text-sm pb-4">*majoration de 59 centime par kilometre parcourus sera apliquée si hors bordeaux</p>
+              <input id="adresse" class="grand-input" type="text" name="lieu_livraison">
             </div>
+
+            <div class="flex flex-col col-span-1">
+              <label for="">Ville</label>
+              <input id="ville" class="petit-input" type="text" name="ville">
+            </div>
+
+            <div class="flex flex-col col-span-1">
+              <label for="">Code postal</label>
+              <input id="codePostal" class="petit-input [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" type="number" name="code_postal">
+            </div>
+            <p id="msgErreurAdresse" class="erreur col-span-full rounded-lg py-1 hidden">
+              Veuillez entre une adresse valide
+            </p>
+            <p class="text-texte/90 text-sm pb-4 col-span-full">*majoration de 59 centime par kilometre parcourus sera apliquée si hors bordeaux</p>
+
             <div class="flex flex-col col-span-1">
               <label for="">Date et heure</label>
               <input class="petit-input" type="datetime-local" name="date_livraison">
@@ -411,7 +408,9 @@
           <div class="h-px bg-primary"></div>
           <div class="flex text-center bg-fond-carte/60 gap-2 p-4">
             <label for="">Prix total : </label>
-            <input id="inputPrixTotal" class="w-12 px-2" value="1">
+            <input id="inputPrixTotal" class="hidden">
+            <!-- <input id="inputPrixTotal" class="w-12 px-2" value="1"> -->
+            <span id="totalCommande">0.00</span>
             <p>€</p>
             
           </div>

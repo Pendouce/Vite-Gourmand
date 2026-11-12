@@ -1,12 +1,10 @@
 import { ouvrirModal, fermerModal } from "./modales.js";
-console.log("commande ok");
 
 const sectionMenus = document.getElementById("sectionMenus");
 const modalContainerCommande = document.querySelectorAll(".modal-container-commande");
 const inputPrixTotal = document.getElementById("inputPrixTotal");
-const prixTotalPresta = document.querySelector(".prixTotalPresta");
+const totalCommande = document.getElementById("totalCommande");
 const btnModalPresta = document.getElementById("btnModalPresta");
-const titreMenu = document.querySelector(".titreMenu");
 const sousTotalMenu = document.querySelector(".sousTotalMenu");
 const prixUnitaireMenu = document.querySelector(".prixUnitaireMenu");
 const nbPersonneMenu = document.querySelector(".nbPersonneMenu");
@@ -20,7 +18,6 @@ const modalMenu = document.getElementById("modalMenu");
 const modalBoisson = document.getElementById("modalBoisson");
 const modalPresta = document.getElementById("modalPresta");
 const btnFermerModalCommande = document.querySelectorAll(".btnFermerModalCommande");
-//const divMenus = document.querySelectorAll(".divMenu");
 const divMenu = document.querySelector(".divMenu");
 const divMenus = document.querySelector(".divMenus");
 const listeMenusModal = document.getElementById("listeMenusModal");
@@ -30,11 +27,6 @@ const detailBoissonModal = document.getElementById("detailBoissonModal");
 const listePrestasModal = document.getElementById("listePrestasModal");
 const detailPrestaModal = document.getElementById("detailPrestaModal");
 const btnDetailsPresta = document.querySelectorAll(".btnDetailsPresta");
-//const btnAjouterDetail = document.getElementById("btnAjouterDetail");
-
-//const carteMenu = document.querySelectorAll(".cart-menu");
-//const btnSupprimer = document.querySelector(".btnSupprimer");
-const total = document.querySelectorAll(".total");
 
 /* Gestion des donnees recuperees du back */
 const getData = async (api, id) => {
@@ -48,11 +40,51 @@ const getData = async (api, id) => {
 const calculSousTotal = (prix, nbPersonne, nbPersMin) => {
   let result = Number(prix) * Number(nbPersonne);
 
-  if (nbPersMin && Number(nbPersonne) > Number(nbPersMin) + 5) {
+  if (Number(nbPersonne) >= Number(nbPersMin) + 5) {
     result *= 0.9;
   }
 
   return result;
+};
+
+const adresse = document.getElementById("adresse");
+const ville = document.getElementById("ville");
+const codePostal = document.getElementById("codePostal");
+
+/* Gestion du total de sous totaux */
+const calculTotal = (sousTotal, element) => {
+  const total = element.querySelectorAll(`${sousTotal}`);
+  // Je transforme ma node liste en tableau pour pouvoir lui appliquer reduce
+  const result = [...total].reduce((acc, curr) => acc + Number(curr.textContent), 0);
+
+  return result;
+};
+
+const calculPrixLivraison = async () => {
+  const formData = new FormData();
+  formData.append("lieu_livraison", adresse.value);
+  formData.append("code_postal", codePostal.value);
+  formData.append("ville", ville.value);
+
+  try {
+    const res = await fetch("/calculerPrixLivraison", {
+      method: "POST",
+      body: formData,
+    });
+    const result = await res.json();
+
+    if (result.succes) {
+      return result;
+    } else {
+      const msgErreurAdresse = document.getElementById("msgErreurAdresse");
+      msgErreurAdresse.classList.remove("hidden");
+      setTimeout(() => {
+        msgErreurAdresse.classList.add("hidden");
+      }, 5000);
+    }
+  } catch (e) {
+    return null;
+  }
 };
 
 /* Gestion des sous totaux apres modification de la quantite */
@@ -66,15 +98,6 @@ const recalculSousTotal = (div, nbElement, prixElement, totalElement) => {
   });
 };
 
-/* Gestion du total de sous totaux */
-const calculTotal = (sousTotal, element) => {
-  const total = element.querySelectorAll(`${sousTotal}`);
-  // Je transforme ma node liste en tableau pour pouvoir lui appliquer reduce
-  const result = [...total].reduce((acc, curr) => acc + Number(curr.textContent), 0);
-
-  return result;
-};
-
 /* Gestion du total apres ajout/supression ou modification de la quantite */
 const recalculTotal = (div, nbElement, element, config) => {
   const nb = div.querySelector(nbElement);
@@ -82,6 +105,36 @@ const recalculTotal = (div, nbElement, element, config) => {
   nb.addEventListener("change", () => {
     return afficheTotal(element, config);
   });
+};
+
+let prixLivraison = null;
+
+/* Gestion de la mise a jour du prix de la commande au changement au niveau de l'adresse */
+[adresse, ville, codePostal].forEach((input) => {
+  input.addEventListener("change", async () => {
+    prixLivraison = await calculPrixLivraison();
+    afficheTotalCommande();
+    console.log(prixLivraison);
+  });
+});
+
+const calculTotalCommande = () => {
+  const total = calculTotal(".total", document);
+
+  if (prixLivraison && prixLivraison.succes) {
+    return (total + Number(prixLivraison.prix)).toFixed(2);
+  }
+};
+
+const afficheTotalCommande = async () => {
+  let prixTotal;
+  if (prixLivraison && prixLivraison.succes) {
+    prixTotal = await calculTotalCommande();
+  } else {
+    prixTotal = calculTotal(".total", document).toFixed(2);
+  }
+  totalCommande.textContent = prixTotal;
+  inputPrixTotal.value = prixTotal;
 };
 
 /* Affichage du total apres calcul */
@@ -144,6 +197,7 @@ const ajouterALaCommande = async (id, config) => {
   afficheTotal(config.section, config);
   recalculTotal(nvlDiv, config.quantite, config.section, config);
   actualiserPresta();
+  afficheTotalCommande();
   supprimerDeLaCommande(nvlDiv, config);
 };
 
@@ -162,6 +216,7 @@ const supprimerDeLaCommande = (div, config) => {
 
     replacerBtnAjouter(config);
     actualiserPresta();
+    afficheTotalCommande();
   });
 };
 
@@ -347,8 +402,11 @@ btnAjouter(configModalBoisson);
 ajouterALaCommandeDepuisDetail(configModalBoisson);
 afficheDetail(configModalBoisson);
 retourListe(configModalBoisson);
-
 replacerBtnAjouter(configBoisson);
+
+divBoissons.addEventListener("change", () => {
+  afficheTotalCommande();
+});
 
 /* PRESTA */
 
@@ -431,7 +489,10 @@ const actualiserPresta = () => {
   });
 };
 
-divMenus.addEventListener("change", actualiserPresta);
+divMenus.addEventListener("change", () => {
+  actualiserPresta();
+  afficheTotalCommande();
+});
 
 const recupererDonnees = async (id) => {
   const dataPresta = await getData("detailPrestation", id);
@@ -480,6 +541,7 @@ const retrouverBlock = (select, data) => {
   sousTotal.textContent = calculSousTotalPresta(data).toFixed(2);
   divPresta.dataPresta = data;
   msgNbPersInsufisant(data, divPresta);
+  afficheTotalCommande();
 };
 
 selectList.forEach((select) => {
@@ -488,9 +550,11 @@ selectList.forEach((select) => {
     const donnees = await recupererDonnees(id);
     retrouverBlock(select, donnees);
     if (!donnees) return;
-    console.log(donnees);
+    //console.log(donnees);
   });
 });
+
+afficheTotalCommande();
 
 /* selectList.forEach((select) => {
   select.addEventListener("change", async () => {

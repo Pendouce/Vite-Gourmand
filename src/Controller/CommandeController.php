@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Service\CommandeService;
 use App\Factory\ContainerId;
 use App\Service\BoissonService;
+use App\Service\CalculPrixService;
 use App\Service\MenuService;
 use App\Service\PrestationService;
-use App\Service\TypeDePrestaService;
 use App\Service\UserService;
 use Exception;
 
@@ -19,6 +19,7 @@ class CommandeController extends Controller
   private UserService $userService;
   private MenuService $menuService;
   private BoissonService $boissonService;
+  private CalculPrixService $calculPrixService;
 
   public function __construct() {
     parent::__construct();
@@ -27,6 +28,20 @@ class CommandeController extends Controller
     $this->userService = ContainerId::getUserService();
     $this->menuService = ContainerId::getMenuService();
     $this->boissonService = ContainerId::getBoissonService();
+    $this->calculPrixService = new CalculPrixService;
+  }
+
+  public function calculerPrixLivraison()
+  {
+    $adresseClient = $_POST['lieu_livraison']." ".$_POST['ville']." ".$_POST['code_postal'];
+    try
+    {
+      $calculPrix = $this->calculPrixService->calculerPrixDeLivraison(ADRESSE_VG, $adresseClient);
+      //echo json_encode($calculPrix);
+      echo json_encode(['succes' => true, 'prix' => $calculPrix]);
+    }catch(Exception $e){
+      echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
+    }
   }
 
   public function creerCommande()
