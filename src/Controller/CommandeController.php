@@ -66,11 +66,15 @@ class CommandeController extends Controller
       }
 
       $dataPrestas = [];
-      foreach($_POST['prestation'] as $prestaId){
+      foreach(($_POST['prestation'] ?? []) as $prestaId){
+        $prestaId = (int) $prestaId;
+        if ($prestaId === '' || $prestaId <= 0) {
+          continue;
+        }
         $dataPrestas[] = [
           'prestation_id' => (int) $prestaId,
-          'date_presta' => $_POST['date_presta'],
-          'adresse_presta' => $_POST['adresse_presta'],
+          'date_presta' => $_POST['date_livraison'],
+          'adresse_presta' => $_POST['lieu_livraison'],
         ];
       }
       $prixTotalPresta = $_POST['prix_total_presta'];
@@ -103,34 +107,45 @@ class CommandeController extends Controller
       $dataPrestas = $this->formaterDonnees($dataPrestas);
       $dataBoissons = $this->formaterDonnees($dataBoissons);
 
+      //var_dump($dataPrestas);
+
       $role = $_SESSION['role_id'];
 
       try{
         $dataCommande['user_id'] = (int) $_SESSION['user_id'];
-        $commande = $this->commandeService->creerCommande($dataCommande, $dataMenus, $dataPrestas, $dataBoissons, $prixTotalPresta, $dataUser, $role);
-
-        $commandeId = $commande->getCommandeId();
-        $this->commandeService->ajouterMenuCommande($commandeId, $dataMenus);
-        $this->commandeService->ajouterPrestaCommande($commandeId, $prixTotalPresta, $dataPrestas);
-        $this->commandeService->ajouterBoissonCommande($commandeId, $dataBoissons);
-        $_SESSION['succes'] = 'Commande passée vous avez recus un mail de confirmation';
-        header('location: /commandeMenu');
+        $this->commandeService->creerCommande($dataCommande, $dataMenus, $dataPrestas, $dataBoissons, $prixTotalPresta, $dataUser, $role);
+        if(in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])){
+          $_SESSION['succes'] = 'Commande passée, un mail de confirmation a été envoyé au client';
+          header('location: /commandes');
         exit;
+        }else{
+          $_SESSION['succes'] = 'Commande passée vous avez recus un mail de confirmation';
+          header('location: /mesCommandes');
+        exit;
+        }
       }catch(Exception $e){
-      $_SESSION['erreur'] = $e->getMessage();
-      header('location: /commandeMenu');
-      exit;
-    }
+        $_SESSION['erreur'] = $e->getMessage();
+        $id = (int) ($_GET['id'] ?? 0);
+        $menu = $id ? $this->menuService->afficherMenuParId($id) : null;
+
+        if (!$menu) {
+          header('location: /menu'); // la route de ta page catalogue
+          exit;
+        }
+
+      }
     }else{
       $role = $role = $_SESSION['role_id'];
       $userId = $_SESSION['user_id'];
+      $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+
       $prestations = $this->prestationService->afficherPrestation($role);
       $prestation = $this->prestationService->afficherPrestationParId($role);
       $prestationsParType = $this->prestationService->afficherPrestationParType();
-      $menu = $this->menuService->afficherMenuParId($_GET['id']);
+      $menu = $this->menuService->afficherMenuParId($id);
       $menus = $this->menuService->afficherMenus($role);
       $boissons = $this->boissonService->afficherBoisson($role);
-      $boisson = $this->boissonService->afficherBoissonParId($_GET['id']);
+      $boisson = $id ? $this->boissonService->afficherBoissonParId($id) : null;
 
       $evenements = $this->menuService->afficherEvenements();
       $themes = $this->menuService->afficherThemes();

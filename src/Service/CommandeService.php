@@ -78,12 +78,26 @@ class CommandeService
     $data['nb_commande'] = $this->genererNbCommande();
     $data['nb_personne'] = $this->calculPrixService->calculerNbPersonneCommande($menusCommande);
 
-    $commande = $this->commandeRepository->creerCommande($data);
+    try{
+      $this->commandeRepository->beginTransaction();
+      $commande = $this->commandeRepository->creerCommande($data);
+
+      $commandeId = $commande->getCommandeId();
+        $this->ajouterMenuCommande($commandeId, $dataMenu);
+        $this->ajouterPrestaCommande($commandeId, $prixTotalPresta, $dataPresta);
+        $this->ajouterBoissonCommande($commandeId, $dataBoisson);
+
+      $this->commandeRepository->commit();
+    }catch(Exception $e){
+      $this->commandeRepository->rollBack();
+      throw new Exception('Erreur lors de la création de la commande : '. $e->getMessage());
+    }
 
     //Envoie du mail de confirmation
     $html = $this->mailService->recupererHtml('commande/confirmationMail', ['prenom' => $dataUser['prenom'], 'nbCommande' => $data['nb_commande']]);
     $objet = 'Confirmation de votre commande';
-    $this->mailService->envoyer($dataUser['email'], $objet, $html);
+    file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+    //$this->mailService->envoyer($dataUser['email'], $objet, $html);
 
     return $commande;
   }
@@ -324,13 +338,15 @@ class CommandeService
       // Mail modification
       $html = $this->mailService->recupererHtml('commande/modificationClientMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $nouvellesDonneesCommande['nb_commande']]);
       $objet = 'Modification de votre commande';
-      $this->mailService->envoyer($user->getEmail(), $objet, $html);
+      file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+      //$this->mailService->envoyer($user->getEmail(), $objet, $html);
 
     }elseif($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN){
       // Mail modification + motif
       $html = $this->mailService->recupererHtml('commande/modificationEmployeMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $nouvellesDonneesCommande['nb_commande'], 'motif' => $motif]);
       $objet = 'Modification de votre commande';
-      $this->mailService->envoyer($user->getEmail(), $objet, $html);
+      file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+      //$this->mailService->envoyer($user->getEmail(), $objet, $html);
     }
 
     unset($nouvellesDonneesCommande['role_id']);
@@ -418,7 +434,8 @@ class CommandeService
           'adresseLivraison' => $commande->getLieuLivraison()
         ]);
         $objet = 'Commande acceptée';
-        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+        file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+        //$this->mailService->envoyer($user->getEmail(), $objet, $html);
       break;
 
       case STATUT_EN_PREPARATION :
@@ -430,7 +447,8 @@ class CommandeService
           'adresseLivraison' => $commande->getLieuLivraison()
         ]);
         $objet = 'Commande en cours de préparation';
-        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+        file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+        //$this->mailService->envoyer($user->getEmail(), $objet, $html);
       break;
 
       case STATUT_EN_COUR_LIV :
@@ -442,7 +460,8 @@ class CommandeService
           'adresseLivraison' => $commande->getLieuLivraison()
         ]);
         $objet = 'Commande en cours de livraison';
-        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+        file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+        //$this->mailService->envoyer($user->getEmail(), $objet, $html);
       break;
 
       case STATUT_LIVREE :
@@ -460,7 +479,8 @@ class CommandeService
           'adresseLivraison' => $commande->getLieuLivraison()
         ]);
         $objet = 'Commande livrée';
-        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+        file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+        //$this->mailService->envoyer($user->getEmail(), $objet, $html);
         sleep(10);
         if($necessiteRetour === false){
           $this->changerStatutCommande($commandeId, STATUT_TERMINEE);
@@ -487,7 +507,8 @@ class CommandeService
           'tauxRetard' => $tauxRetard
         ]);
         $objet = 'Commande en attente de retour du materiel';
-        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+        file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+        //$this->mailService->envoyer($user->getEmail(), $objet, $html);
       break;
 
       case STATUT_TERMINEE :
@@ -509,7 +530,8 @@ class CommandeService
           'lienAvis' => BASE_URL . '/avis?nb_commande='.$commande->getNbCommande()
         ]);
         $objet = 'Commande terminée';
-        $this->mailService->envoyer($user->getEmail(), $objet, $html);
+        file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+        //$this->mailService->envoyer($user->getEmail(), $objet, $html);
       break;
     }
   }
@@ -534,12 +556,14 @@ class CommandeService
       // Mail annulation
       $html = $this->mailService->recupererHtml('commande/annulationClientMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $commande->getNbCommande()]);
       $objet = 'Annulation de votre commande';
-      $this->mailService->envoyer($user->getEmail(), $objet, $html);
+      file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+      //$this->mailService->envoyer($user->getEmail(), $objet, $html);
     }elseif(($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN) && !empty($motif)){
       // Mail annulation + motif
       $html = $this->mailService->recupererHtml('commande/annulationEmployeMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $commande->getNbCommande(), 'motif' => $motif]);
       $objet = 'Annulation de votre commande';
-      $this->mailService->envoyer($user->getEmail(), $objet, $html);
+      file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+      //$this->mailService->envoyer($user->getEmail(), $objet, $html);
     }
   }
 
@@ -656,7 +680,7 @@ class CommandeService
       throw new Exception('Erreur prix total presta '. $total);
     }
 
-    return $prixPresta;
+    return $prestaCalcul;
   }
   /* private function verifPresta(array $dataPresta, float $prixTotalPresta, array $menusCommande)
   {

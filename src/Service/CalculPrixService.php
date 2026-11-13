@@ -40,6 +40,25 @@ class CalculPrixService
     return $result;
   }
 
+
+  /* public function calculerPresta(array $menuCommande, array $presta)
+  {
+    $nbPersonnes = $this->calculerNbPersonneCommande($menuCommande);
+    $supplement = 0;
+
+    if ($nbPersonnes < $presta['seuil']) {
+      throw new Exception('Cette prestation est disponible a partir de '.$presta['seuil']. ' personnes');
+    }
+
+    while($presta['seuil'] < $nbPersonnes){
+      $presta['seuil'] += self::PALIER;
+      $supplement += $presta['supplement'];
+    }
+
+    $result = $supplement + $presta['prix_presta'];
+
+    return $result;
+  } */
   public function calculerPresta(array $menuCommande, float $prixPresta, int $seuil, int $supplementPalier)
   {
     $nbPersonnes = $this->calculerNbPersonneCommande($menuCommande);

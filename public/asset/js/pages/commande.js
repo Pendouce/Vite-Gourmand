@@ -18,7 +18,7 @@ const modalMenu = document.getElementById("modalMenu");
 const modalBoisson = document.getElementById("modalBoisson");
 const modalPresta = document.getElementById("modalPresta");
 const btnFermerModalCommande = document.querySelectorAll(".btnFermerModalCommande");
-const divMenu = document.querySelector(".divMenu");
+//const divMenu = document.querySelector(".divMenu");
 const divMenus = document.querySelector(".divMenus");
 const listeMenusModal = document.getElementById("listeMenusModal");
 const detailMenuModal = document.getElementById("detailMenuModal");
@@ -27,6 +27,9 @@ const detailBoissonModal = document.getElementById("detailBoissonModal");
 const listePrestasModal = document.getElementById("listePrestasModal");
 const detailPrestaModal = document.getElementById("detailPrestaModal");
 const btnDetailsPresta = document.querySelectorAll(".btnDetailsPresta");
+const inputPrixLivraison = document.getElementById("inputPrixLivraison");
+const inputNbPers = document.getElementById("inputNbPers");
+const inputTotalPresta = document.getElementById("inputTotalPresta");
 
 /* Gestion des donnees recuperees du back */
 const getData = async (api, id) => {
@@ -114,7 +117,6 @@ let prixLivraison = null;
   input.addEventListener("change", async () => {
     prixLivraison = await calculPrixLivraison();
     afficheTotalCommande();
-    console.log(prixLivraison);
   });
 });
 
@@ -135,6 +137,11 @@ const afficheTotalCommande = async () => {
   }
   totalCommande.textContent = prixTotal;
   inputPrixTotal.value = prixTotal;
+
+  inputPrixTotal.value = prixTotal;
+  inputPrixLivraison.value = prixLivraison && prixLivraison.succes ? Number(prixLivraison.prix) : 0;
+  inputNbPers.value = calculTotalNbPersMenu();
+  inputTotalPresta.value = calculTotal(".divPresta .total", document).toFixed(2);
 };
 
 /* Affichage du total apres calcul */
@@ -150,26 +157,24 @@ const nbPersonnePlusMoins = (div, plus, moins, nbElement) => {
   const btnPlus = div.querySelector(plus);
   const btnMoins = div.querySelector(moins);
   const input = div.querySelector(nbElement);
-  const max = Number(input.max);
-  const min = Number(input.min);
 
   btnPlus.addEventListener("click", () => {
-    if (Number(input.value) < max) {
+    if (Number(input.value) < input.max) {
       input.value = Number(input.value) + 1;
       input.dispatchEvent(new Event("change", { bubbles: true }));
     }
   });
 
   btnMoins.addEventListener("click", () => {
-    if (Number(input.value) > min) {
+    if (Number(input.value) > input.min) {
       input.value = Number(input.value) - 1;
       input.dispatchEvent(new Event("change", { bubbles: true }));
     }
   });
 
   input.addEventListener("change", () => {
-    if (Number(input.value) < min) input.value = min;
-    if (Number(input.value) > max) input.value = max;
+    if (Number(input.value) < input.min) input.value = input.min;
+    if (Number(input.value) > input.max) input.value = input.max;
   });
 };
 
@@ -182,6 +187,7 @@ const ajouterALaCommande = async (id, config) => {
   nvlDiv.querySelector(`${config.prix}`).textContent = data.prix;
   inputQuantite.value = data.nbPersMin ?? 1;
   inputQuantite.max = data.stock;
+  inputQuantite.min = data.nbPersMin ?? 1;
   if (config.remise) inputQuantite.dataset.nbPersMin = data.nbPersMin;
   nvlDiv.querySelector(config.stock).textContent = data.stock;
   nvlDiv.querySelector(config.inputId).value = id;
@@ -231,36 +237,6 @@ const btnAjouter = (config) => {
     });
   });
 };
-/* const btnAjouter = (btnAjouter, classe, modal, config) => {
-  btnAjouter.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const carte = btn.closest(classe);
-      const id = carte.dataset.id;
-      fermerModal(modal);
-      ajouterALaCommande(id, config);
-    });
-  });
-}; */
-
-/* btnDetailsMenu.forEach((btn) => {
-  btn.addEventListener("click", async () => {
-    const carteMenu = btn.closest(".cart-menu");
-    const id = carteMenu.dataset.id;
-    const res = await fetch(`/detailMenuPartial?id=${id}`);
-    const data = await res.text();
-    detailMenuModal.innerHTML = data;
-    detailMenuModal.classList.remove("hidden");
-    listeMenusModal.classList.add("hidden");
-  });
-}); */
-
-/* detailMenuModal.addEventListener("click", (e) => {
-  if (e.target.closest("#btnRetourMenu")) {
-    detailMenuModal.innerHTML = "";
-    detailMenuModal.classList.add("hidden");
-    listeMenusModal.classList.remove("hidden");
-  }
-}); */
 
 /* Gestion de l'affichage du detail du catalogue */
 const afficheDetail = (config) => {
@@ -312,6 +288,10 @@ const ajouterALaCommandeDepuisDetail = (config) => {
 
 /* MENU */
 
+const templateMenu = document.getElementById("templateMenu");
+// Je recupere uniquement la div Menu
+const divMenu = templateMenu.content.firstElementChild;
+
 btnNvMenu.addEventListener("click", () => {
   nettoyerModal(configModalMenu);
   ouvrirModal(modalMenu);
@@ -344,19 +324,28 @@ const configModalMenu = {
   config: configMenu,
 };
 
+const menuId = sectionMenus.dataset.menuId;
+if (menuId) ajouterALaCommande(menuId, configMenu);
+
 btnAjouter(configModalMenu);
 ajouterALaCommandeDepuisDetail(configModalMenu);
 afficheDetail(configModalMenu);
 retourListe(configModalMenu);
+replacerBtnAjouter(configMenu);
 
-const nbPersMin = nbPersonneMenu.dataset.nbPersMin;
+divMenus.addEventListener("change", () => {
+  actualiserPresta();
+  afficheTotalCommande();
+});
+
+/* const nbPersMin = nbPersonneMenu.dataset.nbPersMin;
 sousTotalMenu.textContent = calculSousTotal(prixUnitaireMenu.textContent, nbPersonneMenu.value, nbPersMin).toFixed(2);
 recalculSousTotal(divMenu, configMenu.quantite, configMenu.prix, configMenu.total);
 nbPersonnePlusMoins(divMenu, ".btnPlus", ".btnMoins", configMenu.quantite);
 supprimerDeLaCommande(divMenu, configMenu);
 
 afficheTotal(configMenu.section, configMenu);
-recalculTotal(configMenu.conteneur, configMenu.quantite, configMenu.section, configMenu);
+recalculTotal(configMenu.conteneur, configMenu.quantite, configMenu.section, configMenu); */
 
 /* BOISSON */
 
@@ -488,11 +477,6 @@ const actualiserPresta = () => {
     }
   });
 };
-
-divMenus.addEventListener("change", () => {
-  actualiserPresta();
-  afficheTotalCommande();
-});
 
 const recupererDonnees = async (id) => {
   const dataPresta = await getData("detailPrestation", id);

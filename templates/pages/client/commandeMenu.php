@@ -75,7 +75,7 @@
     <?php endif; ?>
   </div>
 
-  <form class="flex flex-col gap-8" action="/creerBoisson" method="post" enctype="multipart/form-data">
+  <form class="flex flex-col gap-8" action="/commandeMenu" method="post" enctype="multipart/form-data">
       <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
 
       <!-- Recap commande -->
@@ -99,73 +99,16 @@
         <!-- Div menus -->
         <div class="flex flex-col gap-10">
 
-          <section id="sectionMenus" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6">
+          <section id="sectionMenus" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6" data-menu-id="<?= $menu ? (int) $menu->getMenuId() : '' ?>">
             <div class="flex flex-col items-center gap-2">
               <h3 class="uppercase text-xl text-center md:text-2xl">menus selectionés</h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>
             </div>
             <div class="flex justify-evenly">
               <div class="divMenus flex flex-wrap gap-8">
-                <div class="divMenu w-60 px-2 flex flex-col gap-6">
-                  <!-- Titre menu -->
-                  <input type="hidden" name="menu[]" id="<?= htmlspecialchars($menu->getMenuId()) ?>">
-                  <div class="relative">
-                    <div class="text-center">
-                      <h4 class="titreMenu flex min-h-14 items-center justify-center line-clamp-2 text-balance font-medium text-lg md:text-xl"><?= htmlspecialchars($menu->getTitre()) ?></h4>
-                        <p class="text-texte/70"> 
-                          <span class="stockMenu text-texte/70"><?= htmlspecialchars($menu->getStockDispo()) ?></span>
-                          disponible</p>
-                    </div>
-
-                    <button class="btnSupprimer absolute -left-4 -top-2 hover:text-primary" type="button">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                  <!-- prix + nb pers -->
-                  <div class="menu flex flex-col gap-2">
-                      <div class="flex gap-2">
-                        <p>Prix unitaire: </p>
-                        <div class="flex gap-1">
-                          <span class="prixUnitaireMenu"><?= htmlspecialchars($menu->getPrixPersonne()) ?></span>
-                          <p>€ /pers</p>
-                        </div>
-                        
-                      </div>
-
-                      <div id="divNbPers" class="flex flex-col gap-2">
-                        <label for="">Nombre des personnes:</label>
-                        <div class="flex gap-2">
-                          <button class="btnMoins" type="button">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                          </button>
-                          <input name="nb_personne_menu" class="nbPersonneMenu text-center border border-primary/50 py-1 px-2 rounded-lg w-15 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                           min="<?= $menu->getNombrePersonneMin() ?>" max="<?= $menu->getStockDispo() ?>" step="1" type="number"
-                           value="<?= $menu->getNombrePersonneMin() ?>" data-nb-pers-min="<?= $menu->getNombrePersonneMin() ?>">
-                          <button class="btnPlus" type="button">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                  
-
-                  </div>
-                  <!-- Sous total -->
-                  <div class="flex gap-3">
-                    <p>Sous total: </p>
-                    <div class="flex gap-1">
-                      <span class="sousTotalMenu"><?= $menu->getPrixPersonne() ?></span>
-                      <p>€</p>
-                    </div>
-                  </div>
-                </div>
+                
               </div>
-
+              <input id="inputNbPers" name="nb_personne" class="hidden">
                 <!-- Div ajouter menu -->
 
               <div class="w-20 p-4 flex justify-center">
@@ -184,6 +127,67 @@
                 <p>€</p>
               </div>
             </div>
+
+            <!-- Template menu -->
+                <template id="templateMenu">
+                  <div class="divMenu w-60 px-2 flex flex-col gap-6">
+                  <!-- Titre menu -->
+                  <input type="hidden" name="menu[]">
+                  <div class="relative">
+                    <div class="text-center">
+                      <h4 class="titreMenu flex min-h-14 items-center justify-center line-clamp-2 text-balance font-medium text-lg md:text-xl"></h4>
+                        <p class="text-texte/70"> 
+                          <span class="stockMenu text-texte/70"></span>
+                          disponible</p>
+                    </div>
+
+                    <button class="btnSupprimer absolute -left-4 -top-2 hover:text-primary" type="button">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  <!-- prix + nb pers -->
+                  <div class="menu flex flex-col gap-2">
+                      <div class="flex gap-2">
+                        <p>Prix unitaire: </p>
+                        <div class="flex gap-1">
+                          <span class="prixUnitaireMenu"></span>
+                          <p>€ /pers</p>
+                        </div>
+                        
+                      </div>
+
+                      <div id="divNbPers" class="flex flex-col gap-2">
+                        <label for="">Nombre des personnes:</label>
+                        <div class="flex gap-2">
+                          <button class="btnMoins" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                          </button>
+                          <input name="nb_personne_menu" class="nbPersonneMenu text-center border border-primary/50 py-1 px-2 rounded-lg w-15 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            min="1" max="1" type="number">
+                          <button class="btnPlus" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      
+
+                  </div>
+                  <!-- Sous total -->
+                  <div class="flex gap-3">
+                    <p>Sous total: </p>
+                    <div class="flex gap-1">
+                      <span class="sousTotalMenu"></span>
+                      <p>€</p>
+                    </div>
+                  </div>
+                </div>
+                </template>
           </section>
 
           <!-- BOISSON -->
@@ -317,7 +321,7 @@
                 <select class="select petit-input mx-0" name="prestation[]">
                   <option value="">Non</option>
                   <?php foreach($prestations as $presta): ?>
-                    <option class="presta" value="<?= $presta->getNomPresta() ?>" data-id-presta="<?= $presta->getPrestationId() ?>"><?= htmlspecialchars($presta->getNomPresta()) ?></option>
+                    <option class="presta" value="<?= $presta->getPrestationId() ?>" data-id-presta="<?= $presta->getPrestationId() ?>"><?= htmlspecialchars($presta->getNomPresta()) ?></option>
                   <?php endforeach; ?>
                 </select>
 
@@ -334,9 +338,12 @@
                   </div>
                 </div>
               </div>
-              
+
+
+
             </section>
-          <?php endforeach; ?>
+            <?php endforeach; ?>
+            <input id="inputTotalPresta" name="prix_total_presta" class="hidden">
         </div>
           </section>
         
@@ -380,6 +387,8 @@
               <input id="adresse" class="grand-input" type="text" name="lieu_livraison">
             </div>
 
+            <input id="inputPrixLivraison" name="prix_livraison" class="hidden">
+
             <div class="flex flex-col col-span-1">
               <label for="">Ville</label>
               <input id="ville" class="petit-input" type="text" name="ville">
@@ -396,7 +405,7 @@
 
             <div class="flex flex-col col-span-1">
               <label for="">Date et heure</label>
-              <input class="petit-input" type="datetime-local" name="date_livraison">
+              <input id="dateLivraison" class="petit-input" type="datetime-local" name="date_livraison">
             </div>
             
           </div>
@@ -408,7 +417,7 @@
           <div class="h-px bg-primary"></div>
           <div class="flex text-center bg-fond-carte/60 gap-2 p-4">
             <label for="">Prix total : </label>
-            <input id="inputPrixTotal" class="hidden">
+            <input id="inputPrixTotal" name="prix_total" class="hidden">
             <!-- <input id="inputPrixTotal" class="w-12 px-2" value="1"> -->
             <span id="totalCommande">0.00</span>
             <p>€</p>
