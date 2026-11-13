@@ -15,6 +15,7 @@
 
 
 <div class="contenue-page">
+    
 
   <div id="modalMenu" class="modal-container-commande hidden">
     <div class="modal-commande">
@@ -61,6 +62,8 @@
 
   <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
 
+  <div class="divBlockRetourMsg commande w-full p-2"></div>
+
   <div class="w-full py-4 mb-2">
     <?php if (isset($_SESSION['succes'])): ?>
       <p class="succes">
@@ -75,7 +78,9 @@
     <?php endif; ?>
   </div>
 
-  <form class="flex flex-col gap-8" action="/commandeMenu" method="post" enctype="multipart/form-data">
+  
+
+  <form id="formCommande" class="flex flex-col gap-8" action="/commandeMenu" method="post" enctype="multipart/form-data">
       <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
 
       <!-- Recap commande -->
@@ -426,7 +431,7 @@
           <div class="h-px bg-primary"></div>
         </div>
 
-        <button class="btn-form" type="submit">Commander</button>
+        <button id="btnCommander" class="btn-form" type="submit">Commander</button>
       </div>
   </form>
 

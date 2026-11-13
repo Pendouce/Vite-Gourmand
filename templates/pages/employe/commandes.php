@@ -6,6 +6,22 @@
   <title>Commandes</title>
 </head>
 <body>
+
+<div class="divBlockRetour w-full pb-10 mb-6">
+      <?php if (isset($_SESSION['succes'])): ?>
+        <p id="msgSucces" class="succes">
+            <?= $_SESSION['succes'] ?>
+        </p>
+        <?php unset($_SESSION['succes']); ?>
+      <?php endif; ?>
+
+      <?php if(isset($_SESSION['erreur'])): ?>
+        <p class="erreur"><?= $_SESSION['erreur'] ?></p>
+        <?php unset($_SESSION['erreur']); ?>
+      <?php endif; ?>
+    </div>
+
+    <!-- <div class="divBlockRetourMsg w-full p-2"></div> -->
   <table>
   <thead>
     <tr>

@@ -80,7 +80,7 @@ class CommandeController extends Controller
       $prixTotalPresta = $_POST['prix_total_presta'];
 
       $dataBoissons = [];
-      foreach($_POST['boisson'] as $index => $boissonId){
+      foreach(($_POST['boisson'] ?? []) as $index => $boissonId){
         $dataBoissons[] = [
           'boisson_id' => (int) $boissonId,
           'quantite' => (int) $_POST['quantite'][$index]
@@ -107,7 +107,6 @@ class CommandeController extends Controller
       $dataPrestas = $this->formaterDonnees($dataPrestas);
       $dataBoissons = $this->formaterDonnees($dataBoissons);
 
-      //var_dump($dataPrestas);
 
       $role = $_SESSION['role_id'];
 
@@ -115,24 +114,17 @@ class CommandeController extends Controller
         $dataCommande['user_id'] = (int) $_SESSION['user_id'];
         $this->commandeService->creerCommande($dataCommande, $dataMenus, $dataPrestas, $dataBoissons, $prixTotalPresta, $dataUser, $role);
         if(in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])){
-          $_SESSION['succes'] = 'Commande passée, un mail de confirmation a été envoyé au client';
-          header('location: /commandes');
-        exit;
+          $message = 'Commande passée, un mail de confirmation a été envoyé au client';
+          $_SESSION['succes'] = $message;
+
+          echo json_encode(['succes' => true, 'redirection' =>'/commandes']);
         }else{
-          $_SESSION['succes'] = 'Commande passée vous avez recus un mail de confirmation';
-          header('location: /mesCommandes');
-        exit;
+          $message = 'Commande passée vous avez recus un mail de confirmation';
+          $_SESSION['succes'] = $message;
+          echo json_encode(['succes' => true, 'redirection' =>'/mesCommandes']);
         }
       }catch(Exception $e){
-        $_SESSION['erreur'] = $e->getMessage();
-        $id = (int) ($_GET['id'] ?? 0);
-        $menu = $id ? $this->menuService->afficherMenuParId($id) : null;
-
-        if (!$menu) {
-          header('location: /menu'); // la route de ta page catalogue
-          exit;
-        }
-
+        echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
       }
     }else{
       $role = $role = $_SESSION['role_id'];
