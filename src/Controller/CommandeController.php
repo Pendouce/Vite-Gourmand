@@ -58,7 +58,7 @@ class CommandeController extends Controller
       // Je boucle sur les ids des menus que je vais recevoir
       // Et je recupere le nb_personne de chaque menu
       $dataMenus = [];
-      foreach($_POST['menu'] as $index => $menuId){
+      foreach(($_POST['menu'] ?? []) as $index => $menuId){
         $dataMenus[] = [
           'menu_id' => (int) $menuId,
           'nb_personne_menu' => (int) $_POST['nb_personne_menu'][$index]

@@ -37,7 +37,7 @@ class CalculPrixService
         fn($p) => $this->calculerPresta($menuCommande, $p['prix_presta'], $p['seuil'], $p['supplement']),$presta)
     );
 
-    return $result;
+    return round($result, 2);
   }
 
 
@@ -120,7 +120,7 @@ class CalculPrixService
       array_map(fn($boisson) => $boisson['prix_boisson'] * $boisson['quantite'], $boissonCommande)
     ) ;
 
-    return $result;
+    return round($result, 2);;
   }
 
   private function calculerTotalMenu(float $prixMenu, int $nbPersonnesMin, int $nbPersonnes)
@@ -132,7 +132,7 @@ class CalculPrixService
       $prixTotalMenu = $prixTotalMenu - $prixTotalMenu * $remise;
     }
 
-    return $prixTotalMenu;
+    return round($prixTotalMenu, 2);;
   }
 
   protected function geocoderAdresse(string $adresse)
@@ -180,6 +180,6 @@ class CalculPrixService
 
     $distanceKm = $this->calculerDistance($geoVg['coordonees'], $geoClient['coordonees']);
 
-    return $fraisLivraison + $distanceKm * 0.59;
+    return round($fraisLivraison + $distanceKm * 0.59, 2);
   }
 }

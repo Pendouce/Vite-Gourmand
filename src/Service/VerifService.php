@@ -8,10 +8,10 @@ use Exception;
 
 class VerifService {
 
-  public static function verifNbPositif($nb): void
+  public static function verifNbPositif($nb, ?string $msg = null): void
   {
     if (!is_numeric($nb) || $nb <= 0) {
-      throw new Exception("Veuillez entrer un nombre superieur à 0");
+      throw new Exception($msg ?? "Veuillez entrer un nombre superieur à 0");
     }
   }
 

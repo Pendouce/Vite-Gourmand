@@ -12,6 +12,7 @@ use App\Repository\MenuRepository;
 use App\Repository\PrestationRepository;
 use App\Repository\StatusRepository;
 use App\Repository\UserRepository;
+use App\Service\VerifService;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
@@ -66,6 +67,14 @@ class CommandeService
         $dataUser['email'] !== $user->getEmail()){
       throw new Exception('Les informations ne correspondent pas');
     }
+
+    if(empty($dataMenu)){
+        throw new Exception("Veuillez choisir au moins un menu");
+      }
+
+    if(empty($data['lieu_livraison'])){
+        throw new Exception("Veuillez saisir une adresse valide");
+      }
 
     $menusCommande = $this->verifMenu($dataMenu);
     $prixPresta = $this->verifPresta($dataPresta, $prixTotalPresta, $menusCommande);
@@ -629,9 +638,16 @@ class CommandeService
   {
     // Je boucle sur les menus
     // Je verifie que chacun des menus selectionée a le nombre de personnes minimum requis
+    $menusIds = [];
     $menusCommande = [];
     foreach($dataMenu as $menu){
+      
+      $this->verifDoubleDeLaCommande($menu['menu_id'], $menusIds);
+      $menusIds[] = $menu['menu_id'];
+
       $menuParId = $this->menuRepository->trouverMenuParId($menu['menu_id']);
+      VerifService::verifExisteEnBase($menuParId, 'ce menu');
+
       $nbPersMin = $menuParId->getNombrePersonneMin();
 
       if(!$menuParId->isMenuActif()){
@@ -639,7 +655,7 @@ class CommandeService
       }
 
       if($menu['nb_personne_menu'] < $nbPersMin){
-        throw new Exception('Nombre de personnes minimum '. $nbPersMin .' pour le menu '. $menuParId->getTitre());
+        throw new Exception('Le nombre de personnes minimum est de '. $nbPersMin .' pour le menu '. $menuParId->getTitre());
       }
 
       // Tablau des menus de ma commande
@@ -666,6 +682,8 @@ class CommandeService
     $prestaCalcul = [];
     foreach($dataPresta as $presta){
       $prestationParId = $this->prestationRepository->trouverPrestationparId($presta['prestation_id']);
+      VerifService::verifExisteEnBase($prestationParId, 'cette prestation');
+
       $prixPresta[] = $prestationParId->getPrixPresta();
       $prestaCalcul[] = [
         'prix_presta' => $prestationParId->getPrixPresta(),
@@ -700,13 +718,23 @@ class CommandeService
   private function verifBoisson(array $dataBoisson, array $diffStock = [])
   {
     $boissonsCommande = [];
+    $boissonsIds = [];
     foreach($dataBoisson as $boisson){
+
+      $this->verifDoubleDeLaCommande($boisson['boisson_id'], $boissonsIds);
+      $boissonsIds[] = $boisson['boisson_id'];
+
       $boissonParId = $this->boissonRepository->trouverBoissonParId($boisson['boisson_id']);
+
+      VerifService::verifExisteEnBase($boissonParId, 'cette boisson');
 
       $boissonsCommande[] = [
         'prix_boisson' => $boissonParId->getPrixBoisson(),
         'quantite' => $boisson['quantite']
       ];
+
+      VerifService::verifNbPositif($boisson['quantite'],
+      "Veuillez choisir une quantité d'au moin 1 pour la boisson ".$boissonParId->getNomBoisson());
 
       $quantite = $diffStock[$boisson['boisson_id']] ?? $boisson['quantite'];
 
@@ -733,6 +761,13 @@ class CommandeService
   {
     if(abs($data['prix_total'] - $this->calculPrixService->calculTotalCommande($prixPresta, $menusCommande, $boissonsCommande, ADRESSE_VG, $data['lieu_livraison'])) > 0.01){
       throw new Exception('Erreur de prix total');
+    }
+  }
+
+  private function verifDoubleDeLaCommande(int $id, array $tableauIds)
+  {
+    if(in_array($id, $tableauIds)){
+      throw new Exception('Une commande ne peut pas contenir plusieurs fois le même menu ou la même boisson');
     }
   }
 

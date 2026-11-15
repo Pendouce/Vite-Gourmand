@@ -146,7 +146,7 @@ class BoissonService
     $boisson = $this->boissonRepository->trouverBoissonParId($boissonId);
     $stockBoisson = $boisson->getStockBoisson();
 
-    return $this->calculStockService->calculerStockBoisson($stockBoisson, $nbBoisson);
+    return $this->calculStockService->calculerStockBoisson($stockBoisson, $nbBoisson, $boisson->getNomBoisson());
   }
 
   public function decrementerStockBoisson(int $boissonId, int $nbBoisson)

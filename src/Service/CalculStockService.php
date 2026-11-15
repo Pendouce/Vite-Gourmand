@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Exceptions\StockDispoException;
+use Exception;
 
 class CalculStockService
 {
@@ -14,21 +15,23 @@ class CalculStockService
     return $nbPlat - $nbCommande;
   }
 
-  public function calculerStockMenu(array $plat, int $nbmenu): int
+  public function calculerStockMenu(array $plat, int $nbmenu, string $nom): int
   {
     $nbMenuDispo = min($plat);
    
     if($nbMenuDispo < $nbmenu)
     {
-      throw new StockDispoException($nbMenuDispo, "ce menu");
+      throw new Exception('Vous ne pouvez commander que '.$nbMenuDispo.' menus pour le menu '.$nom);
+      //throw new StockDispoException($nbMenuDispo, "ce menu");
     }
 
     return $nbMenuDispo;
   }
 
-  public function calculerStockBoisson(int $stockBoisson, int $nbBoissonCommande): int
+  public function calculerStockBoisson(int $stockBoisson, int $nbBoissonCommande, string $nom): int
   {
     if($stockBoisson < $nbBoissonCommande){
+      throw new Exception('Vous ne pouvez commander que '.$stockBoisson.' boissons pour la boisson '.$nom);
       throw new StockDispoException($stockBoisson, "cette boisson");
     }
 

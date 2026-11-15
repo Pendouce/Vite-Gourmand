@@ -594,6 +594,7 @@ const envoyerDonneesCommande = async () => {
       body: formData,
     });
     const result = await res.json();
+    console.log(result);
 
     if (result.succes) {
       window.location.href = result.redirection;

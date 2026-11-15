@@ -498,9 +498,11 @@ class MenuService
 
   public function verifStockDispo(int $menuId, int $nbPersonneMenu): void
   {
+    $menu = $this->menuRepository->trouverMenuParId($menuId);
     $platsDuMenu = $this->platRepository->trouverPlatDuMenu($menuId);
     $stocksPlats = array_map(fn($plat) => $plat->getStockPlat(), $platsDuMenu);
-    $this->calculStockService->calculerStockMenu($stocksPlats, $nbPersonneMenu);
+    
+    $this->calculStockService->calculerStockMenu($stocksPlats, $nbPersonneMenu, $menu->getTitre());
   }
 
 }
