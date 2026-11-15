@@ -179,7 +179,7 @@ const nbPersonnePlusMoins = (div, plus, moins, nbElement) => {
 };
 
 /* Gestion de l'ajout d'un nouveau menu/boisson a la commande */
-const ajouterALaCommande = async (id, config) => {
+const ajouterALaCommande = async (id, config, configModal = null) => {
   const data = await getData(config.api, id);
   const nvlDiv = config.modele.cloneNode(true);
   const inputQuantite = nvlDiv.querySelector(config.quantite);
@@ -200,11 +200,12 @@ const ajouterALaCommande = async (id, config) => {
   recalculSousTotal(nvlDiv, config.quantite, config.prix, config.total);
   config.conteneur.appendChild(nvlDiv);
   config.conteneur.parentElement.classList.replace("justify-center", "justify-evenly");
+  if (configModal) desactiverBtnAjouter(configModal);
   afficheTotal(config.section, config);
   recalculTotal(nvlDiv, config.quantite, config.section, config);
   actualiserPresta();
   afficheTotalCommande();
-  supprimerDeLaCommande(nvlDiv, config);
+  supprimerDeLaCommande(nvlDiv, config, configModal);
 };
 
 /* Gestion de l'emplacement du btn ajouter des sections menu et boisson */
@@ -215,7 +216,7 @@ const replacerBtnAjouter = (config) => {
 };
 
 /* Gestion de la suppression d'un menu ou d'une boisson de la commande */
-const supprimerDeLaCommande = (div, config) => {
+const supprimerDeLaCommande = (div, config, configModal) => {
   div.querySelector(".btnSupprimer").addEventListener("click", () => {
     div.remove();
     afficheTotal(config.section, config);
@@ -223,17 +224,21 @@ const supprimerDeLaCommande = (div, config) => {
     replacerBtnAjouter(config);
     actualiserPresta();
     afficheTotalCommande();
+    if (configModal) {
+      desactiverBtnAjouter(configModal);
+      desactiverBtnAjouterDetail(configModal);
+    }
   });
 };
 
 /* Gestion de l'ajout de l'ouverture des modales menu et boisson au click sur ajouter */
 const btnAjouter = (config) => {
-  config.btnAjouter.forEach((btn) => {
+  document.querySelectorAll(config.btnAjouter).forEach((btn) => {
     btn.addEventListener("click", () => {
       const carte = btn.closest(config.classe);
       const id = carte.dataset.id;
       fermerModal(config.modal);
-      ajouterALaCommande(id, config.config);
+      ajouterALaCommande(id, config.config, config);
     });
   });
 };
@@ -249,6 +254,7 @@ const afficheDetail = (config) => {
       config.detailModal.innerHTML = data;
       config.detailModal.classList.remove("hidden");
       config.listeModal.classList.add("hidden");
+      desactiverBtnAjouterDetail(config);
     });
   });
 };
@@ -280,7 +286,7 @@ const ajouterALaCommandeDepuisDetail = (config) => {
     const btn = e.target.closest(config.btnAjouterDetail);
     if (btn) {
       const id = btn.dataset.id;
-      ajouterALaCommande(id, config.config);
+      ajouterALaCommande(id, config.config, config);
       nettoyerModal(config);
     }
   });
@@ -295,7 +301,34 @@ const divMenu = templateMenu.content.firstElementChild;
 btnNvMenu.addEventListener("click", () => {
   nettoyerModal(configModalMenu);
   ouvrirModal(modalMenu);
+  desactiverBtnAjouter(configModalMenu);
 });
+
+const recupereIdsDeLaCommande = (config) => {
+  const ids = [];
+  config.config.conteneur.querySelectorAll(config.config.inputId).forEach((input) => {
+    ids.push(input.value);
+  });
+
+  return ids;
+};
+
+const desactiverBtnAjouter = (config) => {
+  document.querySelectorAll(config.classe).forEach((carte) => {
+    const id = carte.dataset.id;
+    const dejaAjoute = recupereIdsDeLaCommande(config).includes(id);
+    const btn = carte.querySelector(config.btnAjouter);
+    // Si l'id de la carte est dans dejaAjoute je grise son btn
+    btn.disabled = dejaAjoute;
+  });
+};
+
+const desactiverBtnAjouterDetail = (config) => {
+  const btn = document.querySelector(config.btnAjouterDetail);
+  if (!btn) return;
+  const dejaAjoute = recupereIdsDeLaCommande(config).includes(btn.dataset.id);
+  btn.disabled = dejaAjoute;
+};
 
 const configMenu = {
   api: "detailMenu",
@@ -314,7 +347,7 @@ const configMenu = {
 const configModalMenu = {
   api: "detailMenuPartial",
   classe: ".cart-menu",
-  btnAjouter: btnAjouterMenu,
+  btnAjouter: ".btnAjouterMenu",
   btnAjouterDetail: "#btnAjouterDetail",
   btnDetails: btnDetailsMenu,
   modal: modalMenu,
@@ -359,6 +392,7 @@ const divBoisson = templateBoisson.content.firstElementChild;
 btnNvlBoisson.addEventListener("click", () => {
   nettoyerModal(configModalBoisson);
   ouvrirModal(modalBoisson);
+  desactiverBtnAjouter(configModalBoisson);
 });
 
 const configBoisson = {
@@ -377,7 +411,7 @@ const configBoisson = {
 const configModalBoisson = {
   api: "detailBoissonPartial",
   classe: ".cart-plat",
-  btnAjouter: btnAjouterBoisson,
+  btnAjouter: ".btnAjouterBoisson",
   btnAjouterDetail: "#btnAjouterDetail",
   btnDetails: btnDetailsBoisson,
   modal: modalBoisson,

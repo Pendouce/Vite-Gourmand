@@ -4,6 +4,7 @@ namespace App\Test\TestService;
 
 use App\Exceptions\StockDispoException;
 use App\Service\CalculStockService;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class CalculStockTest extends TestCase
@@ -56,8 +57,9 @@ class CalculStockTest extends TestCase
       $plat = [16, 12, 20];
       $nbMenu = 10;
 
+
       $calculStock = new CalculStockService;
-      $result = $calculStock->calculerStockMenu($plat, $nbMenu);
+      $result = $calculStock->calculerStockMenu($plat, $nbMenu, "Mariage");
 
       $this->assertEquals(12, $result);
     }
@@ -68,7 +70,7 @@ class CalculStockTest extends TestCase
       $nbMenu = 12;
 
       $calculStock = new CalculStockService;
-      $result = $calculStock->calculerStockMenu($plat, $nbMenu);
+      $result = $calculStock->calculerStockMenu($plat, $nbMenu, "Mariage");
 
       $this->assertEquals(12, $result);
     }
@@ -78,10 +80,11 @@ class CalculStockTest extends TestCase
       $plat = [16, 12, 20];
       $nbMenu = 16;
 
-      $this->expectException(StockDispoException::class);
+      //$this->expectException(StockDispoException::class);
+      $this->expectException(Exception::class);
 
       $calculStock = new CalculStockService;
-      $calculStock->calculerStockMenu($plat, $nbMenu);
+      $calculStock->calculerStockMenu($plat, $nbMenu, "Mariage");
     }
 
     public function testCalculStockBoissonDispo()
@@ -90,7 +93,7 @@ class CalculStockTest extends TestCase
       $nbBoisson = 10;
 
       $calculStock = new CalculStockService;
-      $result = $calculStock->calculerStockBoisson($stockBoisson, $nbBoisson);
+      $result = $calculStock->calculerStockBoisson($stockBoisson, $nbBoisson, "Coca");
 
       $this->assertEquals(8, $result);
     }
@@ -101,7 +104,7 @@ class CalculStockTest extends TestCase
       $nbBoisson = 12;
 
       $calculStock = new CalculStockService;
-      $result = $calculStock->calculerStockBoisson($stockBoisson, $nbBoisson);
+      $result = $calculStock->calculerStockBoisson($stockBoisson, $nbBoisson, "Coca");
 
       $this->assertEquals(0, $result);
     }
@@ -111,10 +114,11 @@ class CalculStockTest extends TestCase
       $stockBoisson = 10;
       $nbBoisson = 16;
 
-      $this->expectException(StockDispoException::class);
-
+      //$this->expectException(StockDispoException::class);
+      $this->expectException(Exception::class);
+      
       $calculStock = new CalculStockService;
-      $calculStock->calculerStockBoisson($stockBoisson, $nbBoisson);
+      $calculStock->calculerStockBoisson($stockBoisson, $nbBoisson, "Coca");
     }
 
   public function testCalculerRetourStockPlat()

@@ -83,13 +83,12 @@
       <?php endif; ?>
     </div>
 
-    <div class="self-center p-6">
-    <div class="btn-form-dark">
+    <div class="py-6">
       <?php if($modeCommande): ?>
-        <button id="btnAjouterDetail" type="button" data-id="<?= $boisson->getBoissonId() ?>">Ajouter</button>
+        <button id="btnAjouterDetail" class="btn-form-dark disabled:bg-texte/50 disabled:cursor-not-allowed" type="button" data-id="<?= $boisson->getBoissonId() ?>">Ajouter</button>
         <?php endif; ?>
     </div>
-  </div>
+
 
     <?php if(!$modeCommande && ($role === ROLE_ADMIN || $role === ROLE_EMPLOYE)): ?>
       <div class="flex justify-between items-center gap-8">

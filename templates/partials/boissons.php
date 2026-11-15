@@ -65,7 +65,7 @@
             </div>
             <div class="flex items-center justify-center">
           <?php if($modeCommande): ?>
-              <button class="btnAjouterBoisson btn-form-dark flex justify-center items-center w-40" type="button">Ajouter</button>
+              <button class="btnAjouterBoisson btn-form-dark flex justify-center items-center w-40 disabled:bg-texte/50 disabled:cursor-not-allowed" type="button">Ajouter</button>
           <?php endif; ?>
         </div>
         </div>

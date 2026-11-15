@@ -229,7 +229,7 @@
           <?php if(!$modeCommande): ?>
             <a class="btn-form-dark flex justify-center items-center w-40" href="/commandeMenu?id=<?= $menu->getMenuId() ?>">Commander</a>
             <?php else: ?>
-              <button class="btnAjouterMenu btn-form-dark flex justify-center items-center w-40" type="button">Ajouter</button>
+              <button class="btnAjouterMenu btn-form-dark flex justify-center items-center w-40 disabled:bg-texte/50 disabled:cursor-not-allowed" type="button">Ajouter</button>
             <?php endif; ?>
         </div>
       </div>

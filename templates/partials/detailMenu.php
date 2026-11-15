@@ -189,11 +189,11 @@
   </div>
 
   <div class="flex justify-center items-center p-6">
-    <div class="btn-form-dark">
+    <div >
       <?php if(!$modeCommande): ?>
-        <a href="/commandeMenu?id=<?= $menu->getMenuId() ?>">Commander</a>
+        <a class="btn-form-dark" href="/commandeMenu?id=<?= $menu->getMenuId() ?>">Commander</a>
       <?php else: ?>
-        <button id="btnAjouterDetail" type="button" data-id="<?= $menu->getMenuId() ?>">Ajouter</button>
+        <button id="btnAjouterDetail" class="btn-form-dark disabled:bg-texte/50 disabled:cursor-not-allowed" type="button" data-id="<?= $menu->getMenuId() ?>">Ajouter</button>
         <?php endif; ?>
     </div>
   </div>
