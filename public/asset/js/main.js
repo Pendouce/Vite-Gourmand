@@ -8,4 +8,9 @@ import "./pages/imageSurvol.js";
 import "./components/modif.js";
 import "./components/filtre.js";
 import "./components/ajouterChamp.js";
-import "./pages/commande.js";
+const formulaire = document.getElementById("formCommande");
+
+if (formulaire) {
+  await import("./pages/commande/commande.js");
+}
+//import "./pages/commande/commande.js";
