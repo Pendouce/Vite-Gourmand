@@ -16,8 +16,7 @@ use App\Service\VerifService;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
-
-use function PHPUnit\Framework\isArray;
+use Transliterator;
 
 class CommandeService
 {
@@ -57,15 +56,44 @@ class CommandeService
     $this->menuService = $menuService;
   }
 
+  private function normaliserMot(string $mot){
+    $mot = trim($mot);
+    $mot = mb_strtolower($mot);
+    $accents = [
+      'à' => 'a', 'â' => 'a', 'ä' => 'a',
+      'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
+      'î' => 'i', 'ï' => 'i',
+      'ô' => 'o', 'ö' => 'o',
+      'ù' => 'u', 'û' => 'u', 'ü' => 'u',
+      'ç' => 'c',
+  ];
+
+  return strtr($mot, $accents);
+  }
+
   // CREATION DE LA COMMANDE
   public function creerCommande(array $data, array $dataMenu, array $dataPresta, array $dataBoisson, float $prixTotalPresta, array $dataUser, int $role)
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR])) throw new AccesRefuseException();
     $user = $this->userRepository->trouveUtilisateurById($data['user_id']);
-    if($dataUser['nom'] !== $user->getNom()||
-        $dataUser['prenom'] !== $user->getPrenom() ||
-        $dataUser['email'] !== $user->getEmail()){
-      throw new Exception('Les informations ne correspondent pas');
+    $client = $this->userRepository->trouveUtilisateurByEmail($dataUser['email']);
+
+    if($dataUser['email'] !== $user->getEmail()){
+      if($user->getRoleId() == ROLE_ADMIN || $user->getRoleId() == ROLE_EMPLOYE){
+        if(!$client){
+          throw new Exception('Cet utilisateur est introuvable');
+        }
+        if($this->normaliserMot($dataUser['nom']) !== $this->normaliserMot($client->getNom())||
+            $this->normaliserMot($dataUser['prenom']) !== $this->normaliserMot($client->getPrenom())){
+          throw new Exception('Les informations ne correspondent pas');
+        }
+        $data['user_id'] = $client->getUserId();
+      }
+    }else{
+      if($this->normaliserMot($dataUser['nom']) !== $this->normaliserMot($user->getNom())||
+          $this->normaliserMot($dataUser['prenom']) !== $this->normaliserMot($user->getPrenom())){
+        throw new Exception('Les informations ne correspondent pas');
+      }
     }
 
     if(empty($dataMenu)){

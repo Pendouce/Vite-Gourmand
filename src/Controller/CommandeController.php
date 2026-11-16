@@ -112,8 +112,14 @@ class CommandeController extends Controller
 
       try{
         $dataCommande['user_id'] = (int) $_SESSION['user_id'];
-        $this->commandeService->creerCommande($dataCommande, $dataMenus, $dataPrestas, $dataBoissons, $prixTotalPresta, $dataUser, $role);
-        if(in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE])){
+        $commande = $this->commandeService->creerCommande($dataCommande, $dataMenus, 
+        $dataPrestas, $dataBoissons, 
+        $prixTotalPresta, $dataUser, 
+        $role);
+
+        $proprietaireCommande = $commande->getUserId();
+
+        if(in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE]) && $dataCommande['user_id'] !== $proprietaireCommande){
           $message = 'Commande passée, un mail de confirmation a été envoyé au client';
           $_SESSION['succes'] = $message;
 
@@ -179,8 +185,8 @@ class CommandeController extends Controller
       $this->render('pages/employe/commandes', ['commandes' => $commandes]);
     }
 
-    public function afficherCommandesUser(){
-      $this->accesPage([ROLE_UTILISATEUR]);
+    public function afficherMesCommandes(){
+      $this->accesPage([ROLE_UTILISATEUR, ROLE_ADMIN, ROLE_EMPLOYE]);
 
       $userId = $_SESSION['user_id'];
       $role = $_SESSION['role_id'];

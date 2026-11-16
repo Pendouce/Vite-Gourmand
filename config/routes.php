@@ -59,7 +59,7 @@ return[
     "/commandeMenu/" => ["controller" => "App\Controller\CommandeController", "action" => "creerCommande"],
     "/commandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesEmploye"],
     "/calculerPrixLivraison/" => ["controller" => "App\Controller\CommandeController", "action" => "calculerPrixLivraison"],
-    "/mesCommandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandesUser"],
+    "/mesCommandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherMesCommandes"],
     "/detailCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherDetailsCommande"],
     "/commandesFiltre/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandeFiltre"],
     "/modifierCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "modifierCommande"],
