@@ -164,7 +164,7 @@ class CommandeController extends Controller
 
       $this->render('pages/client/commandeMenu', [
         'user' => $user, 
-        'menus' => $menus, 'menu' => $menu,
+        'menus' => $menus, 'menuChoisi' => $menu,
         'evenements' => $evenements, 
         'themes' => $themes, 'regimes' => $regimes,
         'prestations' => $prestations, 'prestation' => $prestation,

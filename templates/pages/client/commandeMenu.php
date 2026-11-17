@@ -6,7 +6,7 @@
 <?php /** @var array $prestationsParType */?>
 <?php /** @var object $prestation */?>
 <?php /** @var object $user */?>
-<?php /** @var object $menu */?>
+<?php /** @var object $menuChoisi */?>
 <?php /** @var object $boisson */?>
 <?php /** @var object $role */?>
 <?php /** @var string $csrfToken */ ?>
@@ -104,7 +104,7 @@
         <!-- Div menus -->
         <div class="flex flex-col gap-10">
 
-          <section id="sectionMenus" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6" data-menu-id="<?= $menu ? (int) $menu->getMenuId() : '' ?>">
+          <section id="sectionMenus" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6" data-menu-id="<?= $menuChoisi ? (int) $menuChoisi->getMenuId() : '' ?>">
             <div class="flex flex-col items-center gap-2">
               <h3 class="uppercase text-xl text-center md:text-2xl">menus selectionés</h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>
