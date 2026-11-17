@@ -45,7 +45,8 @@
         <div class="grid grid-cols-2 gap-4 sm:gap-0">
           <?php foreach($prestations as $prestation): ?>
           <?php if(count($prestation->getContenuPresta()) > 1): ?>
-            <div class="cart-presta-sm col-span-1 flex flex-col gap-4" data-id="<?= $prestation->getPrestationId() ?>">
+            <div class="cart-presta-sm col-span-1 flex flex-col gap-4 <?= $prestation->isPrestationActif() ? "" : "opacity-50" ?>" data-id="<?= $prestation->getPrestationId() ?>">
+
               <div class="blockRetour w-full mb-1"></div>
               <div class="flex flex-col gap-2">
                 <img class="w-15 object-cover self-center" src="<?= htmlspecialchars($prestation->getImgPresta()) ?>" alt="">
@@ -79,7 +80,7 @@
             <?php endif; ?>
             </div>
           <?php else: ?>
-            <div class="cart-presta col-span-full gap-2 relative" data-id="<?= $prestation->getPrestationId() ?>">
+            <div class="cart-presta col-span-full gap-2 relative <?= $prestation->isPrestationActif() ? "" : "opacity-50" ?>" data-id="<?= $prestation->getPrestationId() ?>">
               <div class="blockRetour w-full mb-1"></div>
               <div class="flex flex-col gap-2">
                 <img class="w-15 object-cover self-center bg-transparent" src="<?= htmlspecialchars($prestation->getImgPresta()) ?>" alt="">

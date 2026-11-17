@@ -29,7 +29,7 @@
 
     <div class="md:grid md:grid-cols-2 lg:grid lg:grid-cols-3">
       <?php foreach ($boissons as $boisson): ?>
-        <div class="cart-plat flex justify-center items-center gap-4 col-span-1" data-id="<?= $boisson->getBoissonId() ?>">
+        <div class="cart-plat flex justify-center items-center gap-4 col-span-1 <?= $boisson->isBoissonActif() ? "" : "opacity-50" ?>" data-id="<?= $boisson->getBoissonId() ?> " data-actif="<?= $boisson->isBoissonActif() ?>" >
           <div class="blockRetour w-full mb-6"></div>
             <h3 class="text-xl font-medium lg:text-2xl text-center"><?= htmlspecialchars($boisson->getNomBoisson()) ?></h3>
             <img
@@ -65,7 +65,7 @@
             </div>
             <div class="flex items-center justify-center">
           <?php if($modeCommande): ?>
-              <button class="btnAjouterBoisson btn-form-dark flex justify-center items-center w-40 disabled:bg-texte/50 disabled:cursor-not-allowed" type="button">Ajouter</button>
+              <button <?= $boisson->isBoissonActif() ? "" : "disabled" ?> class="btnAjouterBoisson btn-form-dark flex justify-center items-center w-40 disabled:bg-texte/50 disabled:cursor-not-allowed" type="button">Ajouter</button>
           <?php endif; ?>
         </div>
         </div>

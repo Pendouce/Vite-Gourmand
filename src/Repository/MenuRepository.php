@@ -42,7 +42,7 @@ class MenuRepository extends Repository
 
   public function trouverMenu()
   {
-    $sql = 'SELECT * FROM menu';
+    $sql = 'SELECT * FROM menu ORDER BY menu_actif DESC';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute();

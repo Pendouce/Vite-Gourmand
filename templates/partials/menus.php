@@ -146,7 +146,7 @@
 
   <div id="menuListe" class="grid grid-cols-1 md:grid-cols-2 gap-6">
   <?php foreach($menus as $menu): ?>
-  <div class="cart-menu" data-id="<?= $menu->getMenuId() ?>">
+  <div class="cart-menu <?= $menu->isMenuActif() ? "" : "opacity-50" ?>" data-id="<?= $menu->getMenuId() ?>" data-actif="<?= $menu->isMenuActif() ?>">
     <div class="grid grid-cols-4">
       <!-- Texte -->
       <div class="grid col-span-3 text-center gap-6 px-4 py-6 sm:px-8 sm:pt-6 sm:pb-10">
@@ -227,9 +227,13 @@
         </div>
         <div class="flex items-center justify-center">
           <?php if(!$modeCommande): ?>
-            <a class="btn-form-dark flex justify-center items-center w-40" href="/commandeMenu?id=<?= $menu->getMenuId() ?>">Commander</a>
+            <?php if($menu->isMenuActif()): ?>
+              <a class="btn-form-dark flex justify-center items-center w-40" href="/commandeMenu?id=<?= $menu->getMenuId() ?>">Commander</a>
+              <?php else: ?>
+              <button disabled class="btn-form-dark flex justify-center items-center w-40 disabled:cursor-not-allowed">Commander</button>
+              <?php endif; ?>
             <?php else: ?>
-              <button class="btnAjouterMenu btn-form-dark flex justify-center items-center w-40 disabled:bg-texte/50 disabled:cursor-not-allowed" type="button">Ajouter</button>
+                <button <?= $menu->isMenuActif() ? "" : "disabled" ?> class="btnAjouterMenu btn-form-dark flex justify-center items-center w-40 disabled:bg-texte/50 disabled:cursor-not-allowed" type="button">Ajouter</button>
             <?php endif; ?>
         </div>
       </div>

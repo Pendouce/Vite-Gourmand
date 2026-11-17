@@ -131,6 +131,9 @@ const desactiverBtnAjouter = (config) => {
     const btn = carte.querySelector(config.btnAjouter);
     // Si l'id de la carte est dans dejaAjoute je grise son btn
     btn.disabled = dejaAjoute;
+    if (!carte.dataset.actif) {
+      btn.disabled = true;
+    }
   });
 };
 

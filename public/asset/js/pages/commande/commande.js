@@ -13,7 +13,7 @@ const envoyerDonneesCommande = async () => {
       method: "POST",
       body: formData,
     });
-    console.log(await res.clone().text());
+
     const result = await res.json();
     console.log(result);
 

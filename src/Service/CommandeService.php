@@ -16,7 +16,6 @@ use App\Service\VerifService;
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
-use Transliterator;
 
 class CommandeService
 {
