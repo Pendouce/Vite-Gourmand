@@ -10,8 +10,8 @@ class CommandeMenuRepository extends Repository
 {
   public function ajouterMenuCommande(array $data)
   {
-    $sql = 'INSERT INTO commande_menu(nb_personne_menu, commande_id, menu_id)
-    VALUES (:nb_personne_menu, :commande_id, :menu_id)';
+    $sql = 'INSERT INTO commande_menu(nb_personne_menu, commande_id, menu_id, prix_unitaire, prix_total_menu)
+    VALUES (:nb_personne_menu, :commande_id, :menu_id, :prix_unitaire, :prix_total_menu)';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
@@ -35,7 +35,7 @@ class CommandeMenuRepository extends Repository
 
     foreach($data as $menu){
       $keyMenu = ['menu_id', 'titre', 'prix_personne', 'nombre_personne_min', 'conditions', 'stock_dispo', 'menu_actif'];
-      $keyCommandeMenu = ['nb_personne_menu', 'commande_id', 'menu_id'];
+      $keyCommandeMenu = ['nb_personne_menu', 'commande_id', 'menu_id', 'prix_unitaire', 'prix_total_menu'];
 
       $donneesMenu = [];
       $donneesCommandeMenu = [];

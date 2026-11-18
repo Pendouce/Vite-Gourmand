@@ -191,10 +191,29 @@ class CommandeController extends Controller
       $userId = $_SESSION['user_id'];
       $role = $_SESSION['role_id'];
 
-      $commandes = $this->commandeService->afficherCommandesUser($userId, $role);
-      
-      $this->render('pages/client/mesCommandes', ['commandes' => $commandes]);
+      try{
+        $commandes = $this->commandeService->afficherCommandesUser($userId, $role);
+        $this->render('pages/client/mesCommandes', ['commandes' => $commandes]);
+      }catch(Exception $e){
+        $_SESSION['erreur'] = $e->getMessage();
+      }
     }
+
+    /* public function afficherMesCommandes(){
+      $this->accesPage([ROLE_UTILISATEUR, ROLE_ADMIN, ROLE_EMPLOYE]);
+
+      $userId = $_SESSION['user_id'];
+      $role = $_SESSION['role_id'];
+
+      try{
+        $commandes = $this->commandeService->afficherCommandesUser($userId, $role);
+
+        echo json_encode(['succes' => true, 'commande' => $commandes]);
+      
+      }catch(Exception $e){
+        echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
+      }
+    } */
 
     public function afficherDetailsCommande(){
       $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR]);

@@ -10,8 +10,8 @@ class CommandePrestaRepository extends Repository
 {
   public function ajouterPrestaCommande(array $data)
   {
-    $sql = 'INSERT INTO commande_prestation (prix_total_presta, adresse_presta, date_presta, date_retour_prevu, date_retour, taux_retard, commande_id, prestation_id)
-    VALUES (:prix_total_presta, :adresse_presta, :date_presta, :date_retour_prevu, :date_retour, :taux_retard, :commande_id, :prestation_id)';
+    $sql = 'INSERT INTO commande_prestation (prix_total_presta, adresse_presta, date_presta, date_retour_prevu, date_retour, taux_retard, commande_id, prestation_id, montant_prestation)
+    VALUES (:prix_total_presta, :adresse_presta, :date_presta, :date_retour_prevu, :date_retour, :taux_retard, :commande_id, :prestation_id, :montant_prestation)';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
@@ -36,7 +36,7 @@ class CommandePrestaRepository extends Repository
 
     foreach($data as $presta){
       $keyPresta = ['prestation_id', 'nom_presta', 'prix_presta', 'description_presta', 'img_presta', 'necessite_retour', 'prestation_actif', 'type_presta_id', 'contenu_presta', 'libelle'];
-      $keyCommandePresta = ['prix_total_presta', 'adresse_presta', 'date_presta', 'date_retour_prevu', 'date_retour', 'taux_retard', 'commande_id', 'prestation_id'];
+      $keyCommandePresta = ['prix_total_presta', 'adresse_presta', 'date_presta', 'date_retour_prevu', 'date_retour', 'taux_retard', 'commande_id', 'prestation_id', 'montant_prestation'];
 
       $donneesPresta = [];
       $donneesCommandePresta = [];
@@ -66,7 +66,7 @@ class CommandePrestaRepository extends Repository
     $sql = 'UPDATE commande_prestation SET 
     prix_total_presta = :prix_total_presta, adresse_presta = :adresse_presta, 
     date_presta = :date_presta, date_retour_prevu = :date_retour_prevu, date_retour = :date_retour
-    WHERE prestation_id = :prestation_id AND commande_id = :commande_id';
+    WHERE prestation_id = :prestation_id, montant_prestation = :montant_prestation AND commande_id = :commande_id';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);

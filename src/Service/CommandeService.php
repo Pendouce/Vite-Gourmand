@@ -120,7 +120,7 @@ class CommandeService
 
       $commandeId = $commande->getCommandeId();
         $this->ajouterMenuCommande($commandeId, $dataMenu);
-        $this->ajouterPrestaCommande($commandeId, $prixTotalPresta, $dataPresta);
+        $this->ajouterPrestaCommande($commandeId, $prixTotalPresta, $dataPresta, $dataMenu);
         $this->ajouterBoissonCommande($commandeId, $dataBoisson);
 
       $this->commandeRepository->commit();
@@ -139,18 +139,25 @@ class CommandeService
   }
 
   // AJOUT DES ELEMENTS DE LA COMMANDE
-  public function ajouterPrestaCommande(int $commandeId, float $prixTotalPresta, array $dataPresta)
+  public function ajouterPrestaCommande(int $commandeId, float $prixTotalPresta, array $dataPresta, array $dataMenu)
   {
     $presta = [];
     foreach($dataPresta as $data){
       $datePresta = new DateTimeImmutable($data['date_presta'], new DateTimeZone('Europe/Paris'));
-  
+      $prestaParId = $this->prestationRepository->trouverPrestationparId($data['prestation_id']);
+
       $data['date_presta'] = $datePresta->format('Y-m-d H:i:s');
       $data['date_retour_prevu'] = $datePresta->modify('+10 days')->format('Y-m-d H:i:s');
       $data['commande_id'] = $commandeId;
       $data['date_retour'] = null;
       $data['taux_retard'] = 600;
       $data['prix_total_presta'] = $prixTotalPresta;
+      $data['montant_prestation'] = $this->calculPrixService->calculerPresta(
+        $dataMenu,
+        $prestaParId->getPrixPresta(),
+        $prestaParId->getSeuil(),
+        $prestaParId->getSupplement(),
+      );
 
       //var_dump($data);
       $presta[] = $this->commandePrestaRepository->ajouterPrestaCommande($data);
@@ -164,7 +171,14 @@ class CommandeService
   {
     $menu = [];
     foreach($dataMenu as $data){
+      $menuParId = $this->menuRepository->trouverMenuParId($data['menu_id']);
       $data['commande_id'] = $commandeId;
+      $data['prix_unitaire'] = $menuParId->getPrixPersonne();
+      $data['prix_total_menu'] = $this->calculPrixService->calculerTotalMenu(
+        $menuParId->getPrixPersonne(), 
+        $menuParId->getNombrePersonneMin(),
+        $data['nb_personne_menu']
+      );
       $menu[] = $this->commandeMenuRepository->ajouterMenuCommande($data);
 
       // Je decremente le stock des plats du menu commandé
@@ -177,10 +191,17 @@ class CommandeService
   public function ajouterBoissonCommande(int $commandeId, array $dataBoisson)
   {
     $boisson = [];
+    
     foreach($dataBoisson as $data){
       $boissonParId = $this->boissonRepository->trouverBoissonParId($data['boisson_id']);
+      $tabBoisson = [
+        ['prix_boisson' => $boissonParId->getPrixBoisson() ,
+        'quantite' => $data['quantite'],]
+      ];
+
       $data['commande_id'] = $commandeId;
       $data['prix_unitaire'] = $boissonParId->getPrixBoisson();
+      $data['prix_total_boisson'] = $this->calculPrixService->calculerTotalBoisson($tabBoisson);
       $boisson[] = $this->commandeBoissonRepository->ajouterBoissonCommande($data);
 
       $this->boissonService->decrementerStockBoisson($data['boisson_id'], $data['quantite']);
@@ -212,11 +233,21 @@ class CommandeService
   public function afficherDetailsCommande(int $idCommande, int $userId, int $role)
   {
     $commande = $this->commandeRepository->trouverCommandeParId($idCommande);
+    VerifService::verifExisteEnBase($commande, "cette commande ");
 
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE]) && $commande->getUserId() !== $userId) throw new AccesRefuseException();
 
-    $commandeElement = $this->ajouterElementCommande([$commande]);
+    $user = $this->userRepository->trouveUtilisateurById($commande->getUserId());
+    VerifService::verifExisteEnBase($user, "cet utilisateur"); 
 
+    $commande->setUser($user);
+
+    if($role === ROLE_UTILISATEUR && $commande->getUserId() !== $user->getUserId()){
+      throw new Exception("Vous n'avez pas accèes a cette commande");
+    }
+
+    $commandeElement = $this->ajouterElementCommande([$commande]);
+    
     return $commandeElement[0];
   }
 

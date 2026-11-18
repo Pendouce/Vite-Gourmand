@@ -10,8 +10,8 @@ class CommandeBoissonRepository extends Repository
 {
   public function ajouterBoissonCommande(array $data): CommandeBoisson
   {
-    $sql = 'INSERT INTO commande_boisson (commande_id, boisson_id, quantite, prix_unitaire) 
-    VALUES (:commande_id, :boisson_id, :quantite, :prix_unitaire)';
+    $sql = 'INSERT INTO commande_boisson (commande_id, boisson_id, quantite, prix_unitaire, prix_total_boisson) 
+    VALUES (:commande_id, :boisson_id, :quantite, :prix_unitaire, :prix_total_boisson)';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
@@ -38,7 +38,7 @@ class CommandeBoissonRepository extends Repository
     foreach($data as $boisson){
       // Je separe les donnees (qui sont des cles) boisson de commande boisson et les stock chacunes dans un tableau 
       $keyBoisson = ['boisson_id', 'nom_boisson', 'photo_boisson', 'prix_boisson', 'alcool', 'stock_boisson', 'boisson_actif'];
-      $keyCommandeBoisson = ['commande_id', 'boisson_id', 'quantite', 'prix_unitaire'];
+      $keyCommandeBoisson = ['commande_id', 'boisson_id', 'quantite', 'prix_unitaire', 'prix_total_boisson'];
 
       // Je cree un tableau qui stockera les clees et les valeurs
       $donneesBoisson = [];

@@ -14,6 +14,7 @@ class CommandePrestation extends Entity
   protected ?float $tauxRetard = null;
   protected ?int $commandeId = null;
   protected ?int $prestationId = null;
+  protected ?float $montantPrestation = null;
 
   protected ?Prestation $prestation = null;
 
@@ -175,6 +176,24 @@ class CommandePrestation extends Entity
   public function setPrestation(?Prestation $prestation): self
   {
     $this->prestation = $prestation;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of montantPrestation
+   */
+  public function getMontantPrestation(): ?float
+  {
+    return $this->montantPrestation;
+  }
+
+  /**
+   * Set the value of montantPrestation
+   */
+  public function setMontantPrestation(?float $montantPrestation): self
+  {
+    $this->montantPrestation = $montantPrestation;
 
     return $this;
   }

@@ -104,6 +104,7 @@ CREATE TABLE commande_prestation(
 
 ALTER TABLE commande_prestation CHANGE montant_penalité montant_penalite DOUBLE;
 ALTER TABLE commande_prestation DROP COLUMN montant_penalite;
+ALTER TABLE commande_prestation ADD COLUMN montant_prestation DOUBLE;
 ALTER TABLE commande_prestation ADD COLUMN adresse_presta VARCHAR(255);
 ALTER TABLE commande_prestation
 ADD CONSTRAINT fk_cmd Foreign Key (commande_id) REFERENCES commande (commande_id),
@@ -131,6 +132,8 @@ CREATE TABLE commande_boisson(
 ); 
 
 ALTER TABLE commande_boisson ADD COLUMN prix_unitaire DOUBLE;
+ALTER TABLE commande_boisson ADD COLUMN prix_total_boisson DOUBLE;
+
 ALTER TABLE commande_boisson
 ADD CONSTRAINT fk_com Foreign Key (commande_id) REFERENCES commande (commande_id),
 ADD CONSTRAINT fk_bss Foreign Key (boisson_id) REFERENCES boisson (boisson_id);
@@ -154,6 +157,8 @@ CREATE TABLE commande_menu(
   PRIMARY KEY(commande_id, menu_id)
 ); 
 
+ALTER TABLE commande_menu ADD COLUMN prix_unitaire DOUBLE;
+ALTER TABLE commande_menu ADD COLUMN prix_total_menu DOUBLE;
 ALTER TABLE commande_menu
 ADD CONSTRAINT fk_cm Foreign Key (commande_id) REFERENCES commande (commande_id),
 ADD CONSTRAINT fk_mn Foreign Key (menu_id) REFERENCES menu (menu_id);
