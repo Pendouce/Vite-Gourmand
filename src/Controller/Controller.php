@@ -129,31 +129,6 @@ protected function redirection()
   }
 }
 
-
-/*   protected function formaterDonnees(array $data): array
-{
-    $dataNettoye = array_map(function($value) 
-    {
-      if ($value === null) {
-        return null;
-      }
-
-      if(is_array($value)){
-        return array_map(fn($item) => htmlspecialchars($item), $value);
-      }
-      return htmlspecialchars($value);
-    }, $data);
-    return $dataNettoye;
-} */
-/*   public function formaterDonnees(array $data): array
-{
-    $dataNettoye = array_map(function($value) 
-    {
-      return $value === null ? null : htmlspecialchars($value);
-    }, $data);
-    return $dataNettoye;
-} */
-
   protected function uploadImage(array $file, string $folder, string $extension): string
   {
     $nomTmpImage = $file['tmp_name'];

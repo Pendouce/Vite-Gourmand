@@ -9,8 +9,10 @@ use App\Service\CalculPrixService;
 use App\Service\MenuService;
 use App\Service\PrestationService;
 use App\Service\UserService;
+use App\Service\AffichageStatutService;
 use Exception;
 
+use function PHPSTORM_META\map;
 
 class CommandeController extends Controller
 {
@@ -20,6 +22,7 @@ class CommandeController extends Controller
   private MenuService $menuService;
   private BoissonService $boissonService;
   private CalculPrixService $calculPrixService;
+  private AffichageStatutService $affichageStatutService;
 
   public function __construct() {
     parent::__construct();
@@ -29,6 +32,7 @@ class CommandeController extends Controller
     $this->menuService = ContainerId::getMenuService();
     $this->boissonService = ContainerId::getBoissonService();
     $this->calculPrixService = new CalculPrixService;
+    $this->affichageStatutService = new AffichageStatutService;
   }
 
   public function calculerPrixLivraison()
@@ -193,7 +197,10 @@ class CommandeController extends Controller
 
       try{
         $commandes = $this->commandeService->afficherCommandesUser($userId, $role);
-        $this->render('pages/client/mesCommandes', ['commandes' => $commandes]);
+        $statut = array_map(fn($commande) => 
+          $this->affichageStatutService->couleurStatutCommande($commande->getStatusId())
+        , $commandes);
+        $this->render('pages/client/mesCommandes', ['commandes' => $commandes, 'statut' => $statut]);
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
       }
@@ -207,8 +214,11 @@ class CommandeController extends Controller
 
       try{
         $commandes = $this->commandeService->afficherCommandesUser($userId, $role);
+        $statut = array_map(fn($commande) => 
+          $this->affichageStatutService->couleurStatutCommande($commande->getStatusId())
+        , $commandes);
 
-        echo json_encode(['succes' => true, 'commande' => $commandes]);
+        echo json_encode(['succes' => true, 'commande' => $commandes, 'statut' => $statut]);
       
       }catch(Exception $e){
         echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
@@ -223,7 +233,8 @@ class CommandeController extends Controller
       $role = $_SESSION['role_id'];
 
       $commande = $this->commandeService->afficherDetailsCommande($commandeId, $userId, $role);
-      $this->render('pages/detailCommande', ['commande' => $commande]);
+      $statut = $this->affichageStatutService->couleurStatutCommande($commande->getStatusId());
+      $this->render('pages/detailCommande', ['commande' => $commande, 'statut' => $statut]);
     }
 
     public function afficherCommandeFiltre()
