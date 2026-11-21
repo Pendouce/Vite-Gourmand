@@ -155,27 +155,30 @@
   }
 
   .transmise {
-    @apply w-40 rounded-lg border border-yellow-400/40 bg-yellow-200/40 px-4 py-2 text-center text-yellow-500;
+    @apply rounded-lg border border-yellow-400/40 bg-yellow-200/40 px-4 py-2 text-center text-yellow-500;
   }
   .accepte {
-    @apply w-40 rounded-lg border border-sky-400/40 bg-sky-200/30 px-4 py-2 text-center text-sky-500;
+    @apply rounded-lg border border-sky-400/40 bg-sky-200/30 px-4 py-2 text-center text-sky-500;
   }
   .en-prepa {
-    @apply w-40 rounded-lg border border-emerald-400/40 bg-emerald-200/30 px-4 py-2 text-center text-emerald-500;
+    @apply rounded-lg border border-emerald-400/40 bg-emerald-200/30 px-4 py-2 text-center text-emerald-500;
   }
   .en-cours-liv {
-    @apply w-40 rounded-lg border border-orange-400/40 bg-orange-200/30 px-4 py-2 text-center text-orange-500;
+    @apply rounded-lg border border-orange-400/40 bg-orange-200/30 px-4 py-2 text-center text-orange-500;
   }
   .livre {
-    @apply w-40 rounded-lg border border-lime-400/40 bg-lime-200/30 px-4 py-2 text-center text-lime-500;
+    @apply rounded-lg border border-lime-400/40 bg-lime-200/30 px-4 py-2 text-center text-lime-500;
   }
   .attente-materiel {
-    @apply w-40 rounded-lg border border-red-400/40 bg-red-200/30 px-4 py-2 text-center text-red-500;
+    @apply rounded-lg border border-red-400/40 bg-red-200/30 px-4 py-2 text-center text-red-500;
   }
   .terminee {
-    @apply w-40 rounded-lg border border-zinc-400/40 bg-zinc-200/30 px-4 py-2 text-center text-zinc-500;
+    @apply rounded-lg border border-mauve-400/40 bg-mauve-300/30 px-4 py-2 text-center text-mauve-500;
+  }
+  .annule {
+    @apply rounded-lg border border-mist-700/40 bg-mist-500/30 px-4 py-2 text-center text-mist-700;
   }
   .inconnu {
-    @apply w-40 rounded-lg border border-violet-400/40 bg-violet-200/30 px-4 py-2 text-center text-violet-500;
+    @apply rounded-lg border border-violet-400/40 bg-violet-200/30 px-4 py-2 text-center text-violet-500;
   }
 }

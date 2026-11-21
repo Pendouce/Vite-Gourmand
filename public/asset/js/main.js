@@ -13,4 +13,10 @@ const formulaire = document.getElementById("formCommande");
 if (formulaire) {
   await import("./pages/commande/commande.js");
 }
+
+const modalDetailcommande = document.getElementById("modalDetailcommande");
+
+if (modalDetailcommande) {
+  await import("./pages/commande/modal.js");
+}
 //import "./pages/commande/commande.js";

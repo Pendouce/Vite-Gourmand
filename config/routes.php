@@ -61,6 +61,7 @@ return[
     "/calculerPrixLivraison/" => ["controller" => "App\Controller\CommandeController", "action" => "calculerPrixLivraison"],
     "/mesCommandes/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherMesCommandes"],
     "/detailCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherDetailsCommande"],
+    "/api/detailCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherDetailsCommande"],
     "/commandesFiltre/" => ["controller" => "App\Controller\CommandeController", "action" => "afficherCommandeFiltre"],
     "/modifierCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "modifierCommande"],
     "/modifierStatusCommande/" => ["controller" => "App\Controller\CommandeController", "action" => "modifierStatusCommande"],

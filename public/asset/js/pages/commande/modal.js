@@ -1,4 +1,4 @@
-import { fermerModal } from "../modales.js";
+import { fermerModal, ouvrirModal } from "../modales.js";
 
 const modalContainerCommande = document.querySelectorAll(".modal-container-commande");
 const btnFermerModalCommande = document.querySelectorAll(".btnFermerModalCommande");
@@ -13,7 +13,9 @@ const afficheDetail = (config) => {
       const data = await res.text();
       config.detailModal.innerHTML = data;
       config.detailModal.classList.remove("hidden");
-      config.listeModal.classList.add("hidden");
+      if (config.listeModal) {
+        config.listeModal.classList.add("hidden");
+      }
       //desactiverBtnAjouterDetail(config);
       if (config.apresAffichageDetail) config.apresAffichageDetail();
     });
@@ -54,5 +56,27 @@ modalContainerCommande.forEach((modalContainer) => {
     if (event.target === modalContainer) fermerModal(modalContainer);
   });
 });
+
+/* Mes commandes */
+
+const modalDetailcommande = document.getElementById("modalDetailcommande");
+const detailCommandeModal = document.getElementById("detailCommandeModal");
+const btnDetailCommande = document.querySelectorAll(".btnDetailCommande");
+
+if (modalDetailcommande) {
+  const configModalCommande = {
+    api: "api/detailCommande",
+    classe: ".divCommande",
+    btnDetails: btnDetailCommande,
+    modal: modalDetailcommande,
+    detailModal: detailCommandeModal,
+  };
+
+  afficheDetail(configModalCommande);
+
+  btnDetailCommande.forEach((btn) => {
+    btn.addEventListener("click", () => ouvrirModal(modalDetailcommande));
+  });
+}
 
 export { retourListe, afficheDetail, nettoyerModal };

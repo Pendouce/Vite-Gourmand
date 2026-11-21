@@ -14,6 +14,7 @@ class AffichageStatutService
       STATUT_LIVREE => 'livre',
       STATUT_ATTEND_RETOUR => 'attente-materiel',
       STATUT_TERMINEE => 'terminee',
+      STATUT_ANNULEE => 'annule',
       default => 'inconnu'
     };
 

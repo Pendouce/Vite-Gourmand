@@ -200,7 +200,15 @@ class CommandeController extends Controller
         $statut = array_map(fn($commande) => 
           $this->affichageStatutService->couleurStatutCommande($commande->getStatusId())
         , $commandes);
-        $this->render('pages/client/mesCommandes', ['commandes' => $commandes, 'statut' => $statut]);
+
+        $statut = [];
+        foreach ($commandes as $commande) {
+          $statutId = $commande->getStatusId();
+          $statut[$statutId] = $this->affichageStatutService->couleurStatutCommande($statutId);
+        }
+
+        $this->render('pages/client/mesCommandes', ['commandes' => $commandes, 'statut' => $statut,
+        'titre' => 'mes commandes']);
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
       }
@@ -234,7 +242,8 @@ class CommandeController extends Controller
 
       $commande = $this->commandeService->afficherDetailsCommande($commandeId, $userId, $role);
       $statut = $this->affichageStatutService->couleurStatutCommande($commande->getStatusId());
-      $this->render('pages/detailCommande', ['commande' => $commande, 'statut' => $statut]);
+      
+      $this->render('partials/detailCommande', ['commande' => $commande, 'statut' => $statut]);
     }
 
     public function afficherCommandeFiltre()

@@ -1,8 +1,7 @@
-<?php require_once(APP_ROOT.'/templates/layouts/header.php');?>
 <?php /** @var object $commande */ ?>
 <?php /** @var string $statut */ ?>
 
-<div class="contenue-page">
+<div class="py-4 mt-6">
   <div class="flex flex-col gap-8">
     <div class="bg-primary p-2 rounded-lg">
       <h2 class="uppercase text-xl md:text-2xl text-center font-medium">details de la commande #<?= htmlspecialchars($commande->getNbCommande()) ?></h2>
@@ -37,7 +36,7 @@
             <p><?= htmlspecialchars($commande->getLieuLivraison()) ?></p>
           </div>
           <div class="order-2 md:order-0">
-            <p class="<?= $statut ?>"><?= htmlspecialchars($commande->getLibelle()) ?></p>
+            <p class="w-40 <?= $statut ?>"><?= htmlspecialchars($commande->getLibelle()) ?></p>
           </div>
         </div>
       </div>
@@ -62,7 +61,7 @@
               <p class="md:col-span-1"><?= htmlspecialchars($menu->getNbPersonneMenu()) ?> pers.</p>
             </div>
             <div class="col-span-1 justify-self-center md:justify-self-auto">
-              <p class=""><?= htmlspecialchars($menu->getPrixTotalMenu()) ?> €</p>
+              <p><?= htmlspecialchars($menu->getPrixTotalMenu()) ?> €</p>
             </div>
           <?php endforeach; ?>
 
@@ -120,7 +119,4 @@
 
   </div>
 </div>
-
-
-<?php require_once(APP_ROOT.'/templates/layouts/footer.php');?>
 
