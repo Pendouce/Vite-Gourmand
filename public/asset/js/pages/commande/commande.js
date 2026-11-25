@@ -1,9 +1,11 @@
 import "./menu.js";
 import "./boisson.js";
-
+import { brancherFormulaire } from "./formulaire.js";
 /* ENVOI DE LA COMMANDE */
 const formulaire = document.getElementById("formCommande");
-const divBlockRetourMsg = document.querySelector(".divBlockRetourMsg");
+
+brancherFormulaire(formulaire);
+/* const divBlockRetourMsg = document.querySelector(".divBlockRetourMsg");
 const msgSucces = document.getElementById("msgSucces");
 
 const envoyerDonneesCommande = async () => {
@@ -27,7 +29,6 @@ const envoyerDonneesCommande = async () => {
 
     if (msgSucces) {
       setTimeout(() => {
-        console.log("Les 5 secondes sont écoulées");
         msgSucces.remove();
       }, 5000);
     }
@@ -52,4 +53,4 @@ formulaire.addEventListener("submit", async (event) => {
   if (divBlockRetourMsg.classList.contains("erreur")) {
     btn.disabled = false;
   }
-});
+}); */

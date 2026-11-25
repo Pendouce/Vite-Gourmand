@@ -148,10 +148,6 @@ class CommandeController extends Controller
       $menus = $this->menuService->afficherMenus($role);
       $boissons = $this->boissonService->afficherBoisson($role);
       $boisson = $id ? $this->boissonService->afficherBoissonParId($id) : null;
-
-      $evenements = $this->menuService->afficherEvenements();
-      $themes = $this->menuService->afficherThemes();
-      $regimes = $this->menuService->afficherRegimes();
     
       $prixMenus = array_map(fn ($e) => $e->getPrixPersonne(), $menus);
       $prixMin = min($prixMenus);
@@ -169,8 +165,6 @@ class CommandeController extends Controller
       $this->render('pages/client/commandeMenu', [
         'user' => $user, 
         'menus' => $menus, 'menuChoisi' => $menu,
-        'evenements' => $evenements, 
-        'themes' => $themes, 'regimes' => $regimes,
         'prestations' => $prestations, 'prestation' => $prestation,
         'prestationsParType' => $prestationsParType, 
         'boissons' => $boissons, 'boisson' => $boisson,
@@ -246,6 +240,26 @@ class CommandeController extends Controller
       $this->render('partials/detailCommande', ['commande' => $commande, 'statut' => $statut]);
     }
 
+
+  public function afficherDetailsCommandeApi(){
+    $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR]);
+
+    $commandeId = (int)$_GET['id'];
+    $userId = $_SESSION['user_id'];
+    $role = $_SESSION['role_id'];
+
+    $commande = $this->commandeService->afficherDetailsCommande($commandeId, $userId, $role);
+
+    try{
+      echo json_encode(['succes' => true, 'commande' => $commande]);
+    }catch(Exception $e){
+      echo json_encode(['succes' => false, 'erreur' => $e->getMessage()]);
+    }
+    
+    //$this->render('partials/detailCommande', ['commande' => $commande, 'statut' => $statut]);
+  }
+
+
     public function afficherCommandeFiltre()
     {
       $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE]);
@@ -294,17 +308,17 @@ class CommandeController extends Controller
         }
 
         $dataPrestas = [];
-        foreach($_POST['prestation'] as $prestaId){
+        foreach(($_POST['prestation'] ?? []) as $prestaId){
           $dataPrestas[] = [
             'prestation_id' => (int) $prestaId,
-            'date_presta' => $_POST['date_presta'],
-            'adresse_presta' => $_POST['adresse_presta'],
+            'date_presta' => $_POST['date_livraison'],
+            'adresse_presta' => $_POST['lieu_livraison'],
           ];
         }
         $prixTotalPresta = $_POST['prix_total_presta'];
         
         $dataBoissons = [];
-        foreach($_POST['boisson'] as $index => $boissonId){
+        foreach(($_POST['boisson'] ?? []) as $index => $boissonId){
           $dataBoissons[] = [
             'boisson_id' => (int) $boissonId,
             'quantite' => (int) $_POST['quantite'][$index]
@@ -325,7 +339,8 @@ class CommandeController extends Controller
         $dataPrestas = $this->formaterDonnees($dataPrestas);
         $dataBoissons = $this->formaterDonnees($dataBoissons);
 
-        $motif = $this->formaterValeur($_POST['motif']);
+        $motif = $_POST['motif'] ?? null;
+        if($motif) $this->formaterValeur($motif);
 
         try{
           $commandeId = (int) $_POST['id'];
@@ -333,6 +348,15 @@ class CommandeController extends Controller
           $this->commandeService->modifierCommande($commandeId, $roleId, $dataCommande, $dataMenus, $dataPrestas, $dataBoissons, $prixTotalPresta, $motif);
 
           if($roleId === ROLE_UTILISATEUR){
+            $message = 'Commande modifier vous avez recus un mail de confirmation';
+            $_SESSION['succes'] = $message;
+            echo json_encode(['succes' => true, 'redirection' => '/mesCommandes']);
+          }elseif($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN){
+            $message = 'Commande modifier un mail a été envoyé au client';
+            $_SESSION['succes'] = $message;
+            echo json_encode(['succes' => true, 'redirection' => '/commandes']);
+          }
+          /* if($roleId === ROLE_UTILISATEUR){
             $_SESSION['succes'] = 'Commande modifier vous avez recus un mail de confirmation';
             header('location: /mesCommandes');
             exit;
@@ -340,15 +364,55 @@ class CommandeController extends Controller
             $_SESSION['succes'] = 'Commande modifier un mail a été envoyé au client';
             header('location: /commandes');
             exit;
-          }
+          } */
 
         }catch(Exception $e){
-          $_SESSION['erreur'] = $e->getMessage();
-          header('location: /modifierCommande');
-          exit;
+          echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
+          /* $_SESSION['erreur'] = $e->getMessage();
+          header('location: /modifierCommande?id='.$_GET['id']);
+          exit; */
         }
       }else{
-        $this->render('pages/modifierCommande');
+      $role = $role = $_SESSION['role_id'];
+      $userId = (int) $_SESSION['user_id'];
+      //$id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+      $id = (int) $_GET['id'];
+      
+      $commande = $this->commandeService->afficherDetailsCommande($id, $userId, $role);
+      $prestations = $this->prestationService->afficherPrestation($role);
+      $prestation = $this->prestationService->afficherPrestationParId($role);
+      $prestationsParType = $this->prestationService->afficherPrestationParType();
+      $idsPrestaCommande = array_map(fn($id) => $id->getPrestation()->getPrestationId(), $commande->getCommandePrestations());
+
+      
+      $maxMenu = [];
+      foreach($commande->getCommandeMenus() as $menu){
+        $maxMenu[$menu->getMenu()->getMenuId()] = $menu->getNbPersonneMenu() + $menu->getMenu()->getStockDispo();
+      }
+
+      $maxBoisson = [];
+      foreach($commande->getCommandeBoissons() as $boisson){
+        $maxBoisson[$boisson->getBoisson()->getBoissonId()] = $boisson->getQuantite() + $boisson->getBoisson()->getStockBoisson();
+      }
+      
+      $modeCommande = $modeCommande ?? false;
+
+      if($role === ROLE_UTILISATEUR){
+        $user = $this->userService->afficheInfo($userId);
+      }else{
+       $user = null;
+      }
+
+      $this->render('pages/modifierCommande', [
+        'commande' => $commande, 'user' => $user, 
+        'prestations' => $prestations, 
+        'idsPrestaCommande' => $idsPrestaCommande,
+        'prestation' => $prestation,
+        'prestationsParType' => $prestationsParType, 
+        'maxMenu' => $maxMenu, 'maxBoisson' => $maxBoisson,
+        'role' => $role, 'modeCommande' => $modeCommande,
+        'titre' => 'modification commande']);
+        //$this->render('pages/modifierCommande', ['titre' => 'modification commande']);
       }
     }
 

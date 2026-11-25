@@ -112,12 +112,14 @@ const recalculTotal = (div, nbElement, element, config) => {
 
 let prixLivraison = null;
 
+const actualiserLivraison = async () => {
+  prixLivraison = await calculPrixLivraison();
+  await afficheTotalCommande();
+};
+
 /* Gestion de la mise a jour du prix de la commande au changement au niveau de l'adresse */
 [adresse, ville, codePostal].forEach((input) => {
-  input.addEventListener("change", async () => {
-    prixLivraison = await calculPrixLivraison();
-    afficheTotalCommande();
-  });
+  input.addEventListener("change", actualiserLivraison);
 });
 
 const calculTotalCommande = () => {
@@ -162,4 +164,10 @@ export {
   afficheTotalCommande,
   calculSousTotalPresta,
   calculTotalNbPersMenu,
+  actualiserLivraison,
 };
+
+/* export const actualiserLivraison = async () => {
+  prixLivraison = await calculPrixLivraison();
+  await afficheTotalCommande();
+}; */

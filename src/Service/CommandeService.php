@@ -106,7 +106,7 @@ class CommandeService
     $menusCommande = $this->verifMenu($dataMenu);
     $prixPresta = $this->verifPresta($dataPresta, $prixTotalPresta, $menusCommande);
     $boissonsCommande = $this->verifBoisson($dataBoisson);
-    $this->verifLivraison($data);
+    $this->verifLivraison($data, 10);
     $this->prixTotal($prixPresta, $menusCommande, $boissonsCommande, $data);
 
     $data['date_commande'] = new DateTimeImmutable('now', new DateTimeZone('Europe/Paris'))->format('Y-m-d H:i:s');
@@ -306,16 +306,20 @@ class CommandeService
     $donneesFinalMenu = [];
     foreach($nouvellesDonneesMenu as $menuId => $data){
       $data = array_merge($anciennesDonneesMenu[$menuId], $data);
+      $menu = $anciennesDonneesMenu[$menuId]['menu'];
+      $data['prix_total_menu'] = $this->calculPrixService->calculerTotalMenu(
+          $menu->getPrixPersonne(),
+          $menu->getNombrePersonneMin(),
+          $data['nb_personne_menu']
+      );
       $data['commande_id'] = $commandeId;
       unset($data['menu']);
+      unset($data['prix_unitaire']);
       $donneesFinalMenu[$menuId] = $data;
     }
 
     $diffStockMenu = [];
     foreach($nouvellesDonneesMenu as $menuId => $nouveauMenu){
-      // pour chaque menu recu du front je verifie qu'il existe dnas les anciennes donnees
-      $this->elementInvalide($anciennesDonneesMenu, $menuId, 'Menu');
-
       $ancienMenu = $anciennesDonneesMenu[$menuId];
       // Je calcul la difference de nb_personne de l'ancienne donnee et cellui de la nouvelle
       // et stock cette difference dans diffStockMenu[]
@@ -342,6 +346,16 @@ class CommandeService
     $donneesFinalBoisson = [];
     foreach($nouvellesDonneesBoisson as $boissonId => $data){
       $data = array_merge($anciennesDonneesBoisson[$boissonId], $data);
+      $boisson = $anciennesDonneesBoisson[$boissonId]['boisson'];
+
+      $tabBoisson = [
+        [
+          'prix_boisson' => $boisson->getPrixBoisson(),
+          'quantite' => $data['quantite']
+        ]
+      ];
+
+    $data['prix_total_boisson'] = $this->calculPrixService->calculerTotalBoisson($tabBoisson);
       $data['commande_id'] = $commandeId;
       unset($data['boisson']);
       unset($data['prix_unitaire']);
@@ -351,9 +365,6 @@ class CommandeService
 
     $diffStockBoisson = [];
     foreach($nouvellesDonneesBoisson as $boissonId => $nouvelleBoisson){
-
-      $this->elementInvalide($anciennesDonneesBoisson, $boissonId, 'Boisson');
-
       $ancienneBoisson = $anciennesDonneesBoisson[$boissonId];
       $differenceBoisson = $nouvelleBoisson['quantite'] - $ancienneBoisson['quantite'];
       $diffStockBoisson[$boissonId] = $differenceBoisson;
@@ -370,28 +381,32 @@ class CommandeService
     
     $nouvellesDonneesPresta = [];
     foreach($dataPresta as $presta){
+      $datePresta = new DateTimeImmutable($presta['date_presta'], new DateTimeZone('Europe/Paris'));
+      $presta['date_retour_prevu'] = $datePresta->modify('+10 days')->format('Y-m-d H:i:s');
       $presta['prix_total_presta'] = $prixTotalPresta;
       $nouvellesDonneesPresta[$presta['prestation_id']] = $presta;
     }
+
+    /* foreach($nouvellesDonneesPresta as $prestaId => $nouvellePresta){
+      $this->elementInvalide($anciennesDonneesPresta, $prestaId, 'Prestation');
+    } */
 
     $donneesFinalePresta = [];
     foreach($nouvellesDonneesPresta as $prestaId => $data){
       $data = array_merge($anciennesDonneesPresta[$prestaId], $data);
       $data['commande_id'] = $commandeId;
       unset($data['prestation']);
+      unset($data['montant_prestation']);
+      unset($data['date_retour']);
       unset($data['taux_retard']);
       $donneesFinalePresta[$prestaId] = $data;
-    }
-
-    foreach($nouvellesDonneesPresta as $prestaId => $nouvellePresta){
-      $this->elementInvalide($anciennesDonneesPresta, $prestaId, 'Prestation');
     }
 
     // Je verifie que tout est ok pour la modification de la commande
     $menusCommande = $this->verifMenu($nouvellesDonneesMenu, $diffStockMenu);
     $prixPresta = $this->verifPresta($nouvellesDonneesPresta, $prixTotalPresta, $menusCommande);
     $boissonsCommande = $this->verifBoisson($nouvellesDonneesBoisson, $diffStockBoisson);
-    $this->verifLivraison($nouvellesDonneesCommande);
+    $this->verifLivraison($nouvellesDonneesCommande, 4);
     $this->prixTotal($prixPresta, $menusCommande, $boissonsCommande, $nouvellesDonneesCommande);
 
 
@@ -400,36 +415,19 @@ class CommandeService
       throw new Exception('Un motif est obligatoire pour modifier une commande');
     }
 
-    $user = $this->userRepository->trouveUtilisateurById($nouvellesDonneesCommande['user_id']);
-    if($roleId === ROLE_UTILISATEUR){
-      // Mail modification
-      $html = $this->mailService->recupererHtml('commande/modificationClientMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $nouvellesDonneesCommande['nb_commande']]);
-      $objet = 'Modification de votre commande';
-      file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
-      //$this->mailService->envoyer($user->getEmail(), $objet, $html);
-
-    }elseif($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN){
-      // Mail modification + motif
-      $html = $this->mailService->recupererHtml('commande/modificationEmployeMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $nouvellesDonneesCommande['nb_commande'], 'motif' => $motif]);
-      $objet = 'Modification de votre commande';
-      file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
-      //$this->mailService->envoyer($user->getEmail(), $objet, $html);
-    }
-
-    unset($nouvellesDonneesCommande['role_id']);
-    //unset($nouvellesDonneesCommande['commande_id']);
-    unset($nouvellesDonneesCommande['nb_commande']);
-    unset($nouvellesDonneesCommande['date_commande']);
-    unset($nouvellesDonneesCommande['user_id']);
-    unset($nouvellesDonneesCommande['status_id']);
-    unset($nouvellesDonneesCommande['libelle']);
-    unset($nouvellesDonneesCommande['commande_prestations']);
-    unset($nouvellesDonneesCommande['commande_menus']);
-    unset($nouvellesDonneesCommande['commande_boissons']);
+    $donneesCommande = [
+      'commande_id' => $nouvellesDonneesCommande['commande_id'],
+      'nb_personne' => $nouvellesDonneesCommande['nb_personne'],
+      'date_livraison' => $nouvellesDonneesCommande['date_livraison'],
+      'lieu_livraison' => $nouvellesDonneesCommande['lieu_livraison'],
+      'prix_livraison' => $nouvellesDonneesCommande['prix_livraison'],
+      'prix_total' => $nouvellesDonneesCommande['prix_total'],
+    ];
 
     try{
       $this->commandeRepository->beginTransaction();
-      $this->commandeRepository->modifierCommande($nouvellesDonneesCommande);
+      //$this->commandeRepository->modifierCommande($nouvellesDonneesCommande);
+      $this->commandeRepository->modifierCommande($donneesCommande);
 
       // Je boucle sur chaque menu pour et insert les modifs en base
       foreach($donneesFinalMenu as $menuId => $data){
@@ -468,6 +466,22 @@ class CommandeService
     }catch(Exception $e){
       $this->commandeRepository->rollBack();
       throw new Exception('Erreur lors de la modification de la commande : '. $e->getMessage());
+    }
+
+    $user = $this->userRepository->trouveUtilisateurById($nouvellesDonneesCommande['user_id']);
+    if($roleId === ROLE_UTILISATEUR){
+      // Mail modification
+      $html = $this->mailService->recupererHtml('commande/modificationClientMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $nouvellesDonneesCommande['nb_commande']]);
+      $objet = 'Modification de votre commande';
+      file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+      //$this->mailService->envoyer($user->getEmail(), $objet, $html);
+
+    }elseif($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN){
+      // Mail modification + motif
+      $html = $this->mailService->recupererHtml('commande/modificationEmployeMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $nouvellesDonneesCommande['nb_commande'], 'motif' => $motif]);
+      $objet = 'Modification de votre commande';
+      file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
+      //$this->mailService->envoyer($user->getEmail(), $objet, $html);
     }
   }
 
@@ -658,12 +672,6 @@ class CommandeService
         throw new Exception("Tout est modifiable excepté le choix des menus et des boissons");
       }
   }
-  private function elementInvalide(array $anciennesDonnees, int $id, string $element)
-  {
-    if(!isset($anciennesDonnees[$id])){
-        throw new Exception($element.' invalide pour cette commande');
-      }
-  }
 
   private function modificationNonPermise(int $commandeId)
   {
@@ -758,20 +766,6 @@ class CommandeService
 
     return $prestaCalcul;
   }
-  /* private function verifPresta(array $dataPresta, float $prixTotalPresta, array $menusCommande)
-  {
-    //Je boucle sur mes prestation pour recuperer le prix de chacunes d'entres elles
-    $prixPresta = [];
-    foreach($dataPresta as $presta){
-      $prestationParId = $this->prestationRepository->trouverPrestationparId($presta['prestation_id']);
-      $prixPresta[] = $prestationParId->getPrixPresta();
-    }
-
-    if($prixTotalPresta != $this->calculPrixService->calculerTotalpresta($menusCommande, $prixPresta)){
-      throw new Exception('Erreur prix total presta '. $this->calculPrixService->calculerTotalpresta($menusCommande, $prixPresta));
-    }
-    return $prixPresta;
-  } */
 
   private function verifBoisson(array $dataBoisson, array $diffStock = [])
   {
@@ -801,13 +795,13 @@ class CommandeService
     return $boissonsCommande;
   }
 
-  private function verifLivraison(array $data)
+  private function verifLivraison(array $data, int $delais)
   {
     $dateLivraison = new DateTimeImmutable($data['date_livraison']);
-    $delaisMinimum = new DateTimeImmutable('now', new DateTimeZone('Europe/Paris'))->modify("+5 days");
+    $delaisMinimum = new DateTimeImmutable('now', new DateTimeZone('Europe/Paris'))->modify('+ '. $delais. ' days');
 
     if($dateLivraison < $delaisMinimum){
-      throw new Exception('Le delais minimum entre la commande et la livraison est de 5 jours');
+      throw new Exception('Le delais minimum entre la commande et la livraison est de '.$delais.' jours');
     }
 
     if(abs($data['prix_livraison'] - $this->calculPrixService->calculerPrixDeLivraison(ADRESSE_VG , $data['lieu_livraison'])) > 0.01){

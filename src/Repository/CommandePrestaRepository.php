@@ -65,8 +65,8 @@ class CommandePrestaRepository extends Repository
   {
     $sql = 'UPDATE commande_prestation SET 
     prix_total_presta = :prix_total_presta, adresse_presta = :adresse_presta, 
-    date_presta = :date_presta, date_retour_prevu = :date_retour_prevu, date_retour = :date_retour
-    WHERE prestation_id = :prestation_id, montant_prestation = :montant_prestation AND commande_id = :commande_id';
+    date_presta = :date_presta, date_retour_prevu = :date_retour_prevu
+    WHERE prestation_id = :prestation_id AND commande_id = :commande_id';
 
     $statement = $this->pdo->prepare($sql);
     $statement->execute($data);
@@ -75,6 +75,15 @@ class CommandePrestaRepository extends Repository
   public function modifierDateRetourPresta(array $data)
   {
     $sql = 'UPDATE commande_prestation SET date_retour = :date_retour
+    WHERE prestation_id = :prestation_id AND commande_id = :commande_id';
+
+    $statement = $this->pdo->prepare($sql);
+    $statement->execute($data);
+  }
+
+  public function supprimererPrestaDeLaCommande(array $data)
+  {
+    $sql = 'DELETE commande_prestation
     WHERE prestation_id = :prestation_id AND commande_id = :commande_id';
 
     $statement = $this->pdo->prepare($sql);

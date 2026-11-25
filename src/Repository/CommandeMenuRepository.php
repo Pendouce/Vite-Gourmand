@@ -59,7 +59,8 @@ class CommandeMenuRepository extends Repository
   public function modifierMenuDeLaCommande(array $data)
   {
     $sql = 'UPDATE commande_menu SET 
-    nb_personne_menu = :nb_personne_menu
+    nb_personne_menu = :nb_personne_menu,
+    prix_total_menu = :prix_total_menu
     WHERE menu_id = :menu_id AND commande_id = :commande_id';
 
     $statement = $this->pdo->prepare($sql);

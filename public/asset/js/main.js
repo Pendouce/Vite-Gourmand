@@ -19,4 +19,10 @@ const modalDetailcommande = document.getElementById("modalDetailcommande");
 if (modalDetailcommande) {
   await import("./pages/commande/modal.js");
 }
+
+const formModifCommande = document.getElementById("formModifCommande");
+
+if (formModifCommande) {
+  await import("./pages/commande/modification.js");
+}
 //import "./pages/commande/commande.js";

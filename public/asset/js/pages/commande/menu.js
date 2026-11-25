@@ -22,12 +22,6 @@ const detailMenuModal = document.getElementById("detailMenuModal");
 const btnDetailsMenu = document.querySelectorAll(".btnDetailsMenu");
 const modalMenu = document.getElementById("modalMenu");
 
-btnNvMenu.addEventListener("click", () => {
-  nettoyerModal(configModalMenu);
-  ouvrirModal(modalMenu);
-  desactiverBtnAjouter(configModalMenu);
-});
-
 const configMenu = {
   api: "detailMenu",
   modele: divMenu,
@@ -58,13 +52,22 @@ const configModalMenu = {
 
 // Ajout du menu de base depuis la page menu
 const menuId = sectionMenus.dataset.menuId;
-if (menuId) ajouterALaCommande(menuId, configMenu);
 
-btnAjouter(configModalMenu);
-ajouterALaCommandeDepuisDetail(configModalMenu);
-afficheDetail(configModalMenu);
-retourListe(configModalMenu);
-replacerBtnAjouter(configMenu);
+if (btnNvMenu) {
+  if (menuId) ajouterALaCommande(menuId, configMenu);
+
+  btnNvMenu.addEventListener("click", () => {
+    nettoyerModal(configModalMenu);
+    ouvrirModal(modalMenu);
+    desactiverBtnAjouter(configModalMenu);
+  });
+
+  btnAjouter(configModalMenu);
+  ajouterALaCommandeDepuisDetail(configModalMenu);
+  afficheDetail(configModalMenu);
+  retourListe(configModalMenu);
+  replacerBtnAjouter(configMenu);
+}
 
 divMenus.addEventListener("change", () => {
   actualiserPresta();

@@ -1,12 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>Modifier Commande</h1>
+<?php require_once(APP_ROOT.'/templates/layouts/header.php');?>
+<?php require_once(APP_ROOT.'/templates/layouts/pageBanner.php');?>
+
+<?php /** @var array $prestations */?>
+<?php /** @var array $prestationsParType */?>
+<?php /** @var object $commande */?>
+<?php /** @var object $maxMenu */?>
+<?php /** @var object $maxBoisson */?>
+<?php /** @var array $idsPrestaCommande */?>
+<?php /** @var object $user */?>
+<?php /** @var object $menuChoisi */?>
+<?php /** @var object $role */?>
+<?php /** @var string $csrfToken */ ?>
+<?php /** @var string $modeCommande */?>
+<?php $modeCommande = true ?>
+
+
+<div class="contenue-page">
+
 
   <?php if (isset($_SESSION['erreur'])): ?>
     <p class="erreur"><?= $_SESSION['erreur'] ?></p>
@@ -19,5 +29,378 @@
     </p>
     <?php unset($_SESSION['succes']); ?>
   <?php endif; ?>
-</body>
-</html>
+
+
+
+  <div id="modalPresta" class="modal-container-commande hidden">
+    <div class="modal-commande">
+      <button type="button" class="btnFermerModalCommande absolute right-6 top-6 hover:text-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 lg:size-8">
+          <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+        </svg>
+      </button>
+      <div id="listePrestasModal">
+        <?php include(APP_ROOT.'/templates/partials/presta.php');?>
+      </div>
+      <div id="detailPrestaModal" class="hidden pt-6"></div>
+      
+    </div>
+  </div>
+
+  <div class="divBlockRetourMsg commande w-full p-2 m-2"></div>
+
+  <div class="w-full py-4 m-2">
+    <?php if (isset($_SESSION['succes'])): ?>
+      <p class="succes">
+          <?= $_SESSION['succes'] ?>
+      </p>
+      <?php unset($_SESSION['succes']); ?>
+    <?php endif; ?>
+
+    <?php if(isset($_SESSION['erreur'])): ?>
+      <p class="erreur"><?= $_SESSION['erreur'] ?></p>
+      <?php unset($_SESSION['erreur']); ?>
+    <?php endif; ?>
+  </div>
+
+  
+
+  <form id="formModifCommande" class="flex flex-col gap-8" action="/modifierCommande?id=<?= $commande->getCommandeId() ?>" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="csrfToken" id="csrfToken" value="<?= $csrfToken ?>">
+      <input type="hidden" name="id" value="<?= $commande->getCommandeId() ?>">
+
+      <!-- Recap commande -->
+      <section>
+        <div class="mb-8">
+          <div class="flex flex-col gap-3">
+            <div class="h-0.75 bg-primary w-2/3 self-center"></div>
+            <div class="h-0.5 bg-primary w-1/2 self-center"></div>
+          </div>
+          <h2 class="font-h2 uppercase text-3xl text-center font-medium text-primary lg:text-4xl py-6 md:py-4">
+            recapitulatif de votre <br> commande
+          </h2>
+          <div class="flex flex-col gap-3">
+            <div class="h-0.5 bg-primary w-1/2 self-center"></div>
+            <div class="h-0.75 bg-primary w-2/3 self-center"></div>
+          </div>
+        </div>
+        
+
+        <!-- Div menus -->
+        <div class="flex flex-col gap-10">
+          <input id="inputNbPers" name="nb_personne" class="hidden">
+
+          <section id="sectionMenus" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6" data-menu-id="<?= $menuChoisi ? (int) $menuChoisi->getMenuId() : '' ?>">
+            <div class="flex flex-col items-center gap-2">
+              <h3 class="uppercase text-xl text-center md:text-2xl">menus selectionés</h3>
+              <div class="h-px bg-primary w-2/3 self-center"></div>
+            </div>
+            <div class="flex justify-evenly">
+              <div class="divMenus flex flex-wrap gap-8">
+
+                <?php foreach($commande->getCommandeMenus() as $menu): ?>
+                  
+                  <div class="divMenu w-60 px-2 flex flex-col gap-6">
+                    <!-- Titre menu -->
+                    <input type="hidden" name="menu[]" value="<?= $menu->getMenu()->getMenuId() ?> ">
+                    <div class="">
+                      <div class="text-center">
+                        <h4 class="titreMenu flex min-h-14 items-center justify-center line-clamp-2 text-balance font-medium text-lg md:text-xl"><?= $menu->getMenu()->getTitre() ?> </h4>
+                          <p class="text-texte/70"> 
+                            <span class="stockMenu text-texte/70"> <?= $menu->getMenu()->getStockDispo() ?> </span>
+                            disponible</p>
+                      </div>
+                    </div>
+                    <!-- prix + nb pers -->
+                    <div class="menu flex flex-col gap-2">
+                        <div class="flex gap-2">
+                          <p>Prix unitaire: </p>
+                          <div class="flex gap-1">
+                            <span class="prixUnitaireMenu"><?= $menu->getMenu()->getPrixPersonne() ?> </span>
+                            <p>€ /pers</p>
+                          </div>
+                          
+                        </div>
+                        <div id="divNbPers" class="flex flex-col gap-2">
+                          <label for="">Nombre des personnes:</label>
+                          <div class="flex gap-2">
+                            <button class="btnMoins" type="button">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                              </svg>
+                            </button>
+                            <input name="nb_personne_menu[]" class="nbPersonneMenu text-center border border-primary/50 py-1 px-2 rounded-lg w-15 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              type="number" value="<?= $menu->getNbPersonneMenu() ?>" min="<?= $menu->getMenu()->getNombrePersonneMin() ?>" max="<?= $maxMenu[$menu->getMenu()->getMenuId()] ?>"
+                              data-nb-pers-min="<?= $menu->getMenu()->getNombrePersonneMin() ?>">
+                            <button class="btnPlus" type="button">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                    </div>
+                    <!-- Sous total -->
+                    <div class="flex gap-3">
+                      <p>Sous total: </p>
+                      <div class="flex gap-1">
+                        <span class="sousTotalMenu"></span>
+                        <p>€</p>
+                      </div>
+                    </div>
+                  </div>
+                <?php endforeach; ?>
+              </div>
+
+            </div>
+
+            <div class="flex gap-3 font-medium justify-center">
+              <p> Total menus: </p>
+              <div class="flex gap-1">
+                <span class="total"></span>
+                <p>€</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- BOISSON -->
+
+          <section id="sectionBoissons" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
+            <div class="flex flex-col items-center gap-2">
+              <h3 class="uppercase text-xl text-center md:text-2xl">boisson</h3>
+              <div class="h-px bg-primary w-2/3 self-center"></div>
+            </div>
+            <div class="flex justify-evenly">
+
+              <div class="divBoissons flex flex-wrap gap-8">
+
+              <?php foreach($commande->getCommandeBoissons() as $boisson): ?>
+                <div class="divBoisson w-60 px-2 flex flex-col gap-6">
+    
+                  <!-- Titre boisson -->
+                    <input type="hidden" name="boisson[]" value="<?= $boisson->getBoisson()->getBoissonId() ?> ">
+                    <div class="relative">
+                      <div class=" text-center">
+                         <h4 class="titreBoisson flex min-h-14 items-center justify-center line-clamp-2 text-balance font-medium text-lg md:text-xl"><?= $boisson->getBoisson()->getNomBoisson() ?></h4>
+                          <p class="text-texte/70"><span class="stockBoisson text-texte/70"><?= $boisson->getBoisson()->getStockBoisson() ?></span> disponible</p>
+                      </div>
+                    </div>
+    
+                    <!-- prix + quantite -->
+                    <div class="boisson flex flex-col gap-2">
+                        <div class="flex gap-2">
+                          <p>Prix unitaire: </p>
+                          <div class="flex gap-1">
+                            <span class="prixUnitaireBoisson"><?= $boisson->getBoisson()->getPrixBoisson() ?></span>
+                            <p>€</p>
+                          </div>
+                        </div>
+    
+                        <div class="divQuantite flex flex-col gap-2">
+                          <label for="">Quantité:</label>
+                          <div class="flex gap-2">
+                            <button class="btnMoins" type="button">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                              </svg>
+                            </button>
+                            <input name="quantite[]" class="quantiteBoisson text-center border border-primary/50 py-1 px-2 rounded-lg w-15 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              step="1" type="number" max="<?= $maxBoisson[$boisson->getBoisson()->getBoissonId()] ?>"
+                              value="<?= $boisson->getQuantite() ?>">
+                            <button class="btnPlus" type="button">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                    
+                      </div>
+                      <!-- Sous total -->
+                      <div class="flex gap-3">
+                        <p>Sous total: </p>
+                        <div class="flex gap-1">
+                          <span class="sousTotalBoisson"></span>
+                          <p>€</p>
+                        </div>
+                      </div>
+                </div>
+              <?php endforeach; ?>
+              
+              </div>
+                  <!-- Div ajouter Boisson -->
+            </div>
+
+            <!-- Total boisson -->
+            <div class="flex gap-3 font-medium justify-center">
+              <p> Total boissons: </p>
+              <div class="flex gap-1">
+                <span class="total">0.00</span>
+                <p>€</p>
+              </div>
+            </div>
+          </section>
+    </section>
+
+    <!-- PRESTATIONS -->
+    
+    <section>
+        <div class="mb-8 relative">
+          <div class="flex flex-col gap-3">
+            <div class="h-0.75 bg-primary w-2/3 self-center"></div>
+            <div class="h-0.5 bg-primary w-1/2 self-center"></div>
+          </div>
+          <button id="btnModalPresta" class="absolute right-30 top-6 text-primary" type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                  </svg>
+                </button>
+          <h2 class="font-h2 uppercase text-3xl text-center font-medium text-primary lg:text-4xl py-6 md:py-4">
+            prestations
+          </h2>
+          <div class="flex flex-col gap-3">
+            <div class="h-0.5 bg-primary w-1/2 self-center"></div>
+            <div class="h-0.75 bg-primary w-2/3 self-center"></div>
+          </div>
+        </div>
+          <!-- Divs presta -->
+
+        <div class="flex flex-col gap-10">
+          <?php foreach($prestationsParType as $typeDePrestaLibelle => $prestations): ?>
+            <section class="sectionPresta flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6 relative">
+                <h3 class="uppercase text-xl text-center md:text-2xl"><?= $typeDePrestaLibelle ?></h3>
+              <div class="h-px bg-primary w-2/3 self-center"></div>
+
+              <div class="divPresta flex flex-col items-center gap-4">
+            
+                <span class="msgPresta erreur rounded-md py-1 hidden"></span>
+                <select class="select petit-input mx-0" name="prestation[]">
+                  <option value="">Non</option>
+                  <?php foreach($prestations as $presta): ?>
+                    <option class="presta" value="<?= $presta->getPrestationId() ?>" 
+                      <?= in_array($presta->getPrestationId(), $idsPrestaCommande) ? 'selected' : '' ?>
+                      data-id-presta="<?= $presta->getPrestationId() ?>">
+                      <?= htmlspecialchars($presta->getNomPresta()) ?>
+                    </option>
+                  <?php endforeach; ?>
+                </select>
+
+                <div class="blockMsg text-center hidden">
+                  <p>A partir de <span class="prixPresta"></span>€ /seuil de <span class="seuilPresta"></span> pers</p>
+                  <p>Supplement <span class="supplementPresta"></span>€ /palier de 5</p>
+                </div>
+
+                <div class="flex gap-3 font-medium justify-center">
+                  <p> Sous total: </p>
+                  <div class="flex gap-1">
+                    <span class="total">0.00</span>
+                    <p>€</p>
+                  </div>
+                </div>
+              </div>
+
+
+
+            </section>
+            <?php endforeach; ?>
+            <input id="inputTotalPresta" name="prix_total_presta" class="hidden">
+        </div>
+          </section>
+        
+
+      <!-- Infos -->
+      <section>
+        <div class="mb-6">
+          <div class="flex flex-col gap-3">
+            <div class="h-0.75 bg-primary w-2/3 self-center"></div>
+            <div class="h-0.5 bg-primary w-1/2 self-center"></div>
+          </div>
+          <h2 class="font-h2 uppercase text-3xl text-center font-medium text-primary lg:text-4xl py-6 md:py-4">vos informations</h2>
+          <div class="flex flex-col gap-3">
+            <div class="h-0.5 bg-primary w-1/2 self-center"></div>
+            <div class="h-0.75 bg-primary w-2/3 self-center"></div>
+          </div>
+        </div>
+
+        <div class="cart-form w-full max-w-4xl">
+          <div class="grid grid-cols-2 gap-4 px-3 md:px-0">
+              <div class="flex flex-col col-span-1">
+                <label for="">Nom</label>
+                <input class="petit-input" type="text" name="nom" value="<?= htmlspecialchars($commande->getUser()->getNom()) ?>">
+              </div>
+              <div class="flex flex-col col-span-1">
+                <label for="">Prenom</label>
+                <input class="petit-input" type="text" name="prenom" value="<?= htmlspecialchars($commande->getUser()->getPrenom()) ?>">
+              </div>
+            <div class="flex flex-col col-span-2">
+              <label for="">Email</label>
+              <input class="grand-input" type="text" name="email" value="<?= htmlspecialchars($commande->getUser()->getEmail()) ?>">
+            </div>
+
+            <div class="flex flex-col col-span-1">
+              <label for="">Telephone</label>
+              <input class="petit-input" type="tel" name="telephone" value="<?= htmlspecialchars($commande->getUser()->getTelephone()) ?>">
+            </div>
+
+            <div class="flex flex-col col-span-2">
+              <label for="">Adresse de livraison</label>
+              <input id="adresse" class="grand-input" type="text" name="lieu_livraison" value="<?= htmlspecialchars($commande->getLieuLivraison()) ?>">
+            </div>
+
+            <input id="inputPrixLivraison" name="prix_livraison" class="hidden">
+
+            <div class="flex flex-col col-span-1">
+              <label for="">Ville</label>
+              <input id="ville" class="petit-input" type="text" name="ville">
+            </div>
+
+            <div class="flex flex-col col-span-1">
+              <label for="">Code postal</label>
+              <input id="codePostal" class="petit-input [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" type="number" name="code_postal">
+            </div>
+            <p id="msgErreurAdresse" class="erreur col-span-full rounded-lg py-1 hidden">
+              Veuillez entre une adresse valide
+            </p>
+            <p class="text-texte/90 text-sm pb-4 col-span-full">*majoration de 59 centime par kilometre parcourus sera apliquée si hors bordeaux</p>
+
+            <div class="flex flex-col col-span-1">
+              <label for="">Date et heure</label>
+              <input id="dateLivraison" class="petit-input" type="datetime-local" name="date_livraison" value="<?= htmlspecialchars($commande->getDateLivraison()->format('Y-m-d\TH:i')) ?>">
+            </div>
+            
+            <?php if($role === ROLE_ADMIN || $role === ROLE_EMPLOYE): ?>
+              <div class="col-span-2 flex flex-col">
+                <label for="motif">Motif</label>
+                <textarea name="motif" class="grand-input w-xs md:w-2/3" rows="6"></textarea>
+              </div>
+            <?php endif; ?>
+            
+          </div>
+        </div>
+      </section>
+      <!-- Prix / commande -->
+      <div class="flex flex-col items-center gap-6">
+        <div class="py-8">
+          <div class="h-px bg-primary"></div>
+          <div class="flex text-center bg-fond-carte/60 gap-2 p-4">
+            <label for="">Prix total : </label>
+            <input id="inputPrixTotal" name="prix_total" class="hidden">
+            <!-- <input id="inputPrixTotal" class="w-12 px-2" value="1"> -->
+            <span id="totalCommande">0.00</span>
+            <p>€</p>
+            
+          </div>
+          <div class="h-px bg-primary"></div>
+        </div>
+
+        <button id="btnModifier" class="btn-form" type="submit">Modifier</button>
+      </div>
+  </form>
+
+</div>
+
+
+
+
+
+<?php require_once(APP_ROOT.'/templates/layouts/footer.php');?>

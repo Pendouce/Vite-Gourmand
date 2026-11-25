@@ -22,12 +22,6 @@ const modalBoisson = document.getElementById("modalBoisson");
 const listeBoissonsModal = document.getElementById("listeBoissonsModal");
 const detailBoissonModal = document.getElementById("detailBoissonModal");
 
-btnNvlBoisson.addEventListener("click", () => {
-  nettoyerModal(configModalBoisson);
-  ouvrirModal(modalBoisson);
-  desactiverBtnAjouter(configModalBoisson);
-});
-
 const configBoisson = {
   api: "detailBoisson",
   modele: divBoisson,
@@ -55,11 +49,19 @@ const configModalBoisson = {
   apresAffichageDetail: () => desactiverBtnAjouterDetail(configModalBoisson),
 };
 
-btnAjouter(configModalBoisson);
-ajouterALaCommandeDepuisDetail(configModalBoisson);
-afficheDetail(configModalBoisson);
-retourListe(configModalBoisson);
-replacerBtnAjouter(configBoisson);
+if (btnNvlBoisson) {
+  btnNvlBoisson.addEventListener("click", () => {
+    nettoyerModal(configModalBoisson);
+    ouvrirModal(modalBoisson);
+    desactiverBtnAjouter(configModalBoisson);
+  });
+
+  btnAjouter(configModalBoisson);
+  ajouterALaCommandeDepuisDetail(configModalBoisson);
+  afficheDetail(configModalBoisson);
+  retourListe(configModalBoisson);
+  replacerBtnAjouter(configBoisson);
+}
 
 divBoissons.addEventListener("change", () => {
   afficheTotalCommande();

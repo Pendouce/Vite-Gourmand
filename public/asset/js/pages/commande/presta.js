@@ -98,15 +98,20 @@ const retrouverBlock = (select, data) => {
   afficheTotalCommande();
 };
 
-selectList.forEach((select) => {
-  select.addEventListener("change", async () => {
-    const id = trouverOption(select);
-    const donnees = await recupererDonnees(id);
-    retrouverBlock(select, donnees);
-    if (!donnees) return;
-  });
-});
+const actualiserSelect = async (select) => {
+  const id = trouverOption(select);
+  const donnees = await recupererDonnees(id);
+  retrouverBlock(select, donnees);
+  if (!donnees) return;
+};
 
+const listenerSelect = (selectList) => {
+  selectList.forEach((select) => {
+    select.addEventListener("change", () => actualiserSelect(select));
+  });
+};
+
+listenerSelect(selectList);
 afficheTotalCommande();
 
-export { actualiserPresta };
+export { actualiserPresta, actualiserSelect };

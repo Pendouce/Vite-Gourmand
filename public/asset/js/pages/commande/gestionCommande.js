@@ -36,6 +36,21 @@ const nbPersonnePlusMoins = (div, plus, moins, nbElement) => {
   });
 };
 
+const brancherPlusMoins = (divs, config) => {
+  divs.forEach((div) => {
+    const input = div.querySelector(config.quantite);
+    const prix = div.querySelector(config.prix);
+    const sousTotal = div.querySelector(config.total);
+
+    sousTotal.textContent = calculSousTotal(prix.textContent, input.value, input.dataset.nbPersMin).toFixed(2);
+
+    nbPersonnePlusMoins(div, ".btnPlus", ".btnMoins", config.quantite);
+    recalculSousTotal(div, config.quantite, config.prix, config.total);
+    recalculTotal(div, config.quantite, config.section, config);
+  });
+  afficheTotal(config.section, config);
+};
+
 /* Gestion de l'ajout d'un nouveau menu/boisson a la commande */
 const ajouterALaCommande = async (id, config, configModal = null) => {
   const data = await getData(config.api, id);
@@ -151,4 +166,5 @@ export {
   btnAjouter,
   desactiverBtnAjouter,
   desactiverBtnAjouterDetail,
+  brancherPlusMoins,
 };

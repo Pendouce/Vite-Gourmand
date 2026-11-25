@@ -67,7 +67,7 @@ class CommandeBoissonRepository extends Repository
 
   public function modifierBoissonDeLaCommande(array $data):void
   {
-    $sql = 'UPDATE commande_boisson SET quantite = :quantite
+    $sql = 'UPDATE commande_boisson SET quantite = :quantite, prix_total_boisson = :prix_total_boisson
     WHERE boisson_id = :boisson_id AND commande_id = :commande_id';
 
     $statement = $this->pdo->prepare($sql);
