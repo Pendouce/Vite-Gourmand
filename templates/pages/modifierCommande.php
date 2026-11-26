@@ -17,21 +17,6 @@
 
 <div class="contenue-page">
 
-
-  <?php if (isset($_SESSION['erreur'])): ?>
-    <p class="erreur"><?= $_SESSION['erreur'] ?></p>
-    <?php unset($_SESSION['erreur']); ?>
-  <?php endif; ?>
-
-  <?php if (isset($_SESSION['succes'])): ?>
-    <p class="succes">
-        <?= $_SESSION['succes'] ?>
-    </p>
-    <?php unset($_SESSION['succes']); ?>
-  <?php endif; ?>
-
-
-
   <div id="modalPresta" class="modal-container-commande hidden">
     <div class="modal-commande">
       <button type="button" class="btnFermerModalCommande absolute right-6 top-6 hover:text-primary">
@@ -90,7 +75,7 @@
         <div class="flex flex-col gap-10">
           <input id="inputNbPers" name="nb_personne" class="hidden">
 
-          <section id="sectionMenus" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6" data-menu-id="<?= $menuChoisi ? (int) $menuChoisi->getMenuId() : '' ?>">
+          <section id="sectionMenus" class="flex flex-col border border-primary py-4 px-6 bg-fond-carte/60 gap-6">
             <div class="flex flex-col items-center gap-2">
               <h3 class="uppercase text-xl text-center md:text-2xl">menus selectionés</h3>
               <div class="h-px bg-primary w-2/3 self-center"></div>
@@ -102,7 +87,7 @@
                   
                   <div class="divMenu w-60 px-2 flex flex-col gap-6">
                     <!-- Titre menu -->
-                    <input type="hidden" name="menu[]" value="<?= $menu->getMenu()->getMenuId() ?> ">
+                    <input type="hidden" name="menu[]" value="<?= $menu->getMenu()->getMenuId() ?>">
                     <div class="">
                       <div class="text-center">
                         <h4 class="titreMenu flex min-h-14 items-center justify-center line-clamp-2 text-balance font-medium text-lg md:text-xl"><?= $menu->getMenu()->getTitre() ?> </h4>
@@ -122,7 +107,7 @@
                           
                         </div>
                         <div id="divNbPers" class="flex flex-col gap-2">
-                          <label for="">Nombre des personnes:</label>
+                          <label>Nombre des personnes:</label>
                           <div class="flex gap-2">
                             <button class="btnMoins" type="button">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
@@ -178,7 +163,7 @@
                 <div class="divBoisson w-60 px-2 flex flex-col gap-6">
     
                   <!-- Titre boisson -->
-                    <input type="hidden" name="boisson[]" value="<?= $boisson->getBoisson()->getBoissonId() ?> ">
+                    <input type="hidden" name="boisson[]" value="<?= $boisson->getBoisson()->getBoissonId() ?>">
                     <div class="relative">
                       <div class=" text-center">
                          <h4 class="titreBoisson flex min-h-14 items-center justify-center line-clamp-2 text-balance font-medium text-lg md:text-xl"><?= $boisson->getBoisson()->getNomBoisson() ?></h4>
@@ -197,7 +182,7 @@
                         </div>
     
                         <div class="divQuantite flex flex-col gap-2">
-                          <label for="">Quantité:</label>
+                          <label>Quantité:</label>
                           <div class="flex gap-2">
                             <button class="btnMoins" type="button">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 lg:size-8 text-primary">
@@ -226,10 +211,6 @@
                       </div>
                 </div>
               <?php endforeach; ?>
-              
-              </div>
-                  <!-- Div ajouter Boisson -->
-            </div>
 
             <!-- Total boisson -->
             <div class="flex gap-3 font-medium justify-center">
@@ -325,37 +306,37 @@
         <div class="cart-form w-full max-w-4xl">
           <div class="grid grid-cols-2 gap-4 px-3 md:px-0">
               <div class="flex flex-col col-span-1">
-                <label for="">Nom</label>
-                <input class="petit-input" type="text" name="nom" value="<?= htmlspecialchars($commande->getUser()->getNom()) ?>">
+                <label>Nom</label>
+                <input class="petit-input bg-zinc-400/20" type="text" name="nom" value="<?= htmlspecialchars($commande->getUser()->getNom()) ?>" readonly>
               </div>
               <div class="flex flex-col col-span-1">
-                <label for="">Prenom</label>
-                <input class="petit-input" type="text" name="prenom" value="<?= htmlspecialchars($commande->getUser()->getPrenom()) ?>">
+                <label>Prenom</label>
+                <input class="petit-input bg-zinc-400/20" type="text" name="prenom" value="<?= htmlspecialchars($commande->getUser()->getPrenom()) ?>" readonly>
               </div>
             <div class="flex flex-col col-span-2">
-              <label for="">Email</label>
-              <input class="grand-input" type="text" name="email" value="<?= htmlspecialchars($commande->getUser()->getEmail()) ?>">
+              <label>Email</label>
+              <input class="grand-input bg-zinc-400/20" type="text" name="email" value="<?= htmlspecialchars($commande->getUser()->getEmail()) ?>" readonly>
             </div>
 
             <div class="flex flex-col col-span-1">
-              <label for="">Telephone</label>
-              <input class="petit-input" type="tel" name="telephone" value="<?= htmlspecialchars($commande->getUser()->getTelephone()) ?>">
+              <label>Telephone</label>
+              <input class="petit-input bg-zinc-400/20" type="tel" name="telephone" value="<?= htmlspecialchars($commande->getUser()->getTelephone()) ?>" readonly>
             </div>
 
             <div class="flex flex-col col-span-2">
-              <label for="">Adresse de livraison</label>
+              <label>Adresse de livraison</label>
               <input id="adresse" class="grand-input" type="text" name="lieu_livraison" value="<?= htmlspecialchars($commande->getLieuLivraison()) ?>">
             </div>
 
             <input id="inputPrixLivraison" name="prix_livraison" class="hidden">
 
             <div class="flex flex-col col-span-1">
-              <label for="">Ville</label>
+              <label>Ville</label>
               <input id="ville" class="petit-input" type="text" name="ville">
             </div>
 
             <div class="flex flex-col col-span-1">
-              <label for="">Code postal</label>
+              <label>Code postal</label>
               <input id="codePostal" class="petit-input [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" type="number" name="code_postal">
             </div>
             <p id="msgErreurAdresse" class="erreur col-span-full rounded-lg py-1 hidden">
@@ -364,7 +345,7 @@
             <p class="text-texte/90 text-sm pb-4 col-span-full">*majoration de 59 centime par kilometre parcourus sera apliquée si hors bordeaux</p>
 
             <div class="flex flex-col col-span-1">
-              <label for="">Date et heure</label>
+              <label>Date et heure</label>
               <input id="dateLivraison" class="petit-input" type="datetime-local" name="date_livraison" value="<?= htmlspecialchars($commande->getDateLivraison()->format('Y-m-d\TH:i')) ?>">
             </div>
             
@@ -383,9 +364,8 @@
         <div class="py-8">
           <div class="h-px bg-primary"></div>
           <div class="flex text-center bg-fond-carte/60 gap-2 p-4">
-            <label for="">Prix total : </label>
+            <label>Prix total : </label>
             <input id="inputPrixTotal" name="prix_total" class="hidden">
-            <!-- <input id="inputPrixTotal" class="w-12 px-2" value="1"> -->
             <span id="totalCommande">0.00</span>
             <p>€</p>
             

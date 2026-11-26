@@ -54,6 +54,11 @@ divBoissons.addEventListener("change", () => {
 
 selectList.forEach((select) => {
   actualiserSelect(select);
+  select.addEventListener("change", async () => {
+    await actualiserSelect(select);
+    actualiserPresta();
+    afficheTotalCommande();
+  });
 });
 
 brancherPlusMoins(divsMenu, configMenu);

@@ -81,13 +81,15 @@ class CommandePrestaRepository extends Repository
     $statement->execute($data);
   }
 
-  public function supprimererPrestaDeLaCommande(array $data)
+  public function supprimerPrestaDeLaCommande(int $commandeId, int $prestaId)
   {
-    $sql = 'DELETE commande_prestation
+    $sql = 'DELETE FROM commande_prestation
     WHERE prestation_id = :prestation_id AND commande_id = :commande_id';
 
     $statement = $this->pdo->prepare($sql);
-    $statement->execute($data);
+    $statement->bindValue(':commande_id', $commandeId, PDO::PARAM_INT);
+    $statement->bindValue(':prestation_id', $prestaId, PDO::PARAM_INT);
+    $statement->execute();
   }
 
   public function estRatacheAUneCommande(int $id): bool

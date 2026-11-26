@@ -96,12 +96,12 @@ class CommandeService
     }
 
     if(empty($dataMenu)){
-        throw new Exception("Veuillez choisir au moins un menu");
-      }
+      throw new Exception("Veuillez choisir au moins un menu");
+    }
 
     if(empty($data['lieu_livraison'])){
-        throw new Exception("Veuillez saisir une adresse valide");
-      }
+      throw new Exception("Veuillez saisir une adresse valide");
+    }
 
     $menusCommande = $this->verifMenu($dataMenu);
     $prixPresta = $this->verifPresta($dataPresta, $prixTotalPresta, $menusCommande);
@@ -159,7 +159,6 @@ class CommandeService
         $prestaParId->getSupplement(),
       );
 
-      //var_dump($data);
       $presta[] = $this->commandePrestaRepository->ajouterPrestaCommande($data);
       
     }
@@ -370,41 +369,11 @@ class CommandeService
       $diffStockBoisson[$boissonId] = $differenceBoisson;
     }
 
-    // Modification des données des prestas
-    $prestas = $this->commandePrestaRepository->trouverPrestaDeLaCommande($commandeId);
 
-    $anciennesDonneesPresta = [];
-
-    foreach($prestas as $presta){
-      $anciennesDonneesPresta[$presta->getPrestationId()] = $presta->deshydrate();
-    }
-    
-    $nouvellesDonneesPresta = [];
-    foreach($dataPresta as $presta){
-      $datePresta = new DateTimeImmutable($presta['date_presta'], new DateTimeZone('Europe/Paris'));
-      $presta['date_retour_prevu'] = $datePresta->modify('+10 days')->format('Y-m-d H:i:s');
-      $presta['prix_total_presta'] = $prixTotalPresta;
-      $nouvellesDonneesPresta[$presta['prestation_id']] = $presta;
-    }
-
-    /* foreach($nouvellesDonneesPresta as $prestaId => $nouvellePresta){
-      $this->elementInvalide($anciennesDonneesPresta, $prestaId, 'Prestation');
-    } */
-
-    $donneesFinalePresta = [];
-    foreach($nouvellesDonneesPresta as $prestaId => $data){
-      $data = array_merge($anciennesDonneesPresta[$prestaId], $data);
-      $data['commande_id'] = $commandeId;
-      unset($data['prestation']);
-      unset($data['montant_prestation']);
-      unset($data['date_retour']);
-      unset($data['taux_retard']);
-      $donneesFinalePresta[$prestaId] = $data;
-    }
 
     // Je verifie que tout est ok pour la modification de la commande
     $menusCommande = $this->verifMenu($nouvellesDonneesMenu, $diffStockMenu);
-    $prixPresta = $this->verifPresta($nouvellesDonneesPresta, $prixTotalPresta, $menusCommande);
+    $prixPresta = $this->verifPresta($dataPresta, $prixTotalPresta, $menusCommande);
     $boissonsCommande = $this->verifBoisson($nouvellesDonneesBoisson, $diffStockBoisson);
     $this->verifLivraison($nouvellesDonneesCommande, 4);
     $this->prixTotal($prixPresta, $menusCommande, $boissonsCommande, $nouvellesDonneesCommande);
@@ -413,6 +382,10 @@ class CommandeService
     // Je m'assure que si un employe modifie une commande, un motif est envoye
     if(($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN) && empty($motif)){
       throw new Exception('Un motif est obligatoire pour modifier une commande');
+    }
+
+    if(empty($nouvellesDonneesCommande['lieu_livraison'])){
+      throw new Exception("Veuillez saisir une adresse valide");
     }
 
     $donneesCommande = [
@@ -458,9 +431,7 @@ class CommandeService
         }
       }
 
-      foreach($donneesFinalePresta as $prestaId => $data){
-        $this->commandePrestaRepository->modifierPrestaDeLaCommande($data);
-      }
+      $this->modifierPrestaCommande($commandeId, $dataPresta, $prixTotalPresta, $dataMenu);
 
       $this->commandeRepository->commit();
     }catch(Exception $e){
@@ -483,6 +454,61 @@ class CommandeService
       file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
       //$this->mailService->envoyer($user->getEmail(), $objet, $html);
     }
+  }
+
+  private function modifierPrestaCommande(int $commandeId, array $dataPresta, float $prixTotalPresta, array $dataMenu)
+  {
+    $prestas = $this->commandePrestaRepository->trouverPrestaDeLaCommande($commandeId);
+
+    $anciennesDonneesPresta = [];
+
+    foreach($prestas as $presta){
+      $anciennesDonneesPresta[$presta->getPrestationId()] = $presta->deshydrate();
+    }
+
+    $nouvellesDonneesPresta = [];
+
+    foreach($dataPresta as $presta){
+      $datePresta = new DateTimeImmutable($presta['date_presta'], new DateTimeZone('Europe/Paris'));
+      $presta['date_retour_prevu'] = $datePresta->modify('+10 days')->format('Y-m-d H:i:s');
+      $presta['prix_total_presta'] = $prixTotalPresta;
+      $nouvellesDonneesPresta[$presta['prestation_id']] = $presta;
+    }
+
+    // Je recupere les ids des anciennes prestas
+    $anciensIds = array_keys($anciennesDonneesPresta);
+    // Je recupere les ids des nouvelles prestas
+    $nouveauxIds = array_keys($nouvellesDonneesPresta);
+
+    // Je compare les ids anciens ids aux nouveaux et stock ceux qui ne sont pas dans le nouveau
+    $aSupprimer = array_diff($anciensIds, $nouveauxIds);
+    $aAjouter = array_diff($nouveauxIds, $anciensIds);
+
+    foreach($aSupprimer as $prestaId){
+      $this->commandePrestaRepository->supprimerPrestaDeLaCommande($commandeId, $prestaId);
+    }
+
+    $donneesPrestaAjout = [];
+    foreach($aAjouter as $prestaId){
+      $donneesPrestaAjout[] = $nouvellesDonneesPresta[$prestaId];
+    }
+
+    if(!empty($donneesPrestaAjout)){
+      $this->ajouterPrestaCommande($commandeId, $prixTotalPresta, $donneesPrestaAjout, $dataMenu);
+    }
+
+    foreach($nouvellesDonneesPresta as $prestaId => $data){
+    if(in_array($prestaId, $anciensIds)){
+      $data = array_merge($anciennesDonneesPresta[$prestaId], $data);
+      $data['commande_id'] = $commandeId;
+      unset($data['prestation']);
+      unset($data['montant_prestation']);
+      unset($data['date_retour']);
+      unset($data['taux_retard']);
+      $this->commandePrestaRepository->modifierPrestaDeLaCommande($data);
+    }
+}
+
   }
 
   public function modifierStatusCommande(int $commandeId, int $status, int $role)

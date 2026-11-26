@@ -309,6 +309,10 @@ class CommandeController extends Controller
 
         $dataPrestas = [];
         foreach(($_POST['prestation'] ?? []) as $prestaId){
+          $prestaId = (int) $prestaId;
+          if ($prestaId === '' || $prestaId <= 0) {
+            continue;
+          }
           $dataPrestas[] = [
             'prestation_id' => (int) $prestaId,
             'date_presta' => $_POST['date_livraison'],
@@ -316,7 +320,7 @@ class CommandeController extends Controller
           ];
         }
         $prixTotalPresta = $_POST['prix_total_presta'];
-        
+
         $dataBoissons = [];
         foreach(($_POST['boisson'] ?? []) as $index => $boissonId){
           $dataBoissons[] = [
@@ -356,21 +360,8 @@ class CommandeController extends Controller
             $_SESSION['succes'] = $message;
             echo json_encode(['succes' => true, 'redirection' => '/commandes']);
           }
-          /* if($roleId === ROLE_UTILISATEUR){
-            $_SESSION['succes'] = 'Commande modifier vous avez recus un mail de confirmation';
-            header('location: /mesCommandes');
-            exit;
-          }elseif($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN){
-            $_SESSION['succes'] = 'Commande modifier un mail a été envoyé au client';
-            header('location: /commandes');
-            exit;
-          } */
-
         }catch(Exception $e){
           echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
-          /* $_SESSION['erreur'] = $e->getMessage();
-          header('location: /modifierCommande?id='.$_GET['id']);
-          exit; */
         }
       }else{
       $role = $role = $_SESSION['role_id'];
