@@ -1,4 +1,4 @@
-import { fermerModal, ouvrirModal } from "../modales.js";
+import { fermerModal, ouvrirModal, gererActionListeBtn } from "../modales.js";
 
 const modalContainerCommande = document.querySelectorAll(".modal-container-commande");
 const btnFermerModalCommande = document.querySelectorAll(".btnFermerModalCommande");
@@ -62,6 +62,7 @@ modalContainerCommande.forEach((modalContainer) => {
 const modalDetailcommande = document.getElementById("modalDetailcommande");
 const detailCommandeModal = document.getElementById("detailCommandeModal");
 const btnDetailCommande = document.querySelectorAll(".btnDetailCommande");
+const btnAnnulerCommande = document.querySelectorAll(".btnAnnulerCommande");
 
 if (modalDetailcommande) {
   const configModalCommande = {
@@ -77,6 +78,18 @@ if (modalDetailcommande) {
   btnDetailCommande.forEach((btn) => {
     btn.addEventListener("click", () => ouvrirModal(modalDetailcommande));
   });
+
+  const configAnnulationCommande = {
+    nomBtn: btnAnnulerCommande,
+    id: "#idCommande",
+    nbCommande: "#nbCommande",
+  };
+
+  if (document.querySelector("#nomClient")) {
+    configAnnulationCommande.nom = "#nomClient";
+  }
+
+  gererActionListeBtn(configAnnulationCommande);
 }
 
 export { retourListe, afficheDetail, nettoyerModal };

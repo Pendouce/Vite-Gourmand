@@ -12,8 +12,6 @@ use App\Service\UserService;
 use App\Service\AffichageStatutService;
 use Exception;
 
-use function PHPSTORM_META\map;
-
 class CommandeController extends Controller
 {
   private CommandeService $commandeService;
@@ -185,7 +183,7 @@ class CommandeController extends Controller
 
     public function afficherMesCommandes(){
       $this->accesPage([ROLE_UTILISATEUR, ROLE_ADMIN, ROLE_EMPLOYE]);
-
+      
       $userId = $_SESSION['user_id'];
       $role = $_SESSION['role_id'];
 
@@ -207,25 +205,6 @@ class CommandeController extends Controller
         $_SESSION['erreur'] = $e->getMessage();
       }
     }
-
-    /* public function afficherMesCommandes(){
-      $this->accesPage([ROLE_UTILISATEUR, ROLE_ADMIN, ROLE_EMPLOYE]);
-
-      $userId = $_SESSION['user_id'];
-      $role = $_SESSION['role_id'];
-
-      try{
-        $commandes = $this->commandeService->afficherCommandesUser($userId, $role);
-        $statut = array_map(fn($commande) => 
-          $this->affichageStatutService->couleurStatutCommande($commande->getStatusId())
-        , $commandes);
-
-        echo json_encode(['succes' => true, 'commande' => $commandes, 'statut' => $statut]);
-      
-      }catch(Exception $e){
-        echo json_encode(['succes' => false, 'message' => $e->getMessage()]);
-      }
-    } */
 
     public function afficherDetailsCommande(){
       $this->accesPage([ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR]);
@@ -435,7 +414,7 @@ class CommandeController extends Controller
     
     public function annulerCommandeUser()
     {
-      $this->accesPage([ROLE_UTILISATEUR]);
+      $this->accesPage([ROLE_UTILISATEUR, ROLE_ADMIN, ROLE_EMPLOYE]);
       if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         header('location: /');
         exit;
@@ -448,11 +427,11 @@ class CommandeController extends Controller
       try{
         $this->commandeService->annulerCommande($commandeId, $roleId, $userId);
        $_SESSION['succes'] = 'Commande annulée';
-        header('location: /commandes');
+        header('location: /mesCommandes');
         exit;
       }catch(Exception $e){
         $_SESSION['erreur'] = $e->getMessage();
-        header('location: /commandes');
+        header('location: /mesCommandes');
         exit;
       }
     }

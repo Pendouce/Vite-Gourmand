@@ -21,21 +21,39 @@ if (btnSupprimerCmpt) {
   });
 }
 
-// Si btnSupprimerCmptEmploye existe dans le fichier
-if (btnSupprimerCmptEmploye) {
+const gererActionListeBtn = (config) => {
   // Je boucle sur tous les boutons btn est le bouton que je viens de cliquer
-  btnSupprimerCmptEmploye.forEach((btn) => {
+  config.nomBtn.forEach((btn) => {
     btn.addEventListener("click", () => {
       // Je recupere le nom est l'id de l'employe et les stocks dans leurs variables
       const nom = btn.dataset.nom;
       const id = btn.dataset.id;
+      if (config.nom) {
+        document.querySelector(config.nom).textContent = nom;
+      }
+
+      if (config.nbCommande) {
+        const nbCommande = btn.dataset.nbCommande;
+        document.querySelector(config.nbCommande).textContent = nbCommande;
+      }
       // J'affiche le nom
-      document.getElementById("nomEmploye").textContent = nom;
+      //document.querySelector(config.nom).textContent = nom;
       // J'assigigne a idEmploye la valeur de l'id employe (idEmploye = id selectionné)
-      document.getElementById("idEmploye").value = id;
+      document.querySelector(config.id).value = id;
       ouvrirModal(modalContainer);
     });
   });
+};
+
+// Si btnSupprimerCmptEmploye existe dans le fichier
+if (btnSupprimerCmptEmploye) {
+  const configCompteEmploye = {
+    nomBtn: btnSupprimerCmptEmploye,
+    nom: "#nomEmploye",
+    id: "#idEmploye",
+  };
+
+  gererActionListeBtn(configCompteEmploye);
 }
 
 if (btnGererTypePlat) {
@@ -60,4 +78,4 @@ if (btnAnnuler) {
   btnAnnuler.addEventListener("click", () => fermerModal(modalContainer));
 }
 
-export { ouvrirModal, fermerModal };
+export { ouvrirModal, fermerModal, gererActionListeBtn };

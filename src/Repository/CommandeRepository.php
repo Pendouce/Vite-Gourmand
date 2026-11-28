@@ -78,7 +78,7 @@ class CommandeRepository extends Repository
   public function trouverCommandeUser(int $userId)
   {
     $sql = 'SELECT * FROM commande INNER JOIN status ON commande.status_id = status.status_id
-    WHERE user_id = :user_id';
+    WHERE user_id = :user_id ORDER BY commande.status_id, commande.date_livraison';
 
     $statement = $this->pdo->prepare($sql);
     $statement->bindValue(':user_id', $userId, PDO::PARAM_INT);

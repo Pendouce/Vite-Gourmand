@@ -224,9 +224,13 @@ class CommandeService
   {
     if(!in_array($role, [ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR])) throw new AccesRefuseException();
 
-    $commande = $this->commandeRepository->trouverCommandeUser($userId);
+    $commandes = $this->commandeRepository->trouverCommandeUser($userId);
+    foreach($commandes as $commande){
+      $user = $this->userRepository->trouveUtilisateurById($commande->getUserId());
+      $commande->setUser($user);
+    }
     
-    return $this->ajouterElementCommande($commande);
+    return $this->ajouterElementCommande($commandes);
   }
 
   public function afficherDetailsCommande(int $idCommande, int $userId, int $role)
@@ -648,26 +652,44 @@ class CommandeService
   {
     if(!in_array($roleId, [ROLE_ADMIN, ROLE_EMPLOYE, ROLE_UTILISATEUR])) throw new AccesRefuseException();
 
-    $this->modificationNonPermise($commandeId);
-    $status = STATUT_ANNULEE;
-    $this->modifierStatusCommande($commandeId, $status, $roleId);
-
-    $this->restaurerStockBoisson($commandeId);
-    $this->restaurerStockMenu($commandeId);
-
     $user = $this->userRepository->trouveUtilisateurById($userId);
     $commande = $this->commandeRepository->trouverCommandeParId($commandeId);
 
+    VerifService::verifExisteEnBase($commande, 'cette commande');
 
-    if($roleId === ROLE_UTILISATEUR){
-      // Mail annulation
-      $html = $this->mailService->recupererHtml('commande/annulationClientMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $commande->getNbCommande()]);
+    if($roleId === ROLE_UTILISATEUR && $commande->getUserId() !== $user->getUserId()){
+      throw new AccesRefuseException();
+    }
+
+    if(($roleId === ROLE_ADMIN || $roleId === ROLE_EMPLOYE) && $commande->getUserId() !== $user->getUserId() && empty($motif)){
+      throw new Exception('Veuillez saisir un motif');
+    }
+
+    $this->modificationNonPermise($commandeId);
+    
+    try{
+      $this->commandeRepository->beginTransaction();
+      $this->changerStatutCommande($commandeId, STATUT_ANNULEE);
+
+      $this->restaurerStockBoisson($commandeId);
+      $this->restaurerStockMenu($commandeId);
+
+      $this->commandeRepository->commit();
+
+    }catch(Exception $e){
+      $this->commandeRepository->rollBack();
+      throw new Exception('Erreur lors de la modification de la commande : '. $e->getMessage());
+    }
+
+    if(($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN) && !empty($motif)){
+      // Mail annulation + motif
+      $html = $this->mailService->recupererHtml('commande/annulationEmployeMail', ['prenom' => $commande->getUser()->getPrenom(), 'nbCommande' => $commande->getNbCommande(), 'motif' => $motif]);
       $objet = 'Annulation de votre commande';
       file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
-      //$this->mailService->envoyer($user->getEmail(), $objet, $html);
-    }elseif(($roleId === ROLE_EMPLOYE || $roleId === ROLE_ADMIN) && !empty($motif)){
-      // Mail annulation + motif
-      $html = $this->mailService->recupererHtml('commande/annulationEmployeMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $commande->getNbCommande(), 'motif' => $motif]);
+      //$this->mailService->envoyer($commande->getUser()->getEmail(), $objet, $html);
+    }else{
+      // Mail annulation
+      $html = $this->mailService->recupererHtml('commande/annulationClientMail', ['prenom' => $user->getPrenom(), 'nbCommande' => $commande->getNbCommande()]);
       $objet = 'Annulation de votre commande';
       file_put_contents(APP_ROOT . '/public/afficheMail.php', $html);
       //$this->mailService->envoyer($user->getEmail(), $objet, $html);
